@@ -63,7 +63,7 @@ const ProductCard = ({ product }) => {
           {product.category}
         </p>
 
-        <Link to="/shop">
+        <Link to={`/product/${product.id}`}>
           <h3 className="font-semibold text-slate-900 hover:text-accent transition-colors line-clamp-2">
             {product.name}
           </h3>
