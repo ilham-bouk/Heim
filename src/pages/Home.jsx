@@ -3,7 +3,7 @@ import FeaturesBar from "../components/sections/Features-bar"
 import Category from "../components/sections/Category"
 import ProductGrid from "../components/sections/ProductGrid"
 import PromoBanner from "../components/sections/Promo-banner"
-import TreandingNow from "../components/sections/Treanding-now"
+import TrendingNow from "../components/sections/Trending-now"
 import BlogSection from "../components/sections/blog-section"
 import Newsletter from "../components/sections/Newsletter"
 
@@ -15,7 +15,7 @@ const Home = () => {
       <Category />
       <ProductGrid />
       <PromoBanner />
-      <TreandingNow />
+      <TrendingNow />
       <BlogSection />
       <Newsletter />
     </div>

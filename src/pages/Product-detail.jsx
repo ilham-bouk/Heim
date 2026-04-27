@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router';
 import { ChevronRight, Heart, Share2, ShoppingCart, Minus, Plus, Star, Truck, Shield, RotateCcw } from 'lucide-react';
 import Button from '../components/ui/Button';
-import { products } from '../data/products';
+import { products } from '../data/mockData';
 
 const ProductDetail = () => {
   const { id } = useParams();

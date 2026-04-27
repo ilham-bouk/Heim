@@ -2,7 +2,7 @@ import { useState } from "react"
 import { ChevronRight, SlidersHorizontal, X } from "lucide-react"
 import ProductCard from "../components/ui/Product-card"
 import Button from "../components/ui/Button"
-import { products, categories } from "../data/products"
+import { products, categories } from "../data/mockData"
 import { Link } from "react-router"
 
 const Shop = () => {

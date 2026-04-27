@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react"
-import { categories } from '../../data/products'
+import { categories } from '../../data/mockData'
 import { Link } from "react-router";
 
 const Category = () => {

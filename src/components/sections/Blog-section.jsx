@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react"
 import BlogCard from "../ui/Blog-card";
-import { blogPosts } from "../../data/products"
+import { blogPosts } from "../../data/mockData"
 import Button from '../ui/Button';
 import { Link } from "react-router";
 
@@ -28,7 +28,7 @@ const BlogSection = () => {
 
         {/* Blog grid */}
         <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {blogPosts.map((post) => (
+          {blogPosts.slice(0, 3).map((post) => (
             <BlogCard key={post.id} post={post} />
           ))}
         </div>

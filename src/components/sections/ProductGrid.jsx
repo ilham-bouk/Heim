@@ -1,7 +1,7 @@
 import Button from '../ui/Button';
 import { ArrowRight } from "lucide-react"
 import ProductCard from "../ui/Product-card";
-import { products } from '../../data/products'
+import { products } from '../../data/mockData'
 import { Link } from 'react-router';
 
 const ProductGrid = () => {

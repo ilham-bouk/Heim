@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Menu, X, Search, User, ShoppingBag, House } from 'lucide-react';
 import { Link } from 'react-router';
 
-const Navbar = () => {
+const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
@@ -14,7 +14,6 @@ const Navbar = () => {
   ]
 
   return (
-    // 
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b border-border">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
         {/* Logo */}
@@ -112,4 +111,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Header;

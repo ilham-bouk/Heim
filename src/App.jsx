@@ -1,10 +1,11 @@
 import { BrowserRouter, Route, Routes } from 'react-router'
-import Header from "./components/Header"
-import Footer from "./components/Footer"
+import Header from "./components/layout/Header"
+import Footer from "./components/layout/Footer"
 import Home from "./pages/Home"
 import Shop from "./pages/Shop"
 import ProductDetail from './pages/Product-detail'
 import About from './pages/About'
+import Blog from './pages/Blog'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/about" element={<About />} />
+        <Route path="/blog" element={<Blog />} />
       </Routes>
       
       <Footer />
