@@ -210,7 +210,7 @@ const BlogDetail = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {previousPost && (
                 <Link to={`/blog/${previousPost.id}`}>
-                  <div className="group cursor-pointer">
+                  <div className="group cursor-pointer p-4 border border-slate-200 rounded-xl">
                     <div className="flex items-center gap-2 mb-2">
                       <ArrowLeft className="w-4 h-4 text-accent" />
                       <span className="text-sm text-accent font-semibold">Previous Article</span>
@@ -225,7 +225,7 @@ const BlogDetail = () => {
 
               {nextPost && (
                 <Link to={`/blog/${nextPost.id}`}>
-                  <div className="group cursor-pointer text-end">
+                  <div className="group cursor-pointer text-end p-4 border border-slate-200 rounded-xl">
                     <div className="flex items-center justify-end gap-2 mb-2">
                       <span className="text-sm text-accent font-semibold">Next Article</span>
                       <ArrowRight className="w-4 h-4 text-accent" />
