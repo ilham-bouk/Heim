@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Menu, X, Search, User, ShoppingBag, House } from 'lucide-react';
+import { Menu, X, Heart, User, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router';
+import { useCart } from '../../context/CartContext';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { itemCount } = useCart();
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -55,21 +57,25 @@ const Header = () => {
 
         {/* Right side icons */}
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4">
-          <button className="font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center px-3 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-accent/50">
-            <Search className="h-5 w-5" />
-            <span className="sr-only">Search</span>
+          <button className="font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center px-3 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-accent/5">
+            <Heart className="h-5 w-5" />
+            <span className="sr-only">Wishing list</span>
           </button>
-          <button className="font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center px-3 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-accent/50">
+          <button className="font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center px-3 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-accent/5">
             <User className="h-5 w-5" />
             <span className="sr-only">Account</span>
           </button>
-          <button className="font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center px-3 py-2 text-sm relative text-foreground/80 hover:text-foreground hover:bg-accent/50">
-            <ShoppingBag className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent text-[10px] font-medium text-accent-foreground flex items-center justify-center">
-              3
-            </span>
-            <span className="sr-only">Cart</span>
-          </button>
+          <Link to="/cart">
+            <button className="font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center px-3 py-2 text-sm relative text-foreground/80 hover:text-foreground hover:bg-accent/5">
+              <ShoppingBag className="h-5 w-5" />
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent text-[10px] font-medium text-accent-foreground flex items-center justify-center">
+                  {itemCount}
+                </span>
+              )}
+              <span className="sr-only">Cart</span>
+            </button>
+          </Link>
         </div>
       </nav>
 
@@ -91,19 +97,22 @@ const Header = () => {
 
             <div className="flex gap-4 pt-4 border-t border-border">
               <button className="font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center text-slate-900 hover:bg-accent/50 px-3 py-2 text-sm">
-                <Search className="h-5 w-5" />
+                <Heart className="h-5 w-5" />
               </button>
               <button className="font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center text-slate-900 hover:bg-accent/50 px-3 py-2 text-sm">
                 <User className="h-5 w-5" />
               </button>
-              <button className="relative font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center text-slate-900 hover:bg-accent/50 px-3 py-2 text-sm">
-                <ShoppingBag className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent text-[10px] font-medium text-accent-foreground flex items-center justify-center">
-                  3
-                </span>
-              </button>
+              <Link to="/cart">
+                <button className="relative font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center text-slate-900 hover:bg-accent/50 px-3 py-2 text-sm">
+                  <ShoppingBag className="h-5 w-5" />
+                  {itemCount > 0 && (
+                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent text-[10px] font-medium text-accent-foreground flex items-center justify-center">
+                      {itemCount}
+                    </span>
+                  )}
+                </button>
+              </Link>
             </div>
-
           </div>
         </div>
       )}

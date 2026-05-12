@@ -1,16 +1,31 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router';
-import { ChevronRight, Heart, Share2, ShoppingCart, Minus, Plus, Star, Truck, Shield, RotateCcw } from 'lucide-react';
+import { ChevronRight, Heart, Share2, ShoppingCart, Minus, Plus, Star, Truck, Shield, RotateCcw, Check } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { products } from '../data/mockData';
+import { useCart } from '../context/CartContext';
+
+const getFinalPrice = (product) =>
+  product.discount
+    ? Math.floor(product.price - (product.price * (product.discount / 100)))
+    : product.price;
+
+const getBadgeClass = (badge) => {
+  if (badge === 'Sale') return 'bg-red-500 text-white';
+  if (badge === 'New') return 'bg-blue-500 text-white';
+  return 'bg-purple-500 text-white';
+};
 
 const ProductDetail = () => {
   const { id } = useParams();
-  // const navigate = useNavigate();
+  const { addToCart, cartItems } = useCart();
+
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
 
   const product = products.find(p => p.id === parseInt(id));
+
   if (!product) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center">
@@ -23,18 +38,22 @@ const ProductDetail = () => {
     );
   }
 
-  const finalPrice = product.discount
-    ? Math.floor(product.price - (product.price * (product.discount / 100)))
-    : product.price;
+  const finalPrice = getFinalPrice(product);
+
+  // Check if item is already in cart
+  const cartItem = cartItems.find(item => item.id === product.id);
+  const isInCart = !!cartItem;
 
   const handleAddToCart = () => {
-    console.log(`Added ${quantity} of ${product.name} to cart`);
+    addToCart(product, quantity);
+    setAddedToCart(true);
+    // Reset the feedback after 2 seconds
+    setTimeout(() => setAddedToCart(false), 2000);
   };
 
   const incQuantity = () => setQuantity(q => q + 1);
   const decQuantity = () => setQuantity(q => (q > 1 ? q - 1 : 1));
 
-  // Related products
   const relatedProducts = products
     .filter(p => p.category === product.category && p.id !== product.id)
     .slice(0, 4);
@@ -45,13 +64,9 @@ const ProductDetail = () => {
       <div className="bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-4">
           <nav className="flex items-center gap-2 text-sm text-slate-500">
-            <Link to="/" className="hover:text-slate-900 transition-colors">
-              Home
-            </Link>
+            <Link to="/" className="hover:text-slate-900 transition-colors">Home</Link>
             <ChevronRight className="w-4 h-4" />
-            <Link to="/shop" className="hover:text-slate-900 transition-colors">
-              Shop
-            </Link>
+            <Link to="/shop" className="hover:text-slate-900 transition-colors">Shop</Link>
             <ChevronRight className="w-4 h-4" />
             <Link to={`/shop?category=${product.category}`} className="hover:text-slate-900 transition-colors">
               {product.category}
@@ -65,8 +80,8 @@ const ProductDetail = () => {
       {/* Main Product Section */}
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-          
-          {/* Product Images */}
+
+          {/* Product Image */}
           <div className="relative mb-6 bg-slate-50 rounded-2xl overflow-hidden aspect-square">
             <img
               src={product.image}
@@ -74,15 +89,7 @@ const ProductDetail = () => {
               className="w-full h-full object-cover"
             />
             {product.badge && (
-              <span
-                className={`absolute top-6 left-6 px-4 py-2 rounded-lg text-sm font-semibold ${
-                  product.badge === 'Sale'
-                    ? 'bg-red-500 text-white'
-                    : product.badge === 'New'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-purple-500 text-white'
-                }`}
-              >
+              <span className={`absolute top-6 left-6 px-4 py-2 rounded-lg text-sm font-semibold ${getBadgeClass(product.badge)}`}>
                 {product.badge}
                 {product.discount && product.badge === 'Sale' && ` -${product.discount}%`}
               </span>
@@ -123,16 +130,12 @@ const ProductDetail = () => {
               </span>
             </div>
 
-            {/* Price Section */}
+            {/* Price */}
             <div className="mb-6">
               <div className="flex items-baseline gap-3 mb-2">
-                <span className="text-3xl font-bold text-slate-900">
-                  ${finalPrice}
-                </span>
+                <span className="text-3xl font-bold text-slate-900">${finalPrice}</span>
                 {product.discount && (
-                  <span className="text-xl text-slate-400 line-through">
-                    ${product.price}
-                  </span>
+                  <span className="text-xl text-slate-400 line-through">${product.price}</span>
                 )}
               </div>
             </div>
@@ -183,8 +186,17 @@ const ProductDetail = () => {
                 className="w-full flex justify-center gap-2"
                 onClick={handleAddToCart}
               >
-                <ShoppingCart className="w-5 h-5" />
-                Add to Cart
+                {addedToCart ? (
+                  <>
+                    <Check className="w-5 h-5" />
+                    Added to Cart!
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-5 h-5" />
+                    {isInCart ? `Add More (${cartItem.quantity} in cart)` : 'Add to Cart'}
+                  </>
+                )}
               </Button>
             </div>
 
@@ -234,16 +246,13 @@ const ProductDetail = () => {
         {/* Product Tabs Section */}
         <div className="border-t border-slate-200 pt-12 mb-16">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Description */}
             <div>
               <h3 className="text-xl font-bold text-slate-900 mb-4">Description</h3>
               <p className="text-slate-600 leading-relaxed">
-                {product.description} This premium piece combines modern aesthetics with superior craftsmanship. 
+                {product.description} This premium piece combines modern aesthetics with superior craftsmanship.
                 Made from high-quality materials, it's designed to last for years while maintaining its elegant appearance.
               </p>
             </div>
-
-            {/* Specifications */}
             <div>
               <h3 className="text-xl font-bold text-slate-900 mb-4">Specifications</h3>
               <ul className="space-y-3 text-slate-600">
@@ -265,8 +274,6 @@ const ProductDetail = () => {
                 </li>
               </ul>
             </div>
-
-            {/* Care Instructions */}
             <div>
               <h3 className="text-xl font-bold text-slate-900 mb-4">Care Instructions</h3>
               <ul className="space-y-2 text-slate-600 text-sm">
@@ -280,15 +287,13 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* Related Products Section */}
+        {/* Related Products */}
         {relatedProducts.length > 0 && (
           <div className="border-t border-slate-200 pt-12">
             <h2 className="text-3xl font-bold text-slate-900 mb-8">Related Products</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map((relProduct) => {
-                const relFinalPrice = relProduct.discount
-                  ? Math.floor(relProduct.price - (relProduct.price * (relProduct.discount / 100)))
-                  : relProduct.price;
+                const relFinalPrice = getFinalPrice(relProduct);
                 return (
                   <Link key={relProduct.id} to={`/product/${relProduct.id}`}>
                     <div className="group bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
@@ -299,15 +304,7 @@ const ProductDetail = () => {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                         {relProduct.badge && (
-                          <span
-                            className={`absolute top-3 left-3 px-3 py-1 rounded-lg text-xs font-semibold ${
-                              relProduct.badge === 'Sale'
-                                ? 'bg-red-500 text-white'
-                                : relProduct.badge === 'New'
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-purple-500 text-white'
-                            }`}
-                          >
+                          <span className={`absolute top-3 left-3 px-3 py-1 rounded-lg text-xs font-semibold ${getBadgeClass(relProduct.badge)}`}>
                             {relProduct.badge}
                           </span>
                         )}
@@ -320,13 +317,9 @@ const ProductDetail = () => {
                           {relProduct.name}
                         </h3>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-lg font-bold text-slate-900">
-                            ${relFinalPrice}
-                          </span>
+                          <span className="text-lg font-bold text-slate-900">${relFinalPrice}</span>
                           {relProduct.discount && (
-                            <span className="text-sm text-slate-500 line-through">
-                              ${relProduct.price}
-                            </span>
+                            <span className="text-sm text-slate-500 line-through">${relProduct.price}</span>
                           )}
                         </div>
                       </div>
@@ -339,7 +332,7 @@ const ProductDetail = () => {
         )}
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default ProductDetail
+export default ProductDetail;
