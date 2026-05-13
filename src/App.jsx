@@ -10,6 +10,8 @@ import Blog from './pages/Blog'
 import BlogDetail from './pages/Blog-detail'
 import Contact from './pages/Contact'
 import Cart from './pages/Cart'
+import SignIn from './pages/SignIn'
+import SignUp from './pages/SignUp'
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
           <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
         
         <Footer />
