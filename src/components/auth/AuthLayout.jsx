@@ -6,8 +6,7 @@ const AuthLayout = ({ quote, subtext, children }) => {
     <div className="min-h-screen bg-white flex">
 
       {/* Left decorative panel */}
-      <div className="hidden lg:flex lg:w-5/12 xl:w-1/2 bg-slate-900 flex-col justify-between p-14 xl:p-20 relative overflow-hidden shrink-0">
-
+      <div className="hidden lg:flex lg:w-5/12 xl:w-1/2 bg-slate-800 flex-col justify-between p-14 xl:p-20 relative overflow-hidden shrink-0">        
         {/* Dot-grid texture */}
         <div
           className="absolute inset-0 opacity-[0.04]"
