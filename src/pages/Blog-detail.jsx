@@ -24,7 +24,6 @@ const BlogDetail = () => {
     .filter(p => p.category === post.category && p.id !== post.id)
     .slice(0, 3);
 
-  // Get previous and next posts
   const currentIndex = blogPosts.findIndex(p => p.id === post.id);
   const previousPost = currentIndex > 0 ? blogPosts[currentIndex - 1] : null;
   const nextPost = currentIndex < blogPosts.length - 1 ? blogPosts[currentIndex + 1] : null;
@@ -182,22 +181,6 @@ const BlogDetail = () => {
               </p>
             </div>
           </article>
-
-          {/* Share Buttons */}
-          {/* <div className="flex items-center gap-4">
-            <span className="text-sm font-medium text-slate-600">Share:</span>
-            <div className="flex gap-3">
-              <button className="p-2.5 rounded-lg border border-slate-300 hover:bg-slate-50 transition-colors">
-                <Facebook className="w-5 h-5 text-slate-600" />
-              </button>
-              <button className="p-2.5 rounded-lg border border-slate-300 hover:bg-slate-50 transition-colors">
-                <Twitter className="w-5 h-5 text-slate-600" />
-              </button>
-              <button className="p-2.5 rounded-lg border border-slate-300 hover:bg-slate-50 transition-colors">
-                <MessageCircle className="w-5 h-5 text-slate-600" />
-              </button>
-            </div>
-          </div> */}
         </div>
       </section>
 

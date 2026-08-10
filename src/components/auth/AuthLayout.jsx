@@ -68,7 +68,6 @@ const AuthLayout = ({ quote, subtext, children }) => {
           {children}
         </div>
       </div>
-
     </div>
   );
 };

@@ -216,7 +216,7 @@ const SignUp = () => {
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-          {/* Strength bar — shows instead of generic error while typing */}
+          {/* Strength bar */}
           {formData.password && !errors.password
             ? <PasswordStrengthBar password={formData.password} />
             : <FieldError message={errors.password} />
@@ -322,8 +322,6 @@ const SignUp = () => {
         </button>
       </div>
       
-
-      {/* Demo hint */}
       <p className="mt-6 text-xs text-slate-400 text-center leading-relaxed">
         Demo: any valid email + password of 8+ characters will work.
       </p>
