@@ -98,7 +98,7 @@ const Cart = () => {
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-4">
                           <div>
-                            <Link to={`/product/${item.id}`}>
+                            <Link to={`/shop/${item.id}`}>
                               <h3 className="text-lg font-bold text-slate-900 hover:text-accent transition-colors">
                                 {item.name}
                               </h3>

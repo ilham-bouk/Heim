@@ -1,6 +1,6 @@
 import Button from '../ui/Button';
 import { ArrowRight } from "lucide-react"
-import PromoImg from '../../assets/heroImg.png';
+import PromoImg from '../../assets/Promo-banner.png';
 import { Link } from 'react-router';
 
 const PromoBanner = () => {

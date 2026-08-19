@@ -18,7 +18,7 @@ import NotFound from './pages/NotFound'
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Heim">
       <CartProvider>
         <WishlistProvider>
           <Header />

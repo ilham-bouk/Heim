@@ -1,4 +1,18 @@
-import product1 from '../assets/heroImg.png'
+// products
+import chair from '../assets/chair.jpeg'
+import bed from '../assets/bed.jpeg'
+import lamp from '../assets/lamp.jpeg'
+import table from '../assets/table.jpeg'
+import sofa from '../assets/sofa.jpeg'
+// categories
+import livingroom from '../assets/living-room.jpeg'
+import bedroom from '../assets/bedroom.png'
+import kitchen from '../assets/kitchen.jpeg'
+import office from '../assets/office.jpeg'
+import outdoor from '../assets/outdoor.jpeg'
+import lighting from '../assets/lighting.jpeg'
+
+import blog1 from '../assets/cozy-living-room.jpeg'
 
 export const products = [
   {
@@ -6,7 +20,7 @@ export const products = [
     name: "Modern Lounge Chair",
     price: 399,
     discount: 25,
-    image: product1,
+    image: chair,
     rating: 4.8,
     reviews: 124,
     category: "Living Room",
@@ -15,20 +29,10 @@ export const products = [
   },
   {
     id: 2,
-    name: "Minimalist Coffee Table",
-    price: 449,
-    image: product1,
-    rating: 4.9,
-    reviews: 89,
-    category: "Living Room",
-    description: "Contemporary coffee table with clean lines."
-  },
-  {
-    id: 3,
     name: "Scandinavian Sofa",
     price: 1599,
     discount: 20,
-    image: product1,
+    image: sofa,
     rating: 4.7,
     reviews: 256,
     category: "Living Room",
@@ -36,10 +40,10 @@ export const products = [
     description: "Elegant Scandinavian sofa perfect for modern homes."
   },
   {
-    id: 4,
+    id: 3,
     name: "Wooden Dining Table",
     price: 899,
-    image: product1,
+    image: table,
     rating: 4.6,
     reviews: 78,
     category: "Kitchen",
@@ -47,47 +51,57 @@ export const products = [
     description: "Solid wood dining table, spacious and durable."
   },
   {
-    id: 5,
-    name: "Velvet Accent Chair",
-    price: 349,
-    image: product1,
-    rating: 4.8,
-    reviews: 145,
-    category: "Living Room",
-    description: "Luxurious velvet accent chair in deep colors."
-  },
-  {
-    id: 6,
-    name: "Oak Bookshelf",
-    price: 749,
-    discount: 30,
-    image: product1,
-    rating: 4.5,
-    reviews: 67,
-    category: "Office",
-    badge: "Sale",
-    description: "Premium oak bookshelf with adjustable shelves."
-  },
-  {
-    id: 7,
+    id: 4,
     name: "Modern Floor Lamp",
     price: 189,
-    image: product1,
+    image: lamp,
     rating: 4.7,
     reviews: 203,
     category: "Lighting",
     description: "Contemporary floor lamp with warm lighting."
   },
   {
-    id: 8,
+    id: 5,
     name: "King Size Bed Frame",
     price: 1199,
-    image: product1,
+    image: bed,
     rating: 4.9,
     reviews: 312,
     category: "Bedroom",
     badge: "Bestseller",
     description: "Premium king size bed frame with storage."
+  },
+  {
+    id: 6,
+    name: "Velvet Accent Chair",
+    price: 349,
+    image: chair,
+    rating: 4.8,
+    reviews: 145,
+    category: "Living Room",
+    description: "Luxurious velvet accent chair in deep colors."
+  },
+  {
+    id: 7,
+    name: "Minimalist Coffee Table",
+    price: 449,
+    image: table,
+    rating: 4.9,
+    reviews: 89,
+    category: "Living Room",
+    description: "Contemporary coffee table with clean lines."
+  },
+  {
+    id: 8,
+    name: "Oak Bookshelf",
+    price: 749,
+    discount: 30,
+    image: bed,
+    rating: 4.5,
+    reviews: 67,
+    category: "Office",
+    badge: "Sale",
+    description: "Premium oak bookshelf with adjustable shelves."
   }
 ];
 
@@ -96,37 +110,37 @@ export const categories = [
     id: 1,
     name: "Living Room",
     itemCount: 124,
-    image: product1
+    image: livingroom
   },
   {
     id: 2,
     name: "Bedroom",
     itemCount: 86,
-    image: product1
+    image: bedroom
   },
   {
     id: 3,
     name: "Kitchen",
     itemCount: 54,
-    image: product1
+    image: kitchen
   },
   {
     id: 4,
     name: "Office",
     itemCount: 42,
-    image: product1
+    image: office
   },
   {
     id: 5,
     name: "Outdoor",
     itemCount: 38,
-    image: product1
+    image: outdoor
   },
   {
     id: 6,
     name: "Lighting",
     itemCount: 67,
-    image: product1
+    image: lighting
   }
 ];
 
@@ -140,7 +154,7 @@ export const blogPosts = [
     date: "March 15, 2026",
     readTime: "5 min read",
     category: "Interior Design",
-    image: product1,
+    image: blog1,
     featured: true
   },
   {
@@ -152,7 +166,7 @@ export const blogPosts = [
     date: "March 10, 2026",
     readTime: "7 min read",
     category: "Sustainability",
-    image: product1,
+    image: blog1,
     featured: true
   },
   {
@@ -164,7 +178,7 @@ export const blogPosts = [
     date: "March 5, 2026",
     readTime: "6 min read",
     category: "Bedroom Design",
-    image: product1,
+    image: blog1,
     featured: false
   },
   {
@@ -176,7 +190,7 @@ export const blogPosts = [
     date: "February 28, 2026",
     readTime: "8 min read",
     category: "Interior Design",
-    image: product1,
+    image: blog1,
     featured: false
   },
   {
@@ -188,7 +202,7 @@ export const blogPosts = [
     date: "February 20, 2026",
     readTime: "6 min read",
     category: "Design Tips",
-    image: product1,
+    image: blog1,
     featured: false
   },
   {
@@ -200,7 +214,7 @@ export const blogPosts = [
     date: "February 15, 2026",
     readTime: "7 min read",
     category: "Office Design",
-    image: product1,
+    image: blog1,
     featured: false
   },
   {
@@ -212,7 +226,7 @@ export const blogPosts = [
     date: "February 10, 2026",
     readTime: "9 min read",
     category: "Space Saving",
-    image: product1,
+    image: blog1,
     featured: true
   },
   {
@@ -224,7 +238,7 @@ export const blogPosts = [
     date: "February 5, 2026",
     readTime: "5 min read",
     category: "Design Tips",
-    image: product1,
+    image: blog1,
     featured: false
   },
   {
@@ -236,7 +250,7 @@ export const blogPosts = [
     date: "January 30, 2026",
     readTime: "6 min read",
     category: "Outdoor Design",
-    image: product1,
+    image: blog1,
     featured: false
   },
   {
@@ -248,7 +262,7 @@ export const blogPosts = [
     date: "January 25, 2026",
     readTime: "7 min read",
     category: "Interior Design",
-    image: product1,
+    image: blog1,
     featured: false
   }
 ];

@@ -71,7 +71,7 @@ const WishlistCard = ({ item, onRemove, onAddToCart }) => {
 
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-slate-100">
-        <Link to={`/product/${item.id}`}>
+        <Link to={`/shop/${item.id}`}>
           <img
             src={item.image}
             alt={item.name}
@@ -122,7 +122,7 @@ const WishlistCard = ({ item, onRemove, onAddToCart }) => {
           )}
         </div>
 
-        <Link to={`/product/${item.id}`}>
+        <Link to={`/shop/${item.id}`}>
           <h3 className="font-bold text-slate-900 hover:text-accent transition-colors line-clamp-2 mb-3 leading-snug">
             {item.name}
           </h3>
@@ -160,7 +160,7 @@ const WishlistCard = ({ item, onRemove, onAddToCart }) => {
           </Button>
 
           <div className="flex gap-2">
-            <Link to={`/product/${item.id}`} className="flex-1">
+            <Link to={`/shop/${item.id}`} className="flex-1">
               <button className="w-full px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700">
                 View Details
               </button>
