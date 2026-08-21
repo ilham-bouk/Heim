@@ -1,6 +1,5 @@
 # Heim — Furniture E‑commerce
 
-
 A multi-page e-commerce website built with React and Vite for selling furniture. Heim includes a complete storefront experience with pages for browsing, product details, blog content, and user flows such as sign-in, cart, wishlist, and checkout-ready UI.
 
 ## Table of Contents
@@ -18,6 +17,10 @@ A multi-page e-commerce website built with React and Vite for selling furniture.
 
 ## Overview
 
+Heim is a modern, multi-page e-commerce storefront crafted for showcasing and selling furniture. It delivers a polished, responsive shopping experience with a clear focus on product discovery and conversion — featuring a browsable Shop, rich Product Detail pages, a lightweight Cart and Wishlist, and content-driven Blog pages to support marketing. The UI is designed for both desktop and mobile users, providing fast interactions, intuitive product filtering/search, and streamlined user flows for signing in/up and managing purchases, all wrapped in a cohesive visual system built with Tailwind CSS and Lucide icons.
+
+Under the hood, Heim is built with React and Vite for a snappy development experience and production build, and uses React Router for client-side navigation and Context (or similar local state) for cart and wishlist state. Its component-driven architecture makes it easy to extend or replace parts — for example, swapping mock data for a headless CMS, integrating a payments provider like Stripe, or adding persistent auth. The project is optimized for quick iteration and deployment (currently hosted on GitHub Pages), and follows best practices for accessibility and performance so it’s ready to be adapted into a full production storefront or used as a polished demo for portfolio and client work.
+
 ### Preview
 
 ![Heim Mockup](src/assets/Mockup.png)
@@ -29,13 +32,18 @@ Live Site URL: [View TrueCuisine](https://ilham-bouk.github.io/Heim/)
 ### Features
 
 - Responsive multi-page UI suitable for desktop and mobile
-- Product listing and detail pages
+Product listing and detail pages with image gallery
+ 
 - Client-side routing with React Router
-- Cart & Wishlist UI (local state)
+- Cart & Wishlist UI (local state, ready to be hooked to a backend) 
 - Auth UI mockups for Sign In / Sign Up
 - Blog and blog detail pages for content marketing
 - Search/filter basics on Shop page
-- Modern UI built with Tailwind CSS and Lucide React icons 
+- Modern UI built with Tailwind CSS and Lucide React icons
+- Accessibility & Performance
+    - Use semantic HTML and ARIA attributes where appropriate.
+    - Provide descriptive alt text for images.
+    - Lazy-load large images and defer non-critical resources.
 
 ---
 
