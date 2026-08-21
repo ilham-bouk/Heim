@@ -1,7 +1,8 @@
 import { ChevronRight, Users, Lightbulb, Target, Award, Heart, Zap, Check } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
-import heroImg from '../assets/heroImg.png';
+import aboutImg from '../assets/aboutImg.jpeg'
+import teamImg from '../assets/team-member.jpeg'
 
 const About = () => {
   return (
@@ -50,7 +51,7 @@ const About = () => {
             <div className="relative">
               <div className="aspect-4/3 overflow-hidden rounded-2xl bg-muted">
                 <img
-                  src={heroImg}
+                  src={aboutImg}
                   alt="Heim Furniture Showroom"
                   className="h-full w-full object-cover"
                 />
@@ -218,7 +219,7 @@ const About = () => {
             <div className="text-center">
               <div className="mb-6 overflow-hidden rounded-xl bg-slate-200 aspect-square">
                 <img
-                  src={heroImg}
+                  src={teamImg}
                   alt="Sarah Johnson"
                   className="w-full h-full object-cover"
                 />
@@ -234,7 +235,7 @@ const About = () => {
             <div className="text-center">
               <div className="mb-6 overflow-hidden rounded-xl bg-slate-200 aspect-square">
                 <img
-                  src={heroImg}
+                  src={teamImg}
                   alt="Michael Chen"
                   className="w-full h-full object-cover"
                 />
@@ -250,7 +251,7 @@ const About = () => {
             <div className="text-center">
               <div className="mb-6 overflow-hidden rounded-xl bg-slate-200 aspect-square">
                 <img
-                  src={heroImg}
+                  src={teamImg}
                   alt="Emma Rodriguez"
                   className="w-full h-full object-cover"
                 />
@@ -266,7 +267,7 @@ const About = () => {
             <div className="text-center">
               <div className="mb-6 overflow-hidden rounded-xl bg-slate-200 aspect-square">
                 <img
-                  src={heroImg}
+                  src={teamImg}
                   alt="David Park"
                   className="w-full h-full object-cover"
                 />
@@ -452,7 +453,7 @@ const About = () => {
             <div>
               <div className="rounded-2xl overflow-hidden bg-slate-200 aspect-4/3">
                 <img
-                  src={heroImg}
+                  src={aboutImg}
                   alt="Our Commitment to Quality"
                   className="w-full h-full object-cover"
                 />

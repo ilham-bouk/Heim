@@ -68,8 +68,8 @@ const Header = () => {
               to={item.href}
               className={`relative text-sm font-medium transition-colors pb-0.5 ${
                 isActive(item.href)
-                  ? 'text-foreground after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-foreground after:rounded-full'
-                  : 'text-foreground/70 hover:text-foreground'
+                  ? 'text-foreground'
+                  : 'text-foreground/60 hover:text-foreground'
               }`}
             >
               {item.name}
