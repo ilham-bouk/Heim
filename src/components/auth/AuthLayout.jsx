@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { ShoppingBag } from 'lucide-react';
+import { FREE_SHIPPING_THRESHOLD } from '../../utils/constants';
 
 const AuthLayout = ({ quote, subtext, children }) => {
   return (
@@ -41,7 +42,7 @@ const AuthLayout = ({ quote, subtext, children }) => {
         {/* Trust signals */}
         <div className="relative z-10 space-y-3">
           {[
-            'Free shipping on orders over $100',
+            `Free shipping on orders over $${FREE_SHIPPING_THRESHOLD}`,
             '30-day hassle-free returns',
             '2-year warranty on all products',
           ].map((item) => (

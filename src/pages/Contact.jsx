@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { ChevronRight, MapPin, Phone, Mail, Clock, Send, MessageSquare, AlertCircle, CheckCircle, ChevronDown } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, MessageSquare, AlertCircle, CheckCircle, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
+import Breadcrumb from '../components/ui/Breadcrumb';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -108,18 +109,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Breadcrumb */}
-      <div className="bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-4">
-          <nav className="flex items-center gap-2 text-sm text-slate-500">
-            <Link to="/" className="hover:text-slate-900 transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-slate-900 font-medium">Contact Us</span>
-          </nav>
-        </div>
-      </div>
+      <Breadcrumb items={[{ label: 'Contact Us' }]} />
 
       {/* Hero Section */}
       <section className="py-12 lg:py-20 bg-secondary">

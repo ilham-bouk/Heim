@@ -1,23 +1,13 @@
-import { useState } from 'react';
 import { Star, ShoppingCart } from 'lucide-react';
 import Button from './Button';
 import { Link } from 'react-router';
+import { getFinalPrice, getBadgeClass } from '../../utils/product';
 
 const ProductCard = ({ product }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const finalPrice = product.discount
-    ? Math.floor(product.price - (product.price * (product.discount / 100)))
-    : product.price;
-
   return (
     <div className="group bg-white">
       {/* Image Container */}
-      <div
-        className="relative aspect-square rounded-xl overflow-hidden bg-slate-100"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      <div className="relative aspect-square rounded-xl overflow-hidden bg-slate-100">
         <img
           src={product.image}
           alt={product.name}
@@ -26,26 +16,14 @@ const ProductCard = ({ product }) => {
 
         {/* Badge */}
         {product.badge && (
-          <span
-            className={`absolute top-3 left-3 px-3 py-1 rounded-lg text-xs font-semibold ${
-              product.badge === 'Sale'
-                ? 'bg-red-500 text-white'
-                : product.badge === 'New'
-                ? 'bg-blue-500 text-white'
-                : 'bg-purple-500 text-white'
-            }`}
-          >
+          <span className={`absolute top-3 left-3 px-3 py-1 rounded-lg text-xs font-semibold ${getBadgeClass(product.badge)}`}>
             {product.badge}
             {product.discount && product.badge === 'Sale' && ` -${product.discount}%`}
           </span>
         )}
 
-        {/* Add to Cart Button - Visible on Hover */}
-        <div
-          className={`absolute inset-3 bottom-3 flex items-end transition-all duration-300 ${
-            isHovered ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
+        {/* Add to Cart Button - Visible on Hover (desktop) */}
+        <div className="absolute inset-3 bottom-3 flex items-end opacity-100 transition-opacity duration-300 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100">
           <Button
             variant="primary"
             size="sm"
@@ -89,7 +67,7 @@ const ProductCard = ({ product }) => {
         {/* Price */}
         <div className="flex items-baseline gap-2">
           <span className="text-lg font-bold text-slate-900">
-            ${finalPrice}
+            ${getFinalPrice(product)}
           </span>
           {product.discount && (
             <span className="text-sm text-slate-500 line-through">

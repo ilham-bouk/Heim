@@ -1,4 +1,6 @@
 import { createContext, useState, useContext } from 'react';
+import { getFinalPrice } from '../utils/product';
+import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST } from '../utils/constants';
 
 const CartContext = createContext();
 
@@ -50,13 +52,14 @@ export const CartProvider = ({ children }) => {
 
   // Calculate totals
   const subtotal = cartItems.reduce((total, item) => {
-    const price = item.discount
-      ? Math.floor(item.price - (item.price * (item.discount / 100)))
-      : item.price;
-    return total + (price * item.quantity);
+    return total + (getFinalPrice(item) * item.quantity);
   }, 0);
 
-  const shipping = cartItems.length > 0 ? 10 : 0;
+  const shipping = cartItems.length === 0
+    ? 0
+    : subtotal >= FREE_SHIPPING_THRESHOLD
+      ? 0
+      : STANDARD_SHIPPING_COST;
   const tax = Math.round(subtotal * 0.1); // 10% tax
   const total = subtotal + shipping + tax;
 

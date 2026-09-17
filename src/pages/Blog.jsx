@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { ChevronRight, Search, Calendar, User, Clock, ArrowRight } from 'lucide-react';
+import { Search, Calendar, User, Clock, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
 import { blogPosts, blogCategories } from '../data/mockData';
+import Breadcrumb from '../components/ui/Breadcrumb';
+import NewsletterForm from '../components/ui/NewsletterForm';
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -21,19 +23,8 @@ const Blog = () => {
   const featuredPosts = blogPosts.filter(post => post.featured).slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Breadcrumb */}
-      <div className="bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-4">
-          <nav className="flex items-center gap-2 text-sm text-slate-500">
-            <Link to="/" className="hover:text-slate-900 transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-slate-900 font-medium">Blog</span>
-          </nav>
-        </div>
-      </div>
+    <div className="min-h-screen bg-white">      
+      <Breadcrumb items={[{ label: 'Blog' }]} />
 
       {/* Hero Section */}
       <section className="py-12 lg:py-20 bg-secondary">
@@ -265,16 +256,7 @@ const Blog = () => {
                 <p className="text-slate-600 text-sm mb-4">
                   Subscribe to get the latest design articles and inspiration delivered to your inbox.
                 </p>
-                <div className="space-y-3">
-                  <input
-                    type="email"
-                    placeholder="Your email"
-                    className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-sm"
-                  />
-                  <Button variant="primary" className="w-full">
-                    Subscribe
-                  </Button>
-                </div>
+                <NewsletterForm layout="stack" />
               </div>
             </aside>
           </div>

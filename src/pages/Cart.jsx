@@ -1,7 +1,10 @@
-import { ChevronRight, Trash2, Minus, Plus, ShoppingBag, ArrowLeft, Percent, Truck } from 'lucide-react';
+import { Trash2, Minus, Plus, ShoppingBag, ArrowLeft, Percent, Truck } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
 import { useCart } from '../context/CartContext';
+import { getFinalPrice } from '../utils/product';
+import Breadcrumb from '../components/ui/Breadcrumb';
+import { FREE_SHIPPING_THRESHOLD } from '../utils/constants';
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, subtotal, shipping, tax, total, itemCount } = useCart();
@@ -9,18 +12,7 @@ const Cart = () => {
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-white">
-        {/* Breadcrumb */}
-        <div className="bg-slate-50 border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 lg:px-8 py-4">
-            <nav className="flex items-center gap-2 text-sm text-slate-500">
-              <Link to="/" className="hover:text-slate-900 transition-colors">
-                Home
-              </Link>
-              <ChevronRight className="w-4 h-4" />
-              <span className="text-slate-900 font-medium">Shopping Cart</span>
-            </nav>
-          </div>
-        </div>
+        <Breadcrumb items={[{ label: 'Shopping Cart' }]} />
 
         {/* Empty Cart */}
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
@@ -48,18 +40,7 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Breadcrumb */}
-      <div className="bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-4">
-          <nav className="flex items-center gap-2 text-sm text-slate-500">
-            <Link to="/" className="hover:text-slate-900 transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-slate-900 font-medium">Shopping Cart</span>
-          </nav>
-        </div>
-      </div>
+      <Breadcrumb items={[{ label: 'Shopping Cart' }]} />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-12 lg:py-20">
@@ -73,10 +54,6 @@ const Cart = () => {
           <div className="lg:col-span-2">
             <div className="space-y-4">
               {cartItems.map((item) => {
-                const finalPrice = item.discount
-                  ? Math.floor(item.price - (item.price * (item.discount / 100)))
-                  : item.price;
-
                 return (
                   <div
                     key={item.id}
@@ -117,7 +94,7 @@ const Cart = () => {
                         {/* Price and Discount */}
                         <div className="mb-4 flex items-center gap-3">
                           <span className="text-2xl font-bold text-slate-900">
-                            ${finalPrice}
+                            ${getFinalPrice(item)}
                           </span>
                           {item.discount && (
                             <>
@@ -157,7 +134,7 @@ const Cart = () => {
                           <div className="ml-auto text-right">
                             <p className="text-sm text-slate-500 mb-1">Subtotal</p>
                             <p className="text-2xl font-bold text-slate-900">
-                              ${(finalPrice * item.quantity).toLocaleString()}
+                              ${(getFinalPrice(item) * item.quantity).toLocaleString()}
                             </p>
                           </div>
                         </div>
@@ -234,10 +211,10 @@ const Cart = () => {
               </div>
 
               {/* Free Shipping Info */}
-              {subtotal < 100 && (
+              {subtotal < FREE_SHIPPING_THRESHOLD && (
                 <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <p className="text-xs text-blue-900">
-                    <span className="font-semibold">Free shipping</span> on orders over $100. You're ${(100 - subtotal).toFixed(2)} away!
+                    <span className="font-semibold">Free shipping</span> on orders over ${FREE_SHIPPING_THRESHOLD}. You're ${(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(2)} away!
                   </p>
                 </div>
               )}

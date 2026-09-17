@@ -1,23 +1,13 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router';
-import { ChevronRight, Heart, Share2, ShoppingCart, Minus, Plus, Star, Truck, Shield, RotateCcw, Check } from 'lucide-react';
+import { Heart, Share2, ShoppingCart, Minus, Plus, Star, Truck, Shield, RotateCcw, Check } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useCart }     from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { products }    from '../data/mockData';
+import { getFinalPrice, getBadgeClass } from '../utils/product';
+import Breadcrumb from '../components/ui/Breadcrumb';
 
-const getFinalPrice = (item) =>
-  item.discount
-    ? Math.floor(item.price - (item.price * (item.discount / 100)))
-    : item.price;
-
-const getBadgeClass = (badge) => {
-  if (badge === 'Sale') return 'bg-red-500 text-white';
-  if (badge === 'New')  return 'bg-blue-500 text-white';
-  return 'bg-purple-500 text-white';
-};
-
-/* ─── ProductDetail ───────────────────────────────────────────────────── */
 const ProductDetail = () => {
   const { id } = useParams();
   const { addToCart, cartItems }          = useCart();
@@ -40,11 +30,6 @@ const ProductDetail = () => {
       </div>
     );
   }
-
-  const finalPrice  = getFinalPrice(product);
-  const savings     = product.discount
-    ? Math.floor(product.price * (product.discount / 100))
-    : 0;
 
   const productImages = [product.image];
 
@@ -70,26 +55,13 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-white">
-
-      {/* Breadcrumb */}
-      <div className="bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-4">
-          <nav className="flex items-center gap-2 text-sm text-slate-500">
-            <Link to="/"     className="hover:text-slate-900 transition-colors">Home</Link>
-            <ChevronRight className="w-4 h-4" />
-            <Link to="/shop" className="hover:text-slate-900 transition-colors">Shop</Link>
-            <ChevronRight className="w-4 h-4" />
-            <Link
-              to={`/shop?category=${product.category}`}
-              className="hover:text-slate-900 transition-colors"
-            >
-              {product.category}
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-slate-900 font-medium line-clamp-1">{product.name}</span>
-          </nav>
-        </div>
-      </div>
+      <Breadcrumb
+        items={[
+          { label: 'Shop', href: '/shop' },
+          { label: product.category, href: `/shop?category=${product.category}` },
+          { label: product.name },
+        ]}
+      />
 
       {/* Main product section */}
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-12">
@@ -165,7 +137,7 @@ const ProductDetail = () => {
             {/* Price */}
             <div className="mb-6 pb-6 border-b border-slate-200">
               <div className="flex items-baseline gap-3 mb-1">
-                <span className="text-4xl font-bold text-slate-900">${finalPrice}</span>
+                <span className="text-4xl font-bold text-slate-900">${getFinalPrice(product)}</span>
                 {product.discount && (
                   <span className="text-xl text-slate-400 line-through">${product.price}</span>
                 )}

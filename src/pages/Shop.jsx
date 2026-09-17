@@ -1,9 +1,9 @@
 import { useState } from "react"
-import { ChevronRight, SlidersHorizontal, X } from "lucide-react"
+import { SlidersHorizontal, X } from "lucide-react"
 import ProductCard from "../components/ui/Product-card"
 import Button from "../components/ui/Button"
 import { products, categories } from "../data/mockData"
-import { Link } from "react-router"
+import Breadcrumb from '../components/ui/Breadcrumb';
 
 const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -47,24 +47,12 @@ const Shop = () => {
   return (
     <div className="min-h-screen bg-white">
       <main>
-        {/* Breadcrumb */}
-        <div className="bg-slate-50 border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 py-4">
-            <nav className="flex items-center gap-2 text-sm text-slate-500">
-              <Link to="/" className="hover:text-slate-900 transition-colors">
-                Home
-              </Link>
-              <ChevronRight className="w-4 h-4" />
-              <span className="text-slate-900 font-medium">Shop</span>
-              {selectedCategory && (
-                <>
-                  <ChevronRight className="w-4 h-4" />
-                  <span className="text-slate-900 font-medium">{selectedCategory}</span>
-                </>
-              )}
-            </nav>
-          </div>
-        </div>
+        <Breadcrumb
+          items={selectedCategory
+              ? [{ label: 'Shop', href: '/shop' }, { label: selectedCategory }]
+              : [{ label: 'Shop' }]
+          }
+        />
 
         {/* Page Header */}
         <div className="bg-slate-50 border-b border-slate-200 pb-8">

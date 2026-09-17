@@ -1,38 +1,17 @@
 import { useState } from 'react';
-import { ChevronRight, Trash2, Heart, ShoppingBag, ArrowLeft, ShoppingCart, Star, X } from 'lucide-react';
+import { Trash2, Heart, ShoppingBag, ArrowLeft, ShoppingCart, Star, X } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
-
-const getFinalPrice = (item) =>
-  item.discount
-    ? Math.floor(item.price - (item.price * (item.discount / 100)))
-    : item.price;
-
-const getBadgeClass = (badge) => {
-  if (badge === 'Sale') return 'bg-red-500 text-white';
-  if (badge === 'New')  return 'bg-blue-500 text-white';
-  return 'bg-purple-500 text-white';
-};
-
-/* Breadcrumb */
-const Breadcrumb = () => (
-  <div className="bg-slate-50 border-b border-slate-200">
-    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-4">
-      <nav className="flex items-center gap-2 text-sm text-slate-500">
-        <Link to="/" className="hover:text-slate-900 transition-colors">Home</Link>
-        <ChevronRight className="w-4 h-4" />
-        <span className="text-slate-900 font-medium">Wishlist</span>
-      </nav>
-    </div>
-  </div>
-);
+import { getFinalPrice, getBadgeClass } from '../utils/product';
+import Breadcrumb from '../components/ui/Breadcrumb';
 
 /* Empty state */
 const EmptyWishlist = () => (
   <div className="min-h-screen bg-white">
-    <Breadcrumb />
+    <Breadcrumb items={[{ label: 'Wishlist' }]} />
+
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
       <div className="text-center">
         <div className="flex justify-center mb-6">
@@ -57,7 +36,6 @@ const EmptyWishlist = () => (
 
 /* Wishlist card */
 const WishlistCard = ({ item, onRemove, onAddToCart }) => {
-  const finalPrice = getFinalPrice(item);
   const [addedFeedback, setAddedFeedback] = useState(false);
 
   const handleAddToCart = () => {
@@ -130,7 +108,7 @@ const WishlistCard = ({ item, onRemove, onAddToCart }) => {
 
         {/* Price */}
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-xl font-bold text-slate-900">${finalPrice}</span>
+          <span className="text-xl font-bold text-slate-900">${getFinalPrice(item)}</span>
           {item.discount && (
             <>
               <span className="text-sm text-slate-400 line-through">${item.price}</span>
@@ -197,7 +175,7 @@ const Wishlist = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Breadcrumb />
+      <Breadcrumb items={[{ label: 'Wishlist' }]} />
 
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-12 lg:py-20">
 

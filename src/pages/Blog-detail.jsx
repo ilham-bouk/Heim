@@ -1,7 +1,9 @@
 import { useParams, Link } from 'react-router';
-import { ChevronRight, Calendar, User, Clock, ArrowLeft, ArrowRight, Share2, MessageCircle } from 'lucide-react';
+import { Calendar, User, Clock, ArrowLeft, ArrowRight, Share2, MessageCircle } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { blogPosts } from '../data/mockData';
+import Breadcrumb from '../components/ui/Breadcrumb';
+import NewsletterForm from '../components/ui/NewsletterForm';
 
 const BlogDetail = () => {
   const { id } = useParams();
@@ -56,22 +58,10 @@ const BlogDetail = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Breadcrumb */}
-      <div className="bg-slate-50 border-b border-slate-200">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8 py-4">
-          <nav className="flex items-center gap-2 text-sm text-slate-500">
-            <Link to="/" className="hover:text-slate-900 transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <Link to="/blog" className="hover:text-slate-900 transition-colors">
-              Blog
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-slate-900 font-medium line-clamp-1">{post.title}</span>
-          </nav>
-        </div>
-      </div>
+      <Breadcrumb
+        maxWidthClassName="max-w-4xl"
+        items={[{ label: 'Blog', href: '/blog' }, { label: post.title }]}
+      />
 
       {/* Hero Image Section */}
       <section className="relative h-96 md:h-125 lg:h-150 bg-slate-200 overflow-hidden">
@@ -284,13 +274,8 @@ const BlogDetail = () => {
             Subscribe to our newsletter and get the latest design tips and inspiration delivered to your inbox.
           </p>
           
-          <div className="max-w-md mx-auto flex gap-3">
-            <input
-              type="email"
-              placeholder="Your email"
-              className="flex-1 px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900"
-            />
-            <Button variant="primary">Subscribe</Button>
+          <div className="max-w-md mx-auto">
+            <NewsletterForm />
           </div>
         </div>
       </section>

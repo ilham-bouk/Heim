@@ -4,7 +4,7 @@ import Category from "../components/sections/Category"
 import ProductGrid from "../components/sections/ProductGrid"
 import PromoBanner from "../components/sections/Promo-banner"
 import TrendingNow from "../components/sections/Trending-now"
-import BlogSection from "../components/sections/blog-section"
+import BlogSection from "../components/sections/Blog-section"
 import Newsletter from "../components/sections/Newsletter"
 
 const Home = () => {

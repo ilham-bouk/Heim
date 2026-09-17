@@ -1,10 +1,11 @@
 import { Truck, Shield, Headphones, RefreshCw } from "lucide-react"
+import { FREE_SHIPPING_THRESHOLD } from '../../utils/constants';
 
 const features = [
   {
     icon: Truck,
     title: "Free Delivery",
-    description: "On orders over $500"
+    description: `On orders over $${FREE_SHIPPING_THRESHOLD}`
   },
   {
     icon: Shield,
