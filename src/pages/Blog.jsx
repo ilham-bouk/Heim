@@ -1,23 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router';
 import { Search, Calendar, User, Clock, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
-import { blogPosts, blogCategories } from '../data/mockData';
+import { getBlogPosts, getBlogCategories, searchBlogPosts } from '../services/blogService';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import NewsletterForm from '../components/ui/NewsletterForm';
 
 const Blog = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+  const blogPosts = getBlogPosts();
+  const blogCategories = getBlogCategories();
+
+  useEffect(() => {
+    const urlSearch = searchParams.get('search') || '';
+    setSearchQuery(urlSearch);
+  }, [searchParams]);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    setSearchParams(value ? { search: value } : {});
+  };
+
 
   // Filter posts based on category and search
-  const filteredPosts = blogPosts.filter(post => {
-    const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
-    const matchesSearch = 
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.category.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const filteredPosts = searchBlogPosts(blogPosts, searchQuery, selectedCategory);
 
   // Get featured posts
   const featuredPosts = blogPosts.filter(post => post.featured).slice(0, 3);
@@ -127,7 +137,7 @@ const Blog = () => {
                     type="text"
                     placeholder="Search articles..."
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={handleSearchChange}
                     className="w-full pl-12 pr-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 placeholder-slate-400"
                   />
                 </div>
@@ -199,6 +209,7 @@ const Blog = () => {
                     variant="primary"
                     onClick={() => {
                       setSearchQuery('');
+                      setSearchParams({});
                       setSelectedCategory('All');
                     }}
                   >

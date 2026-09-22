@@ -1,7 +1,7 @@
 import Button from '../ui/Button';
 import { ArrowRight } from "lucide-react"
 import ProductCard from "../ui/Product-card";
-import { products } from '../../data/mockData'
+import { getFeaturedProducts } from '../../services/productService'
 import { Link } from 'react-router';
 
 const TreandingNow = () => {
@@ -27,7 +27,7 @@ const TreandingNow = () => {
         </div>
         {/* Product grid */}
         <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
-          {products.slice(0, 4).map((product) => (
+          {getFeaturedProducts(4).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

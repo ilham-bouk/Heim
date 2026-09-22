@@ -1,16 +1,32 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSearchParams } from "react-router"
 import { SlidersHorizontal, X } from "lucide-react"
 import ProductCard from "../components/ui/Product-card"
 import Button from "../components/ui/Button"
-import { products, categories } from "../data/mockData"
+import { getProducts, getCategories } from "../services/productService"
 import Breadcrumb from '../components/ui/Breadcrumb';
 
 const Shop = () => {
-  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const categoryFromUrl = searchParams.get("category")
+  const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl || null)   
+
   const [sortBy, setSortBy] = useState("featured")
   const [minPrice, setMinPrice] = useState(0)
   const [maxPrice, setMaxPrice] = useState(2000)
   const [showFilters, setShowFilters] = useState(false)
+
+  const products = getProducts()
+  const categories = getCategories()
+
+  useEffect(() => {
+    setSelectedCategory(categoryFromUrl || null)
+  }, [categoryFromUrl])
+
+  const selectCategory = (name) => {
+    setSelectedCategory(name)
+    setSearchParams(name ? { category: name } : {})
+  }
 
   // Filter products by category
   let filtered = products.filter(product => {
@@ -38,7 +54,7 @@ const Shop = () => {
   const hasFilters = selectedCategory || minPrice > 0 || maxPrice < 2000
 
   const clearFilters = () => {
-    setSelectedCategory(null)
+    selectCategory(null)
     setMinPrice(0)
     setMaxPrice(2000)
     setSortBy("featured")
@@ -79,7 +95,7 @@ const Shop = () => {
                   <ul className="space-y-2">
                     <li>
                       <button
-                        onClick={() => setSelectedCategory(null)}
+                        onClick={() => selectCategory(null)}
                         className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors font-medium ${
                           selectedCategory === null
                             ? "bg-slate-900 text-white"
@@ -92,7 +108,7 @@ const Shop = () => {
                     {categories.map((cat) => (
                       <li key={cat.id}>
                         <button
-                          onClick={() => setSelectedCategory(cat.name)}
+                          onClick={() => selectCategory(cat.name)}
                           className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors font-medium flex justify-between ${
                             selectedCategory === cat.name
                               ? "bg-slate-900 text-white"
@@ -202,7 +218,7 @@ const Shop = () => {
                     <h4 className="text-sm font-bold text-slate-900 mb-3">Categories</h4>
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={() => setSelectedCategory(null)}
+                        onClick={() => selectCategory(null)}
                         className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                           selectedCategory === null
                             ? "bg-slate-900 text-white"
@@ -214,7 +230,7 @@ const Shop = () => {
                       {categories.map((cat) => (
                         <button
                           key={cat.id}
-                          onClick={() => setSelectedCategory(cat.name)}
+                          onClick={() => selectCategory(cat.name)}
                           className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                             selectedCategory === cat.name
                               ? "bg-slate-900 text-white"
@@ -268,7 +284,7 @@ const Shop = () => {
                     <div className="flex items-center gap-1 px-3 py-1 bg-slate-100 rounded-full text-sm font-medium">
                       {selectedCategory}
                       <button 
-                        onClick={() => setSelectedCategory(null)}
+                        onClick={() => selectCategory(null)}
                         className="ml-1 hover:text-slate-600"
                       >
                         <X className="w-3 h-3" />

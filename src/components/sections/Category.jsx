@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react"
-import { categories } from '../../data/mockData'
+import { getCategories } from '../../services/productService'
 import { Link } from "react-router";
 
 const Category = () => {
@@ -18,7 +18,7 @@ const Category = () => {
 
         {/* Category grid */}
         <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6 lg:gap-6">
-          {categories.map((category) => (
+          {getCategories().map((category) => (
             <div key={category.id} className="group relative overflow-hidden rounded-xl" >
               {/* Image */}
               <div className="aspect-4/5 overflow-hidden">
@@ -40,8 +40,8 @@ const Category = () => {
                 <p className="text-sm text-white/70">
                   {category.itemCount} items
                 </p>
-                <Link to="/shop"
-                  className="mt-2 gap-2 hover:gap-4 flex items-center text-sm font-medium text-white opacity-0 -translate-x-2.5 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
+                <Link to={`/shop?category=${encodeURIComponent(category.name)}`}
+                  className="mt-2 gap-2 hover:gap-4 flex items-center text-sm font-medium text-white opacity-0 -translate-x-2.5 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-focus-within:opacity-100 group-focus-within:translate-x-0">
                   Shop Now
                   <ArrowRight className="h-4 w-4" />
                 </Link>

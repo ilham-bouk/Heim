@@ -2,10 +2,10 @@ const Button = ({ children, variant = 'primary', size = 'md', className = '', ..
   const baseStyles = 'font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center';
   
   const variants = {
-    primary: 'bg-slate-900 text-white hover:bg-slate-800',
-    outline: 'border-2 border-slate-900 text-slate-900 hover:bg-slate-50',
-    ghost: 'text-slate-900 hover:bg-slate-100',
-    danger: 'bg-red-600 text-white hover:bg-red-700'
+    primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+    outline: 'border-2 border-primary text-primary hover:bg-secondary',
+    ghost: 'text-primary hover:bg-secondary',
+    danger: 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
   };
 
   const sizes = {

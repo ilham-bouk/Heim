@@ -3,6 +3,8 @@ import { MapPin, Phone, Mail, Clock, Send, MessageSquare, AlertCircle, CheckCirc
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
 import Breadcrumb from '../components/ui/Breadcrumb';
+import { isValidEmail } from '../utils/validators';
+import { contact as contactInfoConfig } from '../config/site';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +16,7 @@ const Contact = () => {
   });
 
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [formError, setFormError] = useState('');
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,26 +24,33 @@ const Contact = () => {
       ...prev,
       [name]: value
     }));
+    setErrors(prev => (prev[name] ? { ...prev, [name]: '' } : prev));
+  };
+
+  const validate = () => {
+    const nextErrors = {};
+
+    if (!formData.name) nextErrors.name = 'Full name is required';
+    if (!formData.email) nextErrors.email = 'Email is required';
+    else if (!isValidEmail(formData.email)) nextErrors.email = 'Please enter a valid email address';
+    if (!formData.subject) nextErrors.subject = 'Please select a subject';
+    if (!formData.message) nextErrors.message = 'Message is required';
+    
+    return nextErrors;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Validation
-    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
-      setFormError('Please fill in all required fields');
+    const nextErrors = validate();
+
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
       return;
     }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setFormError('Please enter a valid email address');
-      return;
-    }
-
-    console.log('Form submitted:', formData);
     
     setFormSubmitted(true);
-    setFormError('');
+    setErrors({});
     setFormData({
       name: '',
       email: '',
@@ -57,25 +66,25 @@ const Contact = () => {
     {
       icon: MapPin,
       title: "Visit Our Showroom",
-      details: ["123 Design Street", "New York, NY 10001"],
+      details: contactInfoConfig.address,
       link: "https://maps.google.com"
     },
     {
       icon: Phone,
       title: "Call Us",
-      details: ["+1 (555) 123-4567", "+1 (555) 123-4568"],
-      link: "tel:+15551234567"
+      details: [contactInfoConfig.phone, contactInfoConfig.phoneAlt],
+      link: `tel:${contactInfoConfig.phone.replace(/[^\d+]/g, '')}`
     },
     {
       icon: Mail,
       title: "Email Us",
-      details: ["info@heimfurniture.com", "support@heimfurniture.com"],
-      link: "mailto:info@heimfurniture.com"
+      details: [contactInfoConfig.email, contactInfoConfig.supportEmail],
+      link: `mailto:${contactInfoConfig.email}`
     },
     {
       icon: Clock,
       title: "Business Hours",
-      details: ["Monday - Friday: 9am - 6pm", "Saturday & Sunday: 10am - 4pm"],
+      details: contactInfoConfig.hours,
       link: null
     }
   ];
@@ -191,8 +200,17 @@ const Contact = () => {
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="John Doe"
-                      className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 placeholder-slate-400"
-                    />
+                      aria-invalid={!!errors.name}
+                      aria-describedby={errors.name ? 'name-error' : undefined}
+                      className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 text-foreground placeholder-muted-foreground ${
+                        errors.name ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
+                      }`}
+                     />
+                    {errors.name && (
+                      <p id="name-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.name}
+                      </p>
+                    )}
                   </div>
 
                   {/* Email */}
@@ -207,8 +225,17 @@ const Contact = () => {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="john@example.com"
-                      className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 placeholder-slate-400"
+                      aria-invalid={!!errors.email}
+                      aria-describedby={errors.email ? 'email-error' : undefined}
+                      className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 text-foreground placeholder-muted-foreground ${
+                        errors.email ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
+                      }`}
                     />
+                    {errors.email && (
+                      <p id="email-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.email}
+                      </p>
+                    )}
                   </div>
 
                   {/* Phone */}
@@ -223,7 +250,9 @@ const Contact = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="+1 (555) 123-4567"
-                      className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 placeholder-slate-400"
+                      className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 text-foreground placeholder-muted-foreground ${
+                        errors.phone ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
+                      }`}
                     />
                   </div>
 
@@ -237,7 +266,11 @@ const Contact = () => {
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900"
+                      aria-invalid={!!errors.subject}
+                      aria-describedby={errors.subject ? 'subject-error' : undefined}
+                      className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 text-foreground placeholder-muted-foreground ${
+                        errors.subject ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
+                      }`}
                     >
                       <option value="">Select a subject</option>
                       <option value="product-inquiry">Product Inquiry</option>
@@ -247,6 +280,11 @@ const Contact = () => {
                       <option value="general-question">General Question</option>
                       <option value="partnership">Partnership Opportunity</option>
                     </select>
+                    {errors.subject && (
+                      <p id="subject-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.subject}
+                      </p>
+                    )}
                   </div>
 
                   {/* Message */}
@@ -261,8 +299,17 @@ const Contact = () => {
                       onChange={handleChange}
                       placeholder="Tell us how we can help..."
                       rows="6"
-                      className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 placeholder-slate-400 resize-none"
+                      aria-invalid={!!errors.message}
+                      aria-describedby={errors.message ? 'message-error' : undefined}
+                      className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 text-foreground placeholder-muted-foreground ${
+                        errors.message ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
+                      }`}                    
                     />
+                    {errors.message && (
+                      <p id="message-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.message}
+                      </p>
+                    )}
                   </div>
 
                   {/* Submit Button */}
@@ -278,22 +325,19 @@ const Contact = () => {
                 </form>
 
                 {formSubmitted && (
-                  <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
-                    <div>
-                      <p className="font-semibold text-green-900">Thank you for your message!</p>
-                      <p className="text-sm text-green-700">We've received your inquiry and will get back to you soon.</p>
-                    </div>
+                  <div className="mb-6 p-4 bg-success/10 border border-success/30 rounded-lg flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-success mt-0.5 shrink-0" />
+                     <div>
+                      <p className="font-semibold text-success">Thank you for your message!</p>
+                      <p className="text-sm text-success">We've received your inquiry and will get back to you soon.</p>
+                     </div>
                   </div>
                 )}
 
-                {formError && (
-                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
-                    <div>
-                      <p className="font-semibold text-red-900">Error</p>
-                      <p className="text-sm text-red-700">{formError}</p>
-                    </div>
+                {Object.keys(errors).length > 0 && (
+                  <div className="mb-6 p-4 bg-danger/10 border border-danger/30 rounded-lg flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-danger mt-0.5 shrink-0" />
+                    <p className="font-semibold text-danger">Please fix the highlighted fields</p>
                   </div>
                 )}
 

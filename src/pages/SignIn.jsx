@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router';
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import Button from '../components/ui/Button';
 import AuthLayout from '../components/auth/AuthLayout';
+import { useAuth } from '../context/AuthContext';
+import { isValidEmail } from '../utils/validators';
 
 const FieldError = ({ message }) =>
   message ? (
@@ -22,6 +24,7 @@ const inputClass = (hasError) =>
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const { signIn } = useAuth();
 
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
@@ -32,7 +35,7 @@ const SignIn = () => {
     const e = {};
     if (!formData.email)
       e.email = 'Email is required';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+    else if (!isValidEmail(formData.email))
       e.email = 'Please enter a valid email address';
 
     if (!formData.password)
@@ -48,14 +51,16 @@ const SignIn = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
-    // console.log(e.target);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
     setIsLoading(true);
-    setTimeout(() => navigate('/'), 1000);
+    setTimeout(() => {
+      signIn({ email: formData.email });
+      navigate('/');
+    }, 1000);
   };
 
   return (

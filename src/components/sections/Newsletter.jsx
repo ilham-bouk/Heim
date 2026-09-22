@@ -1,18 +1,7 @@
-import { useState } from 'react';
 import { Mail } from 'lucide-react';
-import Input from '../ui/Input'
-import Button from '../ui/Button';
+import NewsletterForm from '../ui/NewsletterForm';
 
-const Newsletter = () => {
-  const [email, setEmail] = useState("")
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // Handle newsletter signup
-    console.log("Newsletter signup:", email)
-    setEmail("")
-  }
-  
+const Newsletter = () => {  
   return (
     <section className="py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
@@ -35,22 +24,9 @@ const Newsletter = () => {
               Get the latest updates on new arrivals, exclusive offers, and interior design tips delivered straight to your inbox.
             </p>
 
-            <form 
-              onSubmit={handleSubmit}
-              className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row"
-            >
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="flex-1 bg-card"
-              />
-              <Button className="bg-primary hover:bg-primary/90 cursor-pointer">
-                Subscribe
-              </Button>
-            </form>
+            <div className="mx-auto mt-8 max-w-md">
+              <NewsletterForm inputClassName="bg-card" />
+            </div>
 
             <p className="mt-4 text-xs text-muted-foreground">
               By subscribing, you agree to our Privacy Policy. Unsubscribe anytime.

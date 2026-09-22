@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router'
 import { CartProvider } from './context/CartContext'
 import { WishlistProvider } from './context/WishlistContext'
+import { AuthProvider } from './context/AuthContext'
 import Header from "./components/layout/Header"
 import Footer from "./components/layout/Footer"
 import Home from "./pages/Home"
@@ -19,29 +20,31 @@ import NotFound from './pages/NotFound'
 function App() {
   return (
     <BrowserRouter basename="/Heim">
-      <CartProvider>
-        <WishlistProvider>
-          <Header />
+      <AuthProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <Header />
 
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/shop/:id" element={<ProductDetail />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:id" element={<BlogDetail />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/shop/:id" element={<ProductDetail />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogDetail />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          
-          <Footer />          
-        </WishlistProvider>
-      </CartProvider>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            
+            <Footer />          
+          </WishlistProvider>
+        </CartProvider>
+      </AuthProvider>
     </BrowserRouter>
   )
 }

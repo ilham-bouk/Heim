@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router';
 import { Heart, Share2, ShoppingCart, Minus, Plus, Star, Truck, Shield, RotateCcw, Check } from 'lucide-react';
 import Button from '../components/ui/Button';
-import { useCart }     from '../context/CartContext';
+import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
-import { products }    from '../data/mockData';
+import { getProductById, getRelatedProducts } from '../services/productService';
 import { getFinalPrice, getBadgeClass } from '../utils/product';
 import Breadcrumb from '../components/ui/Breadcrumb';
 
@@ -17,7 +17,7 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [addedToCart, setAddedToCart]   = useState(false);
 
-  const product = products.find(p => p.id === parseInt(id));
+  const product = getProductById(id);
 
   if (!product) {
     return (
@@ -49,9 +49,7 @@ const ProductDetail = () => {
   const incQuantity = () => setQuantity(q => q + 1);
   const decQuantity = () => setQuantity(q => (q > 1 ? q - 1 : 1));
 
-  const relatedProducts = products
-    .filter(p => p.category === product.category && p.id !== product.id)
-    .slice(0, 4);
+  const relatedProducts = getRelatedProducts(product, 4);
 
   return (
     <div className="min-h-screen bg-white">

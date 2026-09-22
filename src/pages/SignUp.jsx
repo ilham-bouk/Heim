@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router';
 import { Mail, Lock, User, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import Button from '../components/ui/Button';
 import AuthLayout from '../components/auth/AuthLayout';
+import { useAuth } from '../context/AuthContext';
+import { isValidEmail } from '../utils/validators';
 
 const FieldError = ({ message }) =>
   message ? (
@@ -70,6 +72,7 @@ const PasswordStrengthBar = ({ password }) => {
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const { signUp } = useAuth();
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -93,7 +96,7 @@ const SignUp = () => {
 
     if (!formData.email)
       e.email = 'Email is required';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+    else if (!isValidEmail(formData.email))
       e.email = 'Please enter a valid email address';
 
     if (!formData.password)
@@ -123,7 +126,10 @@ const SignUp = () => {
     e.preventDefault();
     if (!validate()) return;
     setIsLoading(true);
-    setTimeout(() => navigate('/'), 1000);
+    setTimeout(() => {
+      signUp({ fullName: formData.fullName, email: formData.email });
+      navigate('/');
+    }, 1000);
   };
 
   return (

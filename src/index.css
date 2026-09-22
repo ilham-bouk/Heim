@@ -16,6 +16,10 @@
   --color-destructive: #c1483b;
   --color-destructive-foreground: #faf9f7;
   --color-ring: #d4a574;
+  --color-success: #1f9254;
+  --color-success-foreground: #f0fdf4;
+  --color-danger: #c1483b;
+  --color-danger-foreground: #faf9f7;
   
   /* Typography */
   --font-serif: "Playfair Display", serif;

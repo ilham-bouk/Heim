@@ -1,11 +1,14 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import { getFinalPrice } from '../utils/product';
-import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST } from '../utils/constants';
+import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST, TAX_RATE } from '../utils/constants';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const CartContext = createContext();
 
+const CART_STORAGE_KEY = 'heim_cart_items';
+
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useLocalStorage(CART_STORAGE_KEY, []);
 
   // Add item to cart
   const addToCart = (product, quantity = 1) => {
@@ -60,7 +63,7 @@ export const CartProvider = ({ children }) => {
     : subtotal >= FREE_SHIPPING_THRESHOLD
       ? 0
       : STANDARD_SHIPPING_COST;
-  const tax = Math.round(subtotal * 0.1); // 10% tax
+  const tax = Math.round(subtotal * TAX_RATE);
   const total = subtotal + shipping + tax;
 
   const value = {

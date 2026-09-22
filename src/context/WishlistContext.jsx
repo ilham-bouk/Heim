@@ -1,11 +1,13 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useContext } from 'react';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const WishlistContext = createContext();
 
-export const WishlistProvider = ({ children }) => {
-  const [wishlistItems, setWishlistItems] = useState([]);
+const WISHLIST_STORAGE_KEY = 'heim_wishlist_items';
 
-  // Use functional updater to avoid stale closure bugs
+export const WishlistProvider = ({ children }) => {
+  const [wishlistItems, setWishlistItems] = useLocalStorage(WISHLIST_STORAGE_KEY, []);
+
   const addToWishlist = (product) => {
     setWishlistItems(prev => {
       if (prev.find(item => item.id === product.id)) return prev;

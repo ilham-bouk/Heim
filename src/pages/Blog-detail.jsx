@@ -1,13 +1,13 @@
 import { useParams, Link } from 'react-router';
 import { Calendar, User, Clock, ArrowLeft, ArrowRight, Share2, MessageCircle } from 'lucide-react';
 import Button from '../components/ui/Button';
-import { blogPosts } from '../data/mockData';
+import { getBlogPostById, getRelatedBlogPosts, getAdjacentBlogPosts } from '../services/blogService';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import NewsletterForm from '../components/ui/NewsletterForm';
 
 const BlogDetail = () => {
   const { id } = useParams();
-  const post = blogPosts.find(p => p.id === parseInt(id));
+  const post = getBlogPostById(id);
 
   if (!post) {
     return (
@@ -22,13 +22,8 @@ const BlogDetail = () => {
   }
 
   // Get related posts (same category, different post)
-  const relatedPosts = blogPosts
-    .filter(p => p.category === post.category && p.id !== post.id)
-    .slice(0, 3);
-
-  const currentIndex = blogPosts.findIndex(p => p.id === post.id);
-  const previousPost = currentIndex > 0 ? blogPosts[currentIndex - 1] : null;
-  const nextPost = currentIndex < blogPosts.length - 1 ? blogPosts[currentIndex + 1] : null;
+  const relatedPosts = getRelatedBlogPosts(post, 3);
+  const { previous: previousPost, next: nextPost } = getAdjacentBlogPosts(post);
 
   // Expand content with sample sections
   const contentSections = [
