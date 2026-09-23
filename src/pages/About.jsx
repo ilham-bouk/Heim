@@ -221,6 +221,7 @@ const About = () => {
                 <img
                   src={teamImg}
                   alt="Sarah Johnson"
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -237,6 +238,7 @@ const About = () => {
                 <img
                   src={teamImg}
                   alt="Michael Chen"
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -253,6 +255,7 @@ const About = () => {
                 <img
                   src={teamImg}
                   alt="Emma Rodriguez"
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -269,6 +272,7 @@ const About = () => {
                 <img
                   src={teamImg}
                   alt="David Park"
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -455,6 +459,7 @@ const About = () => {
                 <img
                   src={aboutImg}
                   alt="Our Commitment to Quality"
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </div>

@@ -1,6 +1,11 @@
 import { ArrowRight } from "lucide-react"
 import { Link } from "react-router";
 
+/**
++ * Blog post preview card for grid listings (e.g. Home's blog section).
++ * The Blog listing page itself uses its own inline row layout, not this component.
++ * @param {object} post - post object from blogService
++ */
 const BlogCard = ({ post }) => {
   return (
     <article className="group">
@@ -10,6 +15,7 @@ const BlogCard = ({ post }) => {
           <img
             src={post.image}
             alt={post.title}
+            loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>

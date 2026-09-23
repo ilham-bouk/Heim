@@ -1,9 +1,9 @@
 import { useParams, Link } from 'react-router';
 import { Calendar, User, Clock, ArrowLeft, ArrowRight, Share2, MessageCircle } from 'lucide-react';
-import Button from '../components/ui/Button';
 import { getBlogPostById, getRelatedBlogPosts, getAdjacentBlogPosts } from '../services/blogService';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import NewsletterForm from '../components/ui/NewsletterForm';
+import NotFound from './NotFound';
 
 const BlogDetail = () => {
   const { id } = useParams();
@@ -11,13 +11,12 @@ const BlogDetail = () => {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-        <h1 className="text-3xl font-bold text-slate-900 mb-4">Article Not Found</h1>
-        <p className="text-slate-600 mb-8">The article you're looking for doesn't exist.</p>
-        <Link to="/blog">
-          <Button variant="primary">Back to Blog</Button>
-        </Link>
-      </div>
+      <NotFound
+        title="Article Not Found"
+        message="The article you're looking for doesn't exist or may have been removed."
+        backTo="/blog"
+        backLabel="Back to Blog"
+      />
     );
   }
 
@@ -225,6 +224,7 @@ const BlogDetail = () => {
                       <img
                         src={relPost.image}
                         alt={relPost.title}
+                        loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>

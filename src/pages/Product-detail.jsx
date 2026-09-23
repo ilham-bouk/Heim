@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router';
 import { Heart, Share2, ShoppingCart, Minus, Plus, Star, Truck, Shield, RotateCcw, Check } from 'lucide-react';
 import Button from '../components/ui/Button';
+import NotFound from './NotFound';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { getProductById, getRelatedProducts } from '../services/productService';
@@ -10,24 +11,23 @@ import Breadcrumb from '../components/ui/Breadcrumb';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const { addToCart, cartItems }          = useCart();
-  const { toggleWishlist, isInWishlist }  = useWishlist();
+  const { addToCart, cartItems } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
-  const [quantity, setQuantity]         = useState(1);
+  const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [addedToCart, setAddedToCart]   = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
 
   const product = getProductById(id);
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-        <h1 className="text-3xl font-bold text-slate-900 mb-4">Product Not Found</h1>
-        <p className="text-slate-600 mb-8">The product you're looking for doesn't exist.</p>
-        <Link to="/shop">
-          <Button variant="primary">Back to Shop</Button>
-        </Link>
-      </div>
+      <NotFound
+        title="Product Not Found"
+        message="The product you're looking for doesn't exist or may have been removed."
+        backTo="/shop"
+        backLabel="Back to Shop"
+      />
     );
   }
 
@@ -96,7 +96,7 @@ const ProductDetail = () => {
                         : 'border-slate-200 hover:border-slate-400'
                     }`}
                   >
-                    <img src={image} alt={`View ${index + 1}`} className="w-full h-full object-cover" />
+                    <img src={image} alt={`View ${index + 1}`} loading="lazy" className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -309,6 +309,7 @@ const ProductDetail = () => {
                         <img
                           src={rel.image}
                           alt={rel.name}
+                          loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                         {rel.badge && (

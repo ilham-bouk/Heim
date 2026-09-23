@@ -1,13 +1,40 @@
-import { Trash2, Minus, Plus, ShoppingBag, ArrowLeft, Percent, Truck } from 'lucide-react';
+import { useState } from 'react';
+import { Trash2, Minus, Plus, ShoppingBag, ArrowLeft, Truck, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
 import { useCart } from '../context/CartContext';
 import { getFinalPrice } from '../utils/product';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { FREE_SHIPPING_THRESHOLD } from '../utils/constants';
+import { getFeaturedProducts } from '../services/productService';
+import ProductCard from '../components/ui/Product-card';
+
+// Mock promo codes — front-end-only demo of the interaction.
+
+const MOCK_PROMO_CODES = { HEIM10: 0.1 };
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, subtotal, shipping, tax, total, itemCount } = useCart();
+  const [promoInput, setPromoInput] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState(null); // { code, discount }
+  const [promoError, setPromoError] = useState('');
+
+  const handleApplyPromo = () => {
+    const code = promoInput.trim().toUpperCase();
+    if (!code) return;
+
+    const discount = MOCK_PROMO_CODES[code];
+    if (discount) {
+      setAppliedPromo({ code, discount });
+      setPromoError('');
+    } else {
+      setAppliedPromo(null);
+      setPromoError('Invalid promo code');
+    }
+  };
+
+  const promoDiscountAmount = appliedPromo ? Math.round(subtotal * appliedPromo.discount) : 0;
+  const displayTotal = total - promoDiscountAmount;
 
   if (cartItems.length === 0) {
     return (
@@ -38,6 +65,11 @@ const Cart = () => {
     );
   }
 
+  // Recommend items not already in the cart
+  const relatedProducts = getFeaturedProducts(8)
+    .filter((p) => !cartItems.some((item) => item.id === p.id))
+    .slice(0, 4);
+
   return (
     <div className="min-h-screen bg-white">
       <Breadcrumb items={[{ label: 'Shopping Cart' }]} />
@@ -66,6 +98,7 @@ const Cart = () => {
                           <img
                             src={item.image}
                             alt={item.name}
+                            loading="lazy"
                             className="w-full h-full object-cover"
                           />
                         </div>
@@ -181,10 +214,18 @@ const Cart = () => {
                 <span className="font-semibold text-slate-900">${tax}</span>
               </div>
 
+              {/* Promo discount */}
+              {appliedPromo && (
+                <div className="flex justify-between mb-4 pb-4 border-b border-slate-200 text-success">
+                  <span>Promo ({appliedPromo.code})</span>
+                  <span className="font-semibold">-${promoDiscountAmount.toLocaleString()}</span>
+                </div>
+              )}
+
               {/* Total */}
               <div className="flex justify-between mb-6">
                 <span className="text-lg font-bold text-slate-900">Total</span>
-                <span className="text-2xl font-bold text-accent">${total.toLocaleString()}</span>
+                <span className="text-2xl font-bold text-accent">${displayTotal.toLocaleString()}</span>
               </div>
 
               {/* Checkout Button */}
@@ -202,12 +243,27 @@ const Cart = () => {
                     type="text"
                     id="promo"
                     placeholder="Enter code"
-                    className="flex-1 px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-sm"
+                    value={promoInput}
+                    onChange={(e) => setPromoInput(e.target.value)}
+                    disabled={!!appliedPromo}
+                    className="flex-1 px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-sm disabled:bg-slate-50 disabled:text-slate-400"
                   />
-                  <button className="px-3 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors text-sm font-medium">
+                  <button
+                    onClick={handleApplyPromo}
+                    disabled={!!appliedPromo}
+                    className="px-3 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
                     Apply
                   </button>
                 </div>
+
+                {appliedPromo && (
+                  <p className="flex items-center gap-1.5 text-xs text-success">
+                    <CheckCircle className="w-3.5 h-3.5" /> "{appliedPromo.code}" applied
+                  </p>
+                )}
+                {promoError && <p className="text-xs text-destructive">{promoError}</p>}
+                <p className="text-xs text-slate-400">Try code: HEIM10</p>
               </div>
 
               {/* Free Shipping Info */}
@@ -232,14 +288,9 @@ const Cart = () => {
         {/* Recommendations */}
         <div className="mt-16 pt-16 border-t border-slate-200">
           <h2 className="text-3xl font-bold text-slate-900 mb-8">You Might Also Like</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Placeholder cards for related products */}
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="bg-slate-50 rounded-lg p-4 text-center border border-slate-200">
-                <div className="w-full aspect-square bg-slate-200 rounded-lg mb-4" />
-                <h3 className="font-semibold text-slate-900 text-sm mb-2">Related Product {i}</h3>
-                <p className="text-accent font-bold">$XXX</p>
-              </div>
+          <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+            {relatedProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         </div>

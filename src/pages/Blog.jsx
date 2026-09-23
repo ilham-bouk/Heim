@@ -69,6 +69,7 @@ const Blog = () => {
                   <img
                     src={post.image}
                     alt={post.title}
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute top-4 left-4">
@@ -156,6 +157,7 @@ const Blog = () => {
                         <img
                           src={post.image}
                           alt={post.title}
+                          loading="lazy"
                           className="w-full h-48 sm:h-full object-cover"
                         />
                       </div>

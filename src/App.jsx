@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router'
 import { CartProvider } from './context/CartContext'
 import { WishlistProvider } from './context/WishlistContext'
 import { AuthProvider } from './context/AuthContext'
+import ScrollToTop from './components/ScrollToTop'
 import Header from "./components/layout/Header"
 import Footer from "./components/layout/Footer"
 import Home from "./pages/Home"
@@ -20,6 +21,7 @@ import NotFound from './pages/NotFound'
 function App() {
   return (
     <BrowserRouter basename="/Heim">
+      <ScrollToTop />
       <AuthProvider>
         <CartProvider>
           <WishlistProvider>

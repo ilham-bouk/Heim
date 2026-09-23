@@ -1,10 +1,15 @@
 import Button from '../ui/Button';
 import { ArrowRight } from "lucide-react"
 import ProductCard from "../ui/Product-card";
-import { getFeaturedProducts } from '../../services/productService'
 import { Link } from 'react-router';
 
-const TreandingNow = () => {
+/**
+ * @param {string} title - section heading
+ * @param {string} subtitle - supporting copy under the heading
+ * @param {Array<object>} products - products to render (caller decides which/how many)
+ * @param {string} [viewAllLink='/shop'] - destination for the "View All" button
+ */
+const ProductSection = ({ title, subtitle, products, viewAllLink = '/shop' }) => {
   return (
     <section className="py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
@@ -12,22 +17,22 @@ const TreandingNow = () => {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
             <h2 className="text-3xl font-bold text-foreground sm:text-4xl">
-              Trending Now
+              {title}
             </h2>
             <p className="mt-3 text-muted-foreground max-w-xl">
-              See what everyone is loving this season.
+              {subtitle}
             </p>
           </div>
           <Button variant="ghost">
-            <Link to="/shop" className="inline-flex items-center justify-center gap-3">
+            <Link to={viewAllLink} className="inline-flex items-center justify-center gap-3">
               View All
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
         </div>
         {/* Product grid */}
-        <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
-          {getFeaturedProducts(4).map((product) => (
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+          {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
@@ -36,4 +41,4 @@ const TreandingNow = () => {
   )
 }
 
-export default TreandingNow;
+export default ProductSection;

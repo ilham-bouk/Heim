@@ -2,7 +2,19 @@ import { Link, useNavigate } from 'react-router';
 import { ArrowLeft, Home } from 'lucide-react';
 import Button from '../components/ui/Button';
 
-const NotFound = () => {
+/**
+ * @param {string} [title='Page Not Found']
+ * @param {string} [message]
+ * @param {string} [backTo='/']
+ * @param {string} [backLabel='Back to Home']
+ */
+
+const NotFound = ({
+  title = 'Page Not Found',
+  message = "The page you're looking for doesn't exist or may have been moved. Let's get you back on track.",
+  backTo = '/',
+  backLabel = 'Back to Home',
+}) => {
   const navigate = useNavigate();
 
   return (
@@ -19,11 +31,10 @@ const NotFound = () => {
           {/* Floating card — sits over the 404 text */}
           <div className="-mt-10 lg:-mt-16 relative z-10">
             <h1 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-3">
-              Page Not Found
+              {title}
             </h1>
             <p className="text-slate-500 mb-10 max-w-sm mx-auto leading-relaxed">
-              The page you're looking for doesn't exist or may have been moved.
-              Let's get you back on track.
+              {message}
             </p>
 
             {/* Primary actions */}
@@ -37,14 +48,14 @@ const NotFound = () => {
                 <ArrowLeft className="w-4 h-4" />
                 Go Back
               </Button>
-              <Link to="/" className="w-full sm:w-auto">
+              <Link to={backTo} className="w-full sm:w-auto">
                 <Button
                   variant="outline"
                   size="lg"
                   className="w-full flex justify-center items-center gap-2 cursor-pointer"
                 >
                   <Home className="w-4 h-4" />
-                  Back to Home
+                  {backLabel}
                 </Button>
               </Link>
             </div>

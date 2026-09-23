@@ -1,3 +1,10 @@
+/**
+ * Base button primitive used across the template.
+ *
+ * @param {'primary'|'outline'|'ghost'|'danger'} [variant='primary']
+ * @param {'sm'|'md'|'lg'} [size='md']
+ * @param {string} [className] - extra classes, merged after variant/size
+ */
 const Button = ({ children, variant = 'primary', size = 'md', className = '', ...props }) => {
   const baseStyles = 'font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center';
   

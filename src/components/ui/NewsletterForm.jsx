@@ -1,6 +1,15 @@
 import { useState } from 'react';
 import Button from './Button';
 
+/**
+ * Reusable newsletter signup form (Home, Blog, Blog Detail). Manages its
+ * own email input + a brief "Subscribed!" confirmation. Doesn't call any
+ * API itself — wire `onSubscribe` up to your real provider (Mailchimp, etc).
+ *
+ * @param {'row'|'stack'} [layout='row']
+ * @param {string} [inputClassName]
+ * @param {(email: string) => void} [onSubscribe]
+ */
 const NewsletterForm = ({ layout = 'row', inputClassName = '', onSubscribe }) => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
