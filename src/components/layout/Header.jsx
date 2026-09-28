@@ -3,6 +3,7 @@ import { Menu, X, Heart, User, ShoppingBag } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { useAuth } from '../../context/AuthContext';
 
 const NAV_LINKS = [
   { name: 'Home', href: '/' },
@@ -25,8 +26,9 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  const { itemCount }      = useCart();
-  const { wishlistCount }  = useWishlist();
+  const { itemCount } = useCart();
+  const { wishlistCount } = useWishlist();
+  const { isAuthenticated } = useAuth();
 
   const isActive = (href) =>
     href === '/' ? location.pathname === '/' : location.pathname.startsWith(href);
@@ -81,20 +83,20 @@ const Header = () => {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-x-1">
 
           <Link
+            to={isAuthenticated ? '/account' : '/signin'}
+            aria-label={isAuthenticated ? 'My Account' : 'Sign in'}
+            className="relative inline-flex items-center justify-center p-2.5 rounded-lg text-foreground/60 hover:text-foreground hover:bg-accent/5 transition-all"
+          >
+            <User className="h-5 w-5" />
+          </Link>
+
+          <Link
             to="/wishlist"
             aria-label={`Wishlist (${wishlistCount} items)`}
             className="relative inline-flex items-center justify-center p-2.5 rounded-lg text-foreground/60 hover:text-foreground hover:bg-accent/5 transition-all"
           >
             <Heart className="h-5 w-5" />
             <Badge count={wishlistCount} />
-          </Link>
-
-          <Link
-            to="/signin"
-            aria-label="Account"
-            className="relative inline-flex items-center justify-center p-2.5 rounded-lg text-foreground/60 hover:text-foreground hover:bg-accent/5 transition-all"
-          >
-            <User className="h-5 w-5" />
           </Link>
 
           <Link
@@ -132,6 +134,16 @@ const Header = () => {
 
             {/* Icon actions */}
             <div className="flex items-center gap-2 pt-4 mt-2 border-t border-border">
+
+              <Link
+                to={isAuthenticated ? '/account' : '/signin'}
+                onClick={closeMobile}                
+                aria-label={isAuthenticated ? 'My Account' : 'Sign in'}
+                className="relative inline-flex items-center justify-center p-2.5 rounded-lg text-foreground/70 hover:text-foreground hover:bg-accent/5 transition-all"
+              >
+                <User className="h-5 w-5" />
+              </Link>
+
               <Link
                 to="/wishlist"
                 onClick={closeMobile}
@@ -140,15 +152,6 @@ const Header = () => {
               >
                 <Heart className="h-5 w-5" />
                 <Badge count={wishlistCount} />
-              </Link>
-
-              <Link
-                to="/signin"
-                onClick={closeMobile}
-                aria-label="Account"
-                className="relative inline-flex items-center justify-center p-2.5 rounded-lg text-foreground/70 hover:text-foreground hover:bg-accent/5 transition-all"
-              >
-                <User className="h-5 w-5" />
               </Link>
 
               <Link

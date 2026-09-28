@@ -277,3 +277,67 @@ export const blogCategories = [
   { id: 7, name: "Space Saving", count: 1 },
   { id: 8, name: "Outdoor Design", count: 1 }
 ];
+
+export const mockOrders = [
+  {
+    id: 'HEIM-10231',
+    date: '2026-02-14',
+    status: 'Delivered',
+    items: [
+      { productId: 1, name: 'Modern Lounge Chair', image: chair, price: 299, quantity: 1 },
+      { productId: 4, name: 'Modern Floor Lamp', image: lamp, price: 189, quantity: 2 },
+    ],
+    subtotal: 677,
+    shipping: 0,
+    tax: 68,
+    total: 745,
+    shippingAddress: {
+      fullName: 'Jane Doe',
+      line1: '123 Design Street',
+      city: 'New York',
+      state: 'NY',
+      zip: '10001',
+      country: 'United States',
+    },
+  },
+  {
+    id: 'HEIM-10198',
+    date: '2026-01-02',
+    status: 'Shipped',
+    items: [
+      { productId: 3, name: 'Wooden Dining Table', image: table, price: 899, quantity: 1 },
+    ],
+    subtotal: 899,
+    shipping: 0,
+    tax: 90,
+    total: 989,
+    shippingAddress: {
+      fullName: 'Jane Doe',
+      line1: '123 Design Street',
+      city: 'New York',
+      state: 'NY',
+      zip: '10001',
+      country: 'United States',
+    },
+  },
+  {
+    id: 'HEIM-10102',
+    date: '2025-11-20',
+    status: 'Cancelled',
+    items: [
+      { productId: 2, name: 'Scandinavian Sofa', image: sofa, price: 1599, quantity: 1 },
+    ],
+    subtotal: 1599,
+    shipping: 0,
+    tax: 160,
+    total: 1759,
+    shippingAddress: {
+      fullName: 'Jane Doe',
+      line1: '123 Design Street',
+      city: 'New York',
+      state: 'NY',
+      zip: '10001',
+      country: 'United States',
+    },
+  },
+];

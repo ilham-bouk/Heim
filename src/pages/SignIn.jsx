@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router';
+import { useNavigate, useLocation, Link } from 'react-router';
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import Button from '../components/ui/Button';
 import AuthLayout from '../components/auth/AuthLayout';
@@ -24,6 +24,7 @@ const inputClass = (hasError) =>
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { signIn } = useAuth();
 
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -56,10 +57,11 @@ const SignIn = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
+    
     setIsLoading(true);
     setTimeout(() => {
       signIn({ email: formData.email });
-      navigate('/');
+      navigate(location.state?.from?.pathname || '/');
     }, 1000);
   };
 
