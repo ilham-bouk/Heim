@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import { User, Mail, Phone, Cake, Truck, Pencil } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getActiveOrders } from '../services/orderService';
+import { useOrders } from '../context/OrderContext';
 
 const STATUS_MESSAGE = {
   Processing: 'is being prepared',
@@ -27,7 +27,7 @@ const formatBirthday = (value) => {
 
 const AccountProfile = () => {
   const { user } = useAuth();
-  const activeOrders = getActiveOrders();
+  const { activeOrders } = useOrders();
 
   return (
     <div className="space-y-6">

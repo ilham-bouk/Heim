@@ -1,18 +1,9 @@
-// Order data service — see productService.js for the reasoning behind this
-// pattern. Currently backed by mock data since there's no Checkout flow yet
-// to generate real orders.
-//
-// To wire this up for real: once Checkout exists, have it write completed
-// orders into a `heim_orders` localStorage key (via useLocalStorage, same
-// as Cart/Wishlist/Address), using the Order shape documented below. This
-// file's functions can then read from that key instead of mockOrders, and
-// every component that calls getOrders()/getOrderById() keeps working
-// unchanged.
-//
-// To wire a real backend later: replace each function body with a
-// fetch/axios call scoped to the signed-in user (e.g. GET /me/orders).
-
 import { mockOrders } from '../data/mockData';
+import { getFinalPrice } from '../utils/product';
+
+// Order data helpers. Persistence/state lives in context/OrderContext.jsx.
+// Real-backend seams: OrderContext.placeOrder → POST /orders,
+// OrderContext `orders` → GET /me/orders. `buildOrder` disappears (server builds it).
 
 /**
  * Order shape:
@@ -26,21 +17,57 @@ import { mockOrders } from '../data/mockData';
  *   subtotal: number,
  *   shipping: number,
  *   tax: number,
+ *   discount?: number,
  *   total: number,
  *   shippingAddress: {
- *     fullName: string, line1: string, city: string, state: string, zip: string, country: string
- *   }
+ *     fullName: string, line1: string, line2?: string, city: string, state: string, zip: string, country: string
+ *   },
+ *   payment?: { brand: string, last4: string },
+ *   email?: string 
  * }
- *
- * Note: `items[].price` is the price actually paid at checkout, not a live
- * reference to the product's current price/discount — an order shouldn't
- * change retroactively if the catalog changes later.
  */
+export const getSeedOrders = () => mockOrders;
 
-export const getOrders = () => mockOrders;
+export const isActiveOrder = (order) => ['Processing', 'Shipped'].includes(order.status);
 
-export const getOrderById = (id) =>
-  mockOrders.find((order) => order.id === id) || null;
+const ORDER_ID_PREFIX = 'HEIM-';
+const ORDER_ID_FLOOR = 10000;
 
-export const getActiveOrders = () =>
-  mockOrders.filter((order) => ['Processing', 'Shipped'].includes(order.status));
+// Next sequential ID across every known order, e.g. HEIM-10232.
+const getNextOrderId = (existingOrders) => {
+  const highest = existingOrders.reduce(
+    (max, order) => Math.max(max, parseInt(order.id.replace(ORDER_ID_PREFIX, ''), 10) || 0),
+    ORDER_ID_FLOOR
+  );
+  return `${ORDER_ID_PREFIX}${highest + 1}`;
+};
+
+const toShippingAddress = ({ fullName, line1, line2, city, state, zip, country }) => ({
+  fullName, line1, line2, city, state, zip, country,
+});
+
+/**
+ * Builds an Order in the shape documented above from checkout data.
+ * `items[].price` is the unit price actually charged (discount applied), so the
+ * order doesn't change if the catalog changes later.
+ */
+export const buildOrder = ({ cartItems, totals, shippingAddress, payment, email }, existingOrders = []) => ({
+  id: getNextOrderId(existingOrders),
+  date: new Date().toISOString(),
+  status: 'Processing',
+  items: cartItems.map((item) => ({
+    productId: item.id,
+    name: item.name,
+    image: item.image,
+    price: getFinalPrice(item),
+    quantity: item.quantity,
+  })),
+  subtotal: totals.subtotal,
+  shipping: totals.shipping,
+  tax: totals.tax,
+  discount: totals.discount,
+  total: totals.total,
+  shippingAddress: toShippingAddress(shippingAddress),
+  payment: { brand: payment.brand, last4: payment.last4 },
+  email,
+});

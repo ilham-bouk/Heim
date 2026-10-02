@@ -1,18 +1,10 @@
 import { createContext, useContext } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { detectBrand } from '../utils/payment';
 
 const PaymentMethodContext = createContext();
 
 const PAYMENT_STORAGE_KEY = 'heim_payment_methods';
-
-const detectBrand = (cardNumber) => {
-  const digit = cardNumber.trim()[0];
-  if (digit === '4') return 'Visa';
-  if (digit === '5') return 'Mastercard';
-  if (digit === '3') return 'Amex';
-  if (digit === '6') return 'Discover';
-  return 'Card';
-};
 
 /**
  * Payment method shape:
@@ -51,6 +43,8 @@ export const PaymentMethodProvider = ({ children }) => {
         : prev;
       return [...next, newMethod];
     });
+
+    return newMethod;
   };
 
   const removePaymentMethod = (id) => {

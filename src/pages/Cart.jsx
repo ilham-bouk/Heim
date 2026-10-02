@@ -9,32 +9,16 @@ import { FREE_SHIPPING_THRESHOLD } from '../utils/constants';
 import { getFeaturedProducts } from '../services/productService';
 import ProductCard from '../components/ui/Product-card';
 
-// Mock promo codes — front-end-only demo of the interaction.
-
-const MOCK_PROMO_CODES = { HEIM10: 0.1 };
-
 const Cart = () => {
-  const { cartItems, removeFromCart, updateQuantity, subtotal, shipping, tax, total, itemCount } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, subtotal, shipping, tax, discount, appliedPromo, applyPromo, total, itemCount } = useCart();
   const [promoInput, setPromoInput] = useState('');
-  const [appliedPromo, setAppliedPromo] = useState(null); // { code, discount }
   const [promoError, setPromoError] = useState('');
 
   const handleApplyPromo = () => {
-    const code = promoInput.trim().toUpperCase();
-    if (!code) return;
-
-    const discount = MOCK_PROMO_CODES[code];
-    if (discount) {
-      setAppliedPromo({ code, discount });
-      setPromoError('');
-    } else {
-      setAppliedPromo(null);
-      setPromoError('Invalid promo code');
-    }
+    if (!promoInput.trim()) return;
+    const result = applyPromo(promoInput);
+    setPromoError(result.ok ? '' : result.error);
   };
-
-  const promoDiscountAmount = appliedPromo ? Math.round(subtotal * appliedPromo.discount) : 0;
-  const displayTotal = total - promoDiscountAmount;
 
   if (cartItems.length === 0) {
     return (
@@ -218,18 +202,18 @@ const Cart = () => {
               {appliedPromo && (
                 <div className="flex justify-between mb-4 pb-4 border-b border-slate-200 text-success">
                   <span>Promo ({appliedPromo.code})</span>
-                  <span className="font-semibold">-${promoDiscountAmount.toLocaleString()}</span>
+                  <span className="font-semibold">-${discount.toLocaleString()}</span>
                 </div>
               )}
 
               {/* Total */}
               <div className="flex justify-between mb-6">
                 <span className="text-lg font-bold text-slate-900">Total</span>
-                <span className="text-2xl font-bold text-accent">${displayTotal.toLocaleString()}</span>
+                <span className="text-2xl font-bold text-accent">${total.toLocaleString()}</span>
               </div>
 
               {/* Checkout Button */}
-              <Button variant="primary" className="w-full mb-4">
+              <Button as={Link} to="/checkout" variant="primary" className="w-full mb-4">
                 Proceed to Checkout
               </Button>
 

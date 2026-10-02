@@ -1,5 +1,5 @@
 import { Package } from 'lucide-react';
-import { getOrders } from '../services/orderService';
+import { useOrders } from '../context/OrderContext';
 
 const STATUS_STYLES = {
   Delivered: 'bg-success/10 text-success',
@@ -9,7 +9,7 @@ const STATUS_STYLES = {
 };
 
 const AccountOrders = () => {
-  const orders = getOrders();
+  const { orders } = useOrders();
 
   if (orders.length === 0) {
     return (

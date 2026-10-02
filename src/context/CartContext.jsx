@@ -1,14 +1,16 @@
 import { createContext, useContext } from 'react';
 import { getFinalPrice } from '../utils/product';
-import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST, TAX_RATE } from '../utils/constants';
+import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST, TAX_RATE, PROMO_CODES } from '../utils/constants';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const CartContext = createContext();
 
 const CART_STORAGE_KEY = 'heim_cart_items';
+const PROMO_STORAGE_KEY = 'heim_cart_promo';
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useLocalStorage(CART_STORAGE_KEY, []);
+  const [appliedPromo, setAppliedPromo] = useLocalStorage(PROMO_STORAGE_KEY, null); // { code, rate }
 
   // Add item to cart
   const addToCart = (product, quantity = 1) => {
@@ -51,6 +53,17 @@ export const CartProvider = ({ children }) => {
   // Clear cart
   const clearCart = () => {
     setCartItems([]);
+    setAppliedPromo(null);
+  };
+
+  // Returns { ok: true } or { ok: false, error }. Swap for an API call later.
+  const applyPromo = (rawCode) => {
+    const code = rawCode.trim().toUpperCase();
+    const rate = PROMO_CODES[code];
+    if (!rate) return { ok: false, error: 'Invalid promo code' };
+    
+    setAppliedPromo({ code, rate });
+    return { ok: true };
   };
 
   // Calculate totals
@@ -64,7 +77,10 @@ export const CartProvider = ({ children }) => {
       ? 0
       : STANDARD_SHIPPING_COST;
   const tax = Math.round(subtotal * TAX_RATE);
-  const total = subtotal + shipping + tax;
+
+  // Mock simplification: shipping/tax are computed on the pre-discount subtotal.
+  const discount = appliedPromo ? Math.round(subtotal * appliedPromo.rate) : 0;
+  const total = subtotal + shipping + tax - discount;
 
   const value = {
     cartItems,
@@ -75,6 +91,9 @@ export const CartProvider = ({ children }) => {
     subtotal,
     shipping,
     tax,
+    discount,
+    appliedPromo,
+    applyPromo,
     total,
     itemCount: cartItems.reduce((count, item) => count + item.quantity, 0)
   };

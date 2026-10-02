@@ -3,9 +3,10 @@
  *
  * @param {'primary'|'outline'|'ghost'|'danger'} [variant='primary']
  * @param {'sm'|'md'|'lg'} [size='md']
+ * @param {React.ElementType} [as='button'] - render as another element/component, e.g. react-router's Link
  * @param {string} [className] - extra classes, merged after variant/size
  */
-const Button = ({ children, variant = 'primary', size = 'md', className = '', ...props }) => {
+const Button = ({ as: Component = 'button', children,  variant = 'primary', size = 'md', className = '', ...props }) => {
   const baseStyles = 'font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center';
   
   const variants = {
@@ -22,12 +23,12 @@ const Button = ({ children, variant = 'primary', size = 'md', className = '', ..
   };
 
   return (
-    <button 
+    <Component 
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
       {children}
-    </button>
+    </Component>
   );
 }
 

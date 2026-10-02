@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router';
+import { useNavigate, useLocation, Link } from 'react-router';
 import { Mail, Lock, User, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import Button from '../components/ui/Button';
 import AuthLayout from '../components/auth/AuthLayout';
@@ -72,6 +72,7 @@ const PasswordStrengthBar = ({ password }) => {
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { signUp } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -128,7 +129,7 @@ const SignUp = () => {
     setIsLoading(true);
     setTimeout(() => {
       signUp({ fullName: formData.fullName, email: formData.email });
-      navigate('/');
+      navigate(location.state?.from?.pathname || '/');
     }, 1000);
   };
 
@@ -144,6 +145,7 @@ const SignUp = () => {
           Already have an account?{' '}
           <Link
             to="/signin"
+            state={location.state}
             className="text-slate-900 font-semibold underline underline-offset-2 hover:text-slate-600 transition-colors"
           >
             Sign in

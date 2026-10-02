@@ -4,10 +4,15 @@ import { WishlistProvider } from './context/WishlistContext'
 import { AuthProvider } from './context/AuthContext'
 import { AddressProvider } from './context/AddressContext'
 import { PaymentMethodProvider } from './context/PaymentMethodContext'
+import { OrderProvider } from './context/OrderContext'
+import { CheckoutProvider } from './context/CheckoutContext'
 import ScrollToTop from './components/ScrollToTop'
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import CheckoutLayout from './components/checkout/CheckoutLayout'
+import CheckoutGuard from './components/checkout/CheckoutGuard'
 import Header from "./components/layout/Header"
 import Footer from "./components/layout/Footer"
+
 import Home from "./pages/Home"
 import Shop from "./pages/Shop"
 import ProductDetail from './pages/Product-detail'
@@ -25,6 +30,12 @@ import AccountOrders from './pages/Account-orders'
 import AccountAddresses from './pages/Account-addresses'
 import AccountWallet from './pages/Account-wallet'
 import AccountSettings from './pages/Account-settings'
+import CheckoutAccount from './pages/Checkout-account'
+import CheckoutShipping from './pages/Checkout-shipping'
+import CheckoutPayment from './pages/Checkout-payment'
+import CheckoutReview from './pages/Checkout-review'
+import CheckoutConfirmation from './pages/Checkout-confirmation'
+
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -36,35 +47,52 @@ function App() {
           <WishlistProvider>
             <AddressProvider>
               <PaymentMethodProvider>
-                <Header />
+                <OrderProvider>
+                  <CheckoutProvider>
+                    <Header />
 
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/shop" element={<Shop />} />
-                  <Route path="/shop/:id" element={<ProductDetail />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/blog" element={<Blog />} />
-                  <Route path="/blog/:id" element={<BlogDetail />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/cart" element={<Cart />} />
-                  <Route path="/wishlist" element={<Wishlist />} />
-                  <Route path="/signin" element={<SignIn />} />
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route element={<ProtectedRoute />}>
-                    <Route path="/account" element={<AccountLayout />}>
-                      <Route index element={<Navigate to="profile" replace />} />
-                      <Route path="profile" element={<AccountProfile />} />
-                      <Route path="orders" element={<AccountOrders />} />
-                      <Route path="addresses" element={<AccountAddresses />} />
-                      <Route path="wallet" element={<AccountWallet />} />
-                      <Route path="settings" element={<AccountSettings />} />
-                    </Route>
-                  </Route>
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/shop" element={<Shop />} />
+                      <Route path="/shop/:id" element={<ProductDetail />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/blog" element={<Blog />} />
+                      <Route path="/blog/:id" element={<BlogDetail />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/cart" element={<Cart />} />
+                      
+                      <Route path="/checkout" element={<CheckoutLayout />}>
+                        <Route path="account" element={<CheckoutAccount />} />
+                        <Route element={<CheckoutGuard />}>
+                          <Route index element={<Navigate to="/checkout/shipping" replace />} />
+                          <Route path="shipping" element={<CheckoutShipping />} />
+                          <Route path="payment" element={<CheckoutPayment />} />
+                          <Route path="review" element={<CheckoutReview />} />
+                        </Route>
+                        <Route path="confirmation/:orderId" element={<CheckoutConfirmation />} />
+                      </Route>
 
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-                
-                <Footer />
+                      <Route path="/wishlist" element={<Wishlist />} />
+                      <Route path="/signin" element={<SignIn />} />
+                      <Route path="/signup" element={<SignUp />} />
+                      
+                      <Route element={<ProtectedRoute />}>
+                        <Route path="/account" element={<AccountLayout />}>
+                          <Route index element={<Navigate to="profile" replace />} />
+                          <Route path="profile" element={<AccountProfile />} />
+                          <Route path="orders" element={<AccountOrders />} />
+                          <Route path="addresses" element={<AccountAddresses />} />
+                          <Route path="wallet" element={<AccountWallet />} />
+                          <Route path="settings" element={<AccountSettings />} />
+                        </Route>
+                      </Route>
+
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                    
+                    <Footer />
+                  </CheckoutProvider>
+                </OrderProvider>
               </PaymentMethodProvider>
             </AddressProvider>
           </WishlistProvider>

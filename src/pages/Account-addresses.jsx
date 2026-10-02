@@ -1,12 +1,8 @@
 import { useState } from 'react';
 import { MapPin, Plus, Pencil, Trash2, Check } from 'lucide-react';
 import Button from '../components/ui/Button';
-import Input from '../components/ui/Input';
+import AddressForm from '../components/forms/AddressForm';
 import { useAddresses } from '../context/AddressContext';
-
-const EMPTY_FORM = {
-  label: '', fullName: '', line1: '', line2: '', city: '', state: '', zip: '', country: '',
-};
 
 /**
  * Addresses tab. Lives on AddressContext (not local state) because
@@ -17,34 +13,17 @@ const AccountAddresses = () => {
   const { addresses, addAddress, updateAddress, removeAddress, setDefaultAddress } = useAddresses();
 
   const [editingId, setEditingId] = useState(null); // null = closed, 'new' = adding, else = editing that id
-  const [formData, setFormData] = useState(EMPTY_FORM);
+  const editingAddress = addresses.find((a) => a.id === editingId);
 
-  const startAdd = () => {
-    setFormData(EMPTY_FORM);
-    setEditingId('new');
-  };
+  const startAdd = () => setEditingId('new');
+  const startEdit = (address) => setEditingId(address.id);
+  const cancelForm = () => setEditingId(null);
 
-  const startEdit = (address) => {
-    setFormData(address);
-    setEditingId(address.id);
-  };
-
-  const cancelForm = () => {
-    setEditingId(null);
-    setFormData(EMPTY_FORM);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (values) => {
     if (editingId === 'new') {
-      addAddress(formData);
+      addAddress(values);
     } else {
-      updateAddress(editingId, formData);
+      updateAddress(editingId, values);
     }
     cancelForm();
   };
@@ -66,31 +45,16 @@ const AccountAddresses = () => {
         )}
       </div>
 
-      {/* Add/Edit form */}
+      {/* Add/Edit form — `key` resets the form's state when switching edit targets */}
       {isFormOpen && (
-        <form onSubmit={handleSubmit} className="mb-8 p-5 rounded-lg border border-border bg-secondary/40 space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input name="label" placeholder="Label (e.g. Home, Work)" value={formData.label} onChange={handleChange} required />
-            <Input name="fullName" placeholder="Full name" value={formData.fullName} onChange={handleChange} required />
-          </div>
-          <Input name="line1" placeholder="Address line 1" value={formData.line1} onChange={handleChange} required />
-          <Input name="line2" placeholder="Address line 2 (optional)" value={formData.line2} onChange={handleChange} />
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Input name="city" placeholder="City" value={formData.city} onChange={handleChange} required />
-            <Input name="state" placeholder="State" value={formData.state} onChange={handleChange} required />
-            <Input name="zip" placeholder="ZIP code" value={formData.zip} onChange={handleChange} required />
-          </div>
-          <Input name="country" placeholder="Country" value={formData.country} onChange={handleChange} required />
-
-          <div className="flex items-center gap-3 pt-2">
-            <Button type="submit" variant="primary" size="sm">
-              {editingId === 'new' ? 'Add Address' : 'Save Changes'}
-            </Button>
-            <Button type="button" variant="ghost" size="sm" onClick={cancelForm}>
-              Cancel
-            </Button>
-          </div>
-        </form>
+        <AddressForm
+          key={editingId}
+          initialValues={editingAddress}
+          submitLabel={editingId === 'new' ? 'Add Address' : 'Save Changes'}
+          onSubmit={handleSubmit}
+          onCancel={cancelForm}
+          className="mb-8"
+        />
       )}
 
       {/* List */}

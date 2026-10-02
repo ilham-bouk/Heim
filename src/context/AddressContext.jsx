@@ -37,6 +37,8 @@ export const AddressProvider = ({ children }) => {
         : prev;
       return [...next, newAddress];
     });
+
+    return newAddress;
   };
 
   const updateAddress = (id, updates) => {

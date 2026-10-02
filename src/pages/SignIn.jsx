@@ -77,6 +77,7 @@ const SignIn = () => {
           Don't have an account?{' '}
           <Link
             to="/signup"
+            state={location.state}
             className="text-slate-900 font-semibold underline underline-offset-2 hover:text-slate-600 transition-colors"
           >
             Sign up free

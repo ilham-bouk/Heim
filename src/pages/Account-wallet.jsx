@@ -1,13 +1,8 @@
 import { useState } from 'react';
 import { CreditCard, Plus, Trash2, Check, CalendarClock, Percent } from 'lucide-react';
 import Button from '../components/ui/Button';
-import Input from '../components/ui/Input';
+import PaymentMethodForm from '../components/forms/PaymentMethodForm';
 import { usePaymentMethods } from '../context/PaymentMethodContext';
-
-const MONTHS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
-const YEARS = Array.from({ length: 15 }, (_, i) => String(new Date().getFullYear() + i));
-
-const EMPTY_FORM = { cardholderName: '', cardNumber: '', expMonth: '', expYear: '', isDefault: false };
 
 // Illustrative marketing content only — not user data, so it lives here
 // rather than mockData.js/a service. A real integration would replace this
@@ -30,32 +25,6 @@ const AccountWallet = () => {
   const { paymentMethods, addPaymentMethod, removePaymentMethod, setDefaultPaymentMethod } = usePaymentMethods();
 
   const [isAdding, setIsAdding] = useState(false);
-  const [formData, setFormData] = useState(EMPTY_FORM);
-  const [error, setError] = useState('');
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setError('');
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const digitsOnly = formData.cardNumber.replace(/\s+/g, '');
-    if (!/^\d{13,19}$/.test(digitsOnly)) {
-      setError('Enter a valid card number');
-      return;
-    }
-    if (!formData.expMonth || !formData.expYear) {
-      setError('Select an expiration date');
-      return;
-    }
-
-    addPaymentMethod({ ...formData, cardNumber: digitsOnly });
-    setFormData(EMPTY_FORM);
-    setIsAdding(false);
-  };
 
   return (
     <div className="space-y-6">
@@ -78,74 +47,15 @@ const AccountWallet = () => {
         </div>
 
         {isAdding && (
-          <form onSubmit={handleSubmit} className="mb-8 p-5 rounded-lg border border-border bg-secondary/40 space-y-4">
-            <Input
-              name="cardholderName"
-              placeholder="Name on card"
-              value={formData.cardholderName}
-              onChange={handleChange}
-              required
-            />
-            <Input
-              name="cardNumber"
-              inputMode="numeric"
-              placeholder="Card number"
-              value={formData.cardNumber}
-              onChange={handleChange}
-              required
-            />
-            <div className="grid grid-cols-2 gap-4">
-              <select
-                name="expMonth"
-                value={formData.expMonth}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2.5 border border-border rounded-lg text-foreground text-sm bg-card focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="">Month</option>
-                {MONTHS.map((m) => <option key={m} value={m}>{m}</option>)}
-              </select>
-              <select
-                name="expYear"
-                value={formData.expYear}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2.5 border border-border rounded-lg text-foreground text-sm bg-card focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="">Year</option>
-                {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
-              </select>
-            </div>
-
-            <label className="flex items-center gap-2.5 cursor-pointer select-none w-fit">
-              <input
-                type="checkbox"
-                name="isDefault"
-                checked={formData.isDefault}
-                onChange={(e) => setFormData((prev) => ({ ...prev, isDefault: e.target.checked }))}
-                className="w-4 h-4 rounded border-border accent-primary cursor-pointer"
-              />
-              <span className="text-sm text-muted-foreground">Set as default payment method</span>
-            </label>
-
-            {error && <p className="text-sm text-destructive">{error}</p>}
-
-            <p className="text-xs text-muted-foreground">
-              This is a UI demo — no real payment processor is connected. Only the last 4 digits are stored.
-            </p>
-
-            <div className="flex items-center gap-3 pt-2">
-              <Button type="submit" variant="primary" size="sm">Add Card</Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => { setIsAdding(false); setFormData(EMPTY_FORM); setError(''); }}
-              >
-                Cancel
-              </Button>
-            </div>
-          </form>
+          <PaymentMethodForm
+            showDefaultOption
+            onSubmit={(values) => {
+              addPaymentMethod(values);
+              setIsAdding(false);
+            }}
+            onCancel={() => setIsAdding(false)}
+            className="mb-8"
+          />
         )}
 
         {paymentMethods.length === 0 && !isAdding ? (
