@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
+import { ROLES } from '../../utils/constants';
 
 const NAV_LINKS = [
   { name: 'Home', href: '/' },
@@ -28,7 +29,10 @@ const Header = () => {
 
   const { itemCount } = useCart();
   const { wishlistCount } = useWishlist();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, hasRole } = useAuth();
+
+  const userHref = !isAuthenticated ? '/signin' : hasRole(ROLES.ADMIN) ? '/admin' : '/account';
+  const userLabel = !isAuthenticated ? 'Sign in' : hasRole(ROLES.ADMIN) ? 'Admin dashboard' : 'My Account';
 
   const isActive = (href) =>
     href === '/' ? location.pathname === '/' : location.pathname.startsWith(href);
@@ -83,8 +87,8 @@ const Header = () => {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-x-1">
 
           <Link
-            to={isAuthenticated ? '/account' : '/signin'}
-            aria-label={isAuthenticated ? 'My Account' : 'Sign in'}
+            to={userHref}
+            aria-label={userLabel}
             className="relative inline-flex items-center justify-center p-2.5 rounded-lg text-foreground/60 hover:text-foreground hover:bg-accent/5 transition-all"
           >
             <User className="h-5 w-5" />
@@ -136,9 +140,9 @@ const Header = () => {
             <div className="flex items-center gap-2 pt-4 mt-2 border-t border-border">
 
               <Link
-                to={isAuthenticated ? '/account' : '/signin'}
-                onClick={closeMobile}                
-                aria-label={isAuthenticated ? 'My Account' : 'Sign in'}
+                to={userHref}
+                onClick={closeMobile}
+                aria-label={userLabel}
                 className="relative inline-flex items-center justify-center p-2.5 rounded-lg text-foreground/70 hover:text-foreground hover:bg-accent/5 transition-all"
               >
                 <User className="h-5 w-5" />

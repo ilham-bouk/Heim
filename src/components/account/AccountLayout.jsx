@@ -1,5 +1,5 @@
-import { NavLink, Outlet } from 'react-router';
-import { User, Package, Wallet, MapPin, Settings, LayoutDashboard } from 'lucide-react';
+import { Navigate, NavLink, Outlet } from 'react-router';
+import { User, Package, Wallet, MapPin, Settings } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Breadcrumb from '../ui/Breadcrumb';
 import { getInitials } from '../../utils/user';
@@ -13,11 +13,13 @@ const ACCOUNT_NAV = [
   { name: 'Settings', href: '/account/settings', icon: Settings },
 ];
 
-const ADMIN_LINK = { name: 'Admin', href: '/admin', icon: LayoutDashboard };
-
 const AccountLayout = () => {
   const { user, hasRole } = useAuth();
-  const navItems = hasRole(ROLES.ADMIN) ? [...ACCOUNT_NAV, ADMIN_LINK] : ACCOUNT_NAV;
+
+  // Admins use /admin; the customer space isn't for them.
+  if (hasRole(ROLES.ADMIN)) {
+    return <Navigate to="/admin" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -42,7 +44,7 @@ const AccountLayout = () => {
 
               {/* Nav */}
               <nav aria-label="Account navigation" className="space-y-1">
-                {navItems.map((item) => (
+                {ACCOUNT_NAV.map((item) => (
                   <NavLink
                     key={item.name}
                     to={item.href}

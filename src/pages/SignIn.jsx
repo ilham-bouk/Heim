@@ -64,8 +64,7 @@ const SignIn = () => {
 
     signIn({ email: formData.email, password: formData.password })
       .then((user) => {
-        const fallback = user.role === ROLES.ADMIN ? '/admin' : '/';
-        navigate(location.state?.from?.pathname || fallback);
+        navigate(user.role === ROLES.ADMIN ? '/admin' : '/account');
       })
       .catch((err) => {
         setIsLoading(false);
