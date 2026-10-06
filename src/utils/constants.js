@@ -7,3 +7,4 @@ export const TAX_RATE = 0.1; // 10%
 export const FREE_SHIPPING_THRESHOLD = 100;
 export const STANDARD_SHIPPING_COST = 10;
 export const PROMO_CODES = { HEIM10: 0.1 };
+export const ROLES = { ADMIN: 'admin', CUSTOMER: 'customer' };

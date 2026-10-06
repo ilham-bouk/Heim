@@ -5,6 +5,7 @@ import Button from '../components/ui/Button';
 import AuthLayout from '../components/auth/AuthLayout';
 import { useAuth } from '../context/AuthContext';
 import { isValidEmail } from '../utils/validators';
+import { DEMO_ADMIN } from '../config/demo';
 
 const FieldError = ({ message }) =>
   message ? (
@@ -126,11 +127,15 @@ const SignUp = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
+
     setIsLoading(true);
-    setTimeout(() => {
-      signUp({ fullName: formData.fullName, email: formData.email });
-      navigate(location.state?.from?.pathname || '/');
-    }, 1000);
+
+    signUp({ fullName: formData.fullName, email: formData.email })
+      .then(() => navigate(location.state?.from?.pathname || '/'))
+      .catch((err) => {
+        setIsLoading(false);
+        setErrors({ form: err.message });
+      });
   };
 
   return (
@@ -287,6 +292,11 @@ const SignUp = () => {
         </div>
 
         {/* Submit */}
+        {errors.form && (
+          <p role="alert" className="flex items-center gap-1.5 text-sm text-destructive">
+            <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" /> {errors.form}
+          </p>
+        )}
         <Button
           type="submit"
           variant="primary"
@@ -330,9 +340,14 @@ const SignUp = () => {
         </button>
       </div>
       
-      <p className="mt-6 text-xs text-slate-400 text-center leading-relaxed">
-        Demo: any valid email + password of 8+ characters will work.
-      </p>
+      <div className="mt-6 space-y-1 text-center text-xs leading-relaxed text-muted-foreground">
+        <p>Demo: any valid email + password of 8+ characters will work.</p>
+        <p>
+          To enter as admin, sign in with email: <code className="font-semibold text-foreground">{DEMO_ADMIN.email}</code>{' '}
+          password: <code className="font-semibold text-foreground">{DEMO_ADMIN.password}</code>
+        </p>
+      </div>
+
     </AuthLayout>
   );
 };

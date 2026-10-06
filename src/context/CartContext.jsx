@@ -2,11 +2,12 @@ import { createContext, useContext } from 'react';
 import { getFinalPrice } from '../utils/product';
 import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST, TAX_RATE, PROMO_CODES } from '../utils/constants';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { STORAGE_KEYS } from '../utils/storageKeys';
 
 const CartContext = createContext();
 
-const CART_STORAGE_KEY = 'heim_cart_items';
-const PROMO_STORAGE_KEY = 'heim_cart_promo';
+const CART_STORAGE_KEY = STORAGE_KEYS.cart;
+const PROMO_STORAGE_KEY = STORAGE_KEYS.cartPromo;
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useLocalStorage(CART_STORAGE_KEY, []);

@@ -5,6 +5,8 @@ import Button from '../components/ui/Button';
 import AuthLayout from '../components/auth/AuthLayout';
 import { useAuth } from '../context/AuthContext';
 import { isValidEmail } from '../utils/validators';
+import { ROLES } from '../utils/constants';
+import { DEMO_ADMIN } from '../config/demo';
 
 const FieldError = ({ message }) =>
   message ? (
@@ -59,10 +61,16 @@ const SignIn = () => {
     if (!validate()) return;
     
     setIsLoading(true);
-    setTimeout(() => {
-      signIn({ email: formData.email });
-      navigate(location.state?.from?.pathname || '/');
-    }, 1000);
+
+    signIn({ email: formData.email, password: formData.password })
+      .then((user) => {
+        const fallback = user.role === ROLES.ADMIN ? '/admin' : '/';
+        navigate(location.state?.from?.pathname || fallback);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setErrors({ form: err.message });
+      });
   };
 
   return (
@@ -156,6 +164,11 @@ const SignIn = () => {
         </label>
 
         {/* Submit */}
+        {errors.form && (
+          <p role="alert" className="flex items-center gap-1.5 text-sm text-destructive">
+            <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" /> {errors.form}
+          </p>
+        )}
         <Button
           type="submit"
           variant="primary"
@@ -201,9 +214,13 @@ const SignIn = () => {
       </div>
 
       {/* Demo hint */}
-      <p className="mt-6 text-xs text-slate-400 text-center leading-relaxed">
-        Demo: any valid email + password of 8+ characters will work.
-      </p>
+      <div className="mt-6 space-y-1 text-center text-xs leading-relaxed text-muted-foreground">
+        <p>Demo: any valid email + password of 8+ characters will work.</p>
+        <p>
+          To enter as admin, sign in with email: <code className="font-semibold text-foreground">{DEMO_ADMIN.email}</code>{' '}
+          password: <code className="font-semibold text-foreground">{DEMO_ADMIN.password}</code>
+        </p>
+      </div>
 
       {/* Footer links */}
       <p className="mt-4 text-xs text-slate-400 text-center">

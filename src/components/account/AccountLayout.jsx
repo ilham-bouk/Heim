@@ -1,7 +1,9 @@
 import { NavLink, Outlet } from 'react-router';
-import { User, Package, Wallet, MapPin, Settings } from 'lucide-react';
+import { User, Package, Wallet, MapPin, Settings, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Breadcrumb from '../ui/Breadcrumb';
+import { getInitials } from '../../utils/user';
+import { ROLES } from '../../utils/constants';
 
 const ACCOUNT_NAV = [
   { name: 'Profile', href: '/account/profile', icon: User },
@@ -11,16 +13,11 @@ const ACCOUNT_NAV = [
   { name: 'Settings', href: '/account/settings', icon: Settings },
 ];
 
-const getInitials = (name = '') =>
-  name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0]?.toUpperCase())
-    .join('') || 'U';
+const ADMIN_LINK = { name: 'Admin', href: '/admin', icon: LayoutDashboard };
 
 const AccountLayout = () => {
-  const { user } = useAuth();
+  const { user, hasRole } = useAuth();
+  const navItems = hasRole(ROLES.ADMIN) ? [...ACCOUNT_NAV, ADMIN_LINK] : ACCOUNT_NAV;
 
   return (
     <div className="min-h-screen bg-white">
@@ -45,7 +42,7 @@ const AccountLayout = () => {
 
               {/* Nav */}
               <nav aria-label="Account navigation" className="space-y-1">
-                {ACCOUNT_NAV.map((item) => (
+                {navItems.map((item) => (
                   <NavLink
                     key={item.name}
                     to={item.href}

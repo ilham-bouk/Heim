@@ -1,10 +1,11 @@
 import { createContext, useContext } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { buildOrder, getSeedOrders, isActiveOrder } from '../services/orderService';
+import { STORAGE_KEYS } from '../utils/storageKeys';
 
 const OrderContext = createContext();
 
-const ORDERS_STORAGE_KEY = 'heim_orders';
+const ORDERS_STORAGE_KEY = STORAGE_KEYS.orders;
 const MOCK_LATENCY_MS = 800; // simulated network delay — remove when wiring a real API
 
 // Orders placed through Checkout are persisted to localStorage and merged in

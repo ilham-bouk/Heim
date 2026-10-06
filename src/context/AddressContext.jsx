@@ -1,9 +1,10 @@
 import { createContext, useContext } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { STORAGE_KEYS } from '../utils/storageKeys';
 
 const AddressContext = createContext();
 
-const ADDRESS_STORAGE_KEY = 'heim_addresses';
+const ADDRESS_STORAGE_KEY = STORAGE_KEYS.addresses;
 
 /**
  * Address shape:

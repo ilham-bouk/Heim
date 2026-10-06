@@ -1,9 +1,10 @@
 import { createContext, useContext } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { STORAGE_KEYS } from '../utils/storageKeys';
 
 const WishlistContext = createContext();
 
-const WISHLIST_STORAGE_KEY = 'heim_wishlist_items';
+const WISHLIST_STORAGE_KEY = STORAGE_KEYS.wishlist;
 
 export const WishlistProvider = ({ children }) => {
   const [wishlistItems, setWishlistItems] = useLocalStorage(WISHLIST_STORAGE_KEY, []);

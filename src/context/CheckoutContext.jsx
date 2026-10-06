@@ -1,9 +1,10 @@
 import { createContext, useCallback, useContext, useState } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { STORAGE_KEYS } from '../utils/storageKeys';
 
 const CheckoutContext = createContext();
 
-const CHECKOUT_STORAGE_KEY = 'heim_checkout_draft';
+const CHECKOUT_STORAGE_KEY = STORAGE_KEYS.checkoutDraft;
 
 /**
  * Checkout draft (persisted so a refresh mid-checkout doesn't lose progress):

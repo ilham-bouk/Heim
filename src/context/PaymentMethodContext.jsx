@@ -1,10 +1,11 @@
 import { createContext, useContext } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { detectBrand } from '../utils/payment';
+import { STORAGE_KEYS } from '../utils/storageKeys';
 
 const PaymentMethodContext = createContext();
 
-const PAYMENT_STORAGE_KEY = 'heim_payment_methods';
+const PAYMENT_STORAGE_KEY = STORAGE_KEYS.paymentMethods;
 
 /**
  * Payment method shape:

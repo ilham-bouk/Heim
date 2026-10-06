@@ -24,4 +24,12 @@
   /* Typography */
   --font-serif: "Playfair Display", serif;
   --font-sans: "Inter", sans-serif;
+
+  /* Toast entrance (applied with motion-safe: so reduced-motion users get none) */
+  --animate-toast-in: toast-in 200ms ease-out;
+
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateY(0.5rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
