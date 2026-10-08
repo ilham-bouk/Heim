@@ -8,3 +8,7 @@ export const FREE_SHIPPING_THRESHOLD = 100;
 export const STANDARD_SHIPPING_COST = 10;
 export const PROMO_CODES = { HEIM10: 0.1 };
 export const ROLES = { ADMIN: 'admin', CUSTOMER: 'customer' };
+
+// Bump whenever seed data in data/mockData.js changes shape or content: stored
+// copies with an older version are replaced by the new seed on next load.
+export const DATA_VERSION = 1;

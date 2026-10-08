@@ -3,7 +3,9 @@ import { useSearchParams } from 'react-router';
 import { Search, Calendar, User, Clock, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
-import { getBlogPosts, getBlogCategories, searchBlogPosts } from '../services/blogService';
+import { useBlog } from '../context/BlogContext';
+import { searchBlogPosts } from '../services/blogService';
+import { formatDate } from '../utils/format';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import NewsletterForm from '../components/ui/NewsletterForm';
 
@@ -11,8 +13,7 @@ const Blog = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
-  const blogPosts = getBlogPosts();
-  const blogCategories = getBlogCategories();
+  const { blogPosts, blogCategories, getFeaturedBlogPosts } = useBlog();
 
   useEffect(() => {
     const urlSearch = searchParams.get('search') || '';
@@ -25,12 +26,7 @@ const Blog = () => {
     setSearchParams(value ? { search: value } : {});
   };
 
-
-  // Filter posts based on category and search
   const filteredPosts = searchBlogPosts(blogPosts, searchQuery, selectedCategory);
-
-  // Get featured posts
-  const featuredPosts = blogPosts.filter(post => post.featured).slice(0, 3);
 
   return (
     <div className="min-h-screen bg-white">      
@@ -59,7 +55,7 @@ const Blog = () => {
           <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-12">Featured Articles</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredPosts.map((post) => (
+            {getFeaturedBlogPosts(3).map((post) => (
               <article 
                 key={post.id} 
                 className="group bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-lg transition-all duration-300"
@@ -94,7 +90,7 @@ const Blog = () => {
                   <div className="flex flex-wrap gap-4 text-sm text-slate-500 mb-4 pb-4 border-b border-slate-200">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
-                      {post.date}
+                      {formatDate(post.publishedAt)}
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
@@ -191,7 +187,7 @@ const Blog = () => {
                             <span>•</span>
                             <div className="flex items-center gap-1">
                               <Calendar className="w-4 h-4" />
-                              {post.date}
+                              {formatDate(post.publishedAt)}
                             </div>
                           </div>
                           <Link to={`/blog/${post.id}`}>
@@ -256,7 +252,7 @@ const Blog = () => {
                         <h4 className="font-semibold text-slate-900 line-clamp-2 mb-2 hover:text-accent">
                           {post.title}
                         </h4>
-                        <p className="text-xs text-slate-500">{post.date}</p>
+                        <p className="text-xs text-slate-500">{formatDate(post.publishedAt)}</p>
                       </div>
                     </Link>
                   ))}

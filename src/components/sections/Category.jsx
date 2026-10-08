@@ -1,8 +1,10 @@
 import { ArrowRight } from "lucide-react"
-import { getCategories } from '../../services/productService'
+import { useCatalog } from '../../context/CatalogContext'
 import { Link } from "react-router";
 
 const Category = () => {
+  const { categories } = useCatalog();
+
   return (
     <section className="py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
@@ -18,7 +20,7 @@ const Category = () => {
 
         {/* Category grid */}
         <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6 lg:gap-6">
-          {getCategories().map((category) => (
+          {categories.map((category) => (
             <div key={category.id} className="group relative overflow-hidden rounded-xl" >
               {/* Image */}
               <div className="aspect-4/5 overflow-hidden">
@@ -38,7 +40,7 @@ const Category = () => {
                   {category.name}
                 </h3>
                 <p className="text-sm text-white/70">
-                  {category.itemCount} items
+                  {category.itemCount} {category.itemCount === 1 ? 'item' : 'items'}
                 </p>
                 <Link to={`/shop?category=${encodeURIComponent(category.name)}`}
                   className="mt-2 gap-2 hover:gap-4 flex items-center text-sm font-medium text-white opacity-0 -translate-x-2.5 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-focus-within:opacity-100 group-focus-within:translate-x-0">

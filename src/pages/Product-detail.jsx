@@ -5,7 +5,7 @@ import Button from '../components/ui/Button';
 import NotFound from './NotFound';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
-import { getProductById, getRelatedProducts } from '../services/productService';
+import { useCatalog } from '../context/CatalogContext';
 import { getFinalPrice, getBadgeClass } from '../utils/product';
 import Breadcrumb from '../components/ui/Breadcrumb';
 
@@ -13,6 +13,7 @@ const ProductDetail = () => {
   const { id } = useParams();
   const { addToCart, cartItems } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { getProductById, getRelatedProducts } = useCatalog();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -56,7 +57,7 @@ const ProductDetail = () => {
       <Breadcrumb
         items={[
           { label: 'Shop', href: '/shop' },
-          { label: product.category, href: `/shop?category=${product.category}` },
+          { label: product.category, href: `/shop?category=${encodeURIComponent(product.category)}` },
           { label: product.name },
         ]}
       />
@@ -250,7 +251,7 @@ const ProductDetail = () => {
 
         {/* Product info tabs */}
         <div className="border-t border-slate-200 pt-12 mb-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className={`grid grid-cols-1 gap-8 ${product.specs?.length ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
             <div>
               <h3 className="text-xl font-bold text-slate-900 mb-4">Description</h3>
               <p className="text-slate-600 leading-relaxed">
@@ -259,22 +260,19 @@ const ProductDetail = () => {
                 while maintaining its elegant appearance.
               </p>
             </div>
-            <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-4">Specifications</h3>
-              <ul className="space-y-3 text-slate-600">
-                {[
-                  ['Dimensions', 'H: 85cm × W: 120cm'],
-                  ['Material', 'Premium Oak Wood'],
-                  ['Weight', '45 kg'],
-                  ['Color', 'Natural'],
-                ].map(([label, value]) => (
-                  <li key={label} className="flex justify-between">
-                    <span>{label}</span>
-                    <span className="font-medium text-slate-900">{value}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {product.specs?.length > 0 && (
+              <div>
+                <h3 className="text-xl font-bold text-slate-900 mb-4">Specifications</h3>
+                <ul className="space-y-3 text-slate-600">
+                  {product.specs.map(({ label, value }) => (
+                    <li key={label} className="flex justify-between gap-4">
+                      <span>{label}</span>
+                      <span className="font-medium text-slate-900 text-right">{value}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div>
               <h3 className="text-xl font-bold text-slate-900 mb-4">Care Instructions</h3>
               <ul className="space-y-2 text-slate-600 text-sm">

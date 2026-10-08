@@ -11,6 +11,9 @@ export const STORAGE_KEYS = {
   paymentMethods: 'heim_payment_methods',
   orders: 'heim_orders',
   checkoutDraft: 'heim_checkout_draft',
+  products: 'heim_products',
+  categories: 'heim_categories',
+  blogPosts: 'heim_blog_posts',
 };
 
 // Kept when resetting demo data, so an admin isn't signed out mid-test.

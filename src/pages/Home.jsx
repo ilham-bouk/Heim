@@ -5,9 +5,11 @@ import ProductSection from "../components/sections/ProductSection"
 import PromoBanner from "../components/sections/Promo-banner"
 import BlogSection from "../components/sections/Blog-section"
 import Newsletter from "../components/sections/Newsletter"
-import { getFeaturedProducts, getProducts } from "../services/productService"
+import { useCatalog } from "../context/CatalogContext"
 
 const Home = () => {
+  const { getFeaturedProducts, getNewestProducts } = useCatalog()
+
   return (
     <div>
       <Hero />
@@ -20,9 +22,10 @@ const Home = () => {
       />
       <PromoBanner />
       <ProductSection
-        title="Trending Now"
-        subtitle="See what everyone is loving this season."
-        products={getProducts().slice(4, 8)}
+        title="New Products"
+        subtitle="Fresh pieces, just added to the collection."
+        products={getNewestProducts(4)}
+        viewAllLink="/shop?sort=newest"
       />
       <BlogSection />
       <Newsletter />

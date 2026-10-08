@@ -1,37 +1,50 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { STORAGE_KEYS } from '../utils/storageKeys';
+import { useCatalog } from './CatalogContext';
 
 const WishlistContext = createContext();
 
 const WISHLIST_STORAGE_KEY = STORAGE_KEYS.wishlist;
 
+// Storage keeps product IDs only; products are resolved from the live catalog.
+// Older saved wishlists hold full product copies, so entries are normalised to IDs on read.
+const toId = (entry) => (typeof entry === 'object' ? entry.id : entry);
+
 export const WishlistProvider = ({ children }) => {
-  const [wishlistItems, setWishlistItems] = useLocalStorage(WISHLIST_STORAGE_KEY, []);
+  const { getProductById } = useCatalog();
+  const [storedEntries, setStoredEntries] = useLocalStorage(WISHLIST_STORAGE_KEY, []);
+
+  const wishlistItems = useMemo(
+    () =>
+      storedEntries.flatMap((entry) => {
+        const product = getProductById(toId(entry));
+        return product ? [product] : [];
+      }),
+    [storedEntries, getProductById]
+  );
 
   const addToWishlist = (product) => {
-    setWishlistItems(prev => {
-      if (prev.find(item => item.id === product.id)) return prev;
-      return [...prev, product];
+    setStoredEntries((prev) => {
+      const ids = prev.map(toId);
+      return ids.includes(product.id) ? ids : [...ids, product.id];
     });
   };
 
   const removeFromWishlist = (productId) => {
-    setWishlistItems(prev => prev.filter(item => item.id !== productId));
+    setStoredEntries((prev) => prev.map(toId).filter((id) => id !== productId));
   };
 
   const toggleWishlist = (product) => {
-    setWishlistItems(prev =>
-      prev.find(item => item.id === product.id)
-        ? prev.filter(item => item.id !== product.id)
-        : [...prev, product]
-    );
+    setStoredEntries((prev) => {
+      const ids = prev.map(toId);
+      return ids.includes(product.id) ? ids.filter((id) => id !== product.id) : [...ids, product.id];
+    });
   };
 
-  const isInWishlist = (productId) =>
-    wishlistItems.some(item => item.id === productId);
+  const isInWishlist = (productId) => wishlistItems.some((item) => item.id === productId);
 
-  const clearWishlist = () => setWishlistItems([]);
+  const clearWishlist = () => setStoredEntries([]);
 
   const value = {
     wishlistItems,
@@ -43,11 +56,7 @@ export const WishlistProvider = ({ children }) => {
     wishlistCount: wishlistItems.length,
   };
 
-  return (
-    <WishlistContext.Provider value={value}>
-      {children}
-    </WishlistContext.Provider>
-  );
+  return <WishlistContext.Provider value={value}>{children}</WishlistContext.Provider>;
 };
 
 export const useWishlist = () => {

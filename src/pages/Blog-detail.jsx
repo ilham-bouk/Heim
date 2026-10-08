@@ -1,12 +1,14 @@
 import { useParams, Link } from 'react-router';
 import { Calendar, User, Clock, ArrowLeft, ArrowRight, Share2, MessageCircle } from 'lucide-react';
-import { getBlogPostById, getRelatedBlogPosts, getAdjacentBlogPosts } from '../services/blogService';
+import { useBlog } from '../context/BlogContext';
+import { formatDate } from '../utils/format';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import NewsletterForm from '../components/ui/NewsletterForm';
 import NotFound from './NotFound';
 
 const BlogDetail = () => {
   const { id } = useParams();
+  const { getBlogPostById, getRelatedBlogPosts, getAdjacentBlogPosts } = useBlog();
   const post = getBlogPostById(id);
 
   if (!post) {
@@ -24,31 +26,8 @@ const BlogDetail = () => {
   const relatedPosts = getRelatedBlogPosts(post, 3);
   const { previous: previousPost, next: nextPost } = getAdjacentBlogPosts(post);
 
-  // Expand content with sample sections
-  const contentSections = [
-    {
-      heading: "Introduction",
-      text: post.content
-    },
-    {
-      heading: "Key Points to Consider",
-      text: "When implementing these strategies, it's important to consider your space, budget, and personal preferences. Each home is unique, and what works for one person may not work for another. Take time to experiment and find what resonates with your style."
-    },
-    {
-      heading: "Practical Tips",
-      list: [
-        "Start small and build gradually",
-        "Invest in quality over quantity",
-        "Consider lighting and placement carefully",
-        "Don't be afraid to mix styles",
-        "Trust your instincts and have fun"
-      ]
-    },
-    {
-      heading: "Conclusion",
-      text: "Creating a beautiful and functional space is a journey, not a destination. Take your time, enjoy the process, and remember that the best design is one that makes you happy. Whether you're working with a professional designer or doing it yourself, these principles will help guide your decisions and create a space you truly love."
-    }
-  ];
+  // Paragraphs are separated by a blank line in post.content.
+  const paragraphs = (post.content ?? '').split(/\n{2,}/).filter(Boolean);
 
   return (
     <div className="min-h-screen bg-white">
@@ -95,7 +74,7 @@ const BlogDetail = () => {
 
             <div className="flex items-center gap-2 text-slate-600">
               <Calendar className="w-5 h-5" />
-              <span className="text-sm">{post.date}</span>
+              <span className="text-sm">{formatDate(post.publishedAt)}</span>
             </div>
 
             <div className="flex items-center gap-2 text-slate-600">
@@ -105,20 +84,22 @@ const BlogDetail = () => {
           </div>
 
           {/* Article Tags */}
-          <div className="py-8 border-b border-slate-200">
-            <div className="flex flex-wrap gap-3">
-              <span className="text-sm font-medium text-slate-600">Tags:</span>
-              <div className="flex flex-wrap gap-2">
-                {['design', 'interior', 'furniture', 'style'].map((tag) => (
-                  <Link key={tag} to={`/blog?search=${tag}`}>
-                    <span className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm rounded-full transition-colors cursor-pointer">
-                      #{tag}
-                    </span>
-                  </Link>
-                ))}
+          {post.tags?.length > 0 && (
+            <div className="py-8 border-b border-slate-200">
+              <div className="flex flex-wrap gap-3">
+                <span className="text-sm font-medium text-slate-600">Tags:</span>
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag) => (
+                    <Link key={tag} to={`/blog?search=${tag}`}>
+                      <span className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm rounded-full transition-colors cursor-pointer">
+                        #{tag}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
       </section>
@@ -133,29 +114,10 @@ const BlogDetail = () => {
             </p>
 
             {/* Content Sections */}
-            {contentSections.map((section, index) => (
-              <div key={index} className="mb-12">
-                <h2 className="text-3xl font-bold text-slate-900 mb-4">
-                  {section.heading}
-                </h2>
-                
-                {section.text && (
-                  <p className="text-slate-600 leading-relaxed mb-4">
-                    {section.text}
-                  </p>
-                )}
-
-                {section.list && (
-                  <ul className="space-y-3 mb-4">
-                    {section.list.map((item, idx) => (
-                      <li key={idx} className="flex gap-3 text-slate-600">
-                        <span className="text-accent font-bold mt-1">•</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+            {paragraphs.map((paragraph, index) => (
+              <p key={index} className="text-slate-600 leading-relaxed mb-6">
+                {paragraph}
+              </p>
             ))}
 
             {/* Conclusion Note */}
@@ -185,7 +147,7 @@ const BlogDetail = () => {
                     <h4 className="text-lg font-bold text-slate-900 group-hover:text-accent transition-colors line-clamp-2">
                       {previousPost.title}
                     </h4>
-                    <p className="text-sm text-slate-500 mt-2">{previousPost.date}</p>
+                    <p className="text-sm text-slate-500 mt-2">{formatDate(previousPost.publishedAt)}</p>
                   </div>
                 </Link>
               )}
@@ -200,7 +162,7 @@ const BlogDetail = () => {
                     <h4 className="text-lg font-bold text-slate-900 group-hover:text-accent transition-colors line-clamp-2">
                       {nextPost.title}
                     </h4>
-                    <p className="text-sm text-slate-500 mt-2">{nextPost.date}</p>
+                    <p className="text-sm text-slate-500 mt-2">{formatDate(nextPost.publishedAt)}</p>
                   </div>
                 </Link>
               )}
@@ -247,7 +209,7 @@ const BlogDetail = () => {
                       </p>
 
                       <div className="flex items-center justify-between pt-4 border-t border-slate-200">
-                        <span className="text-xs text-slate-500">{relPost.date}</span>
+                        <span className="text-xs text-slate-500">{formatDate(relPost.publishedAt)}</span>
                         <ArrowRight className="w-4 h-4 text-accent" />
                       </div>
                     </div>

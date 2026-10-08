@@ -1,10 +1,12 @@
 import { ArrowRight } from "lucide-react"
 import BlogCard from "../ui/Blog-card";
-import { getFeaturedBlogPosts } from "../../services/blogService"
+import { useBlog } from "../../context/BlogContext"
 import Button from '../ui/Button';
 import { Link } from "react-router";
 
 const BlogSection = () => {
+  const { getFeaturedBlogPosts } = useBlog();
+  
   return (
     <section className="py-16 lg:py-24 bg-secondary">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">

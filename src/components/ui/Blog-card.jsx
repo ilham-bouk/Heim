@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react"
 import { Link } from "react-router";
+import { formatDate } from "../../utils/format";
 
 /**
 + * Blog post preview card for grid listings (e.g. Home's blog section).
@@ -27,7 +28,9 @@ const BlogCard = ({ post }) => {
           <span className="text-xs font-medium uppercase tracking-wider text-accent">
             {post.category}
           </span>
-          <span className="text-xs text-muted-foreground">{post.date}</span>
+          <span className="text-xs text-muted-foreground">
+            {formatDate(post.publishedAt)}
+          </span>
         </div>
         
         <Link to={`/blog/${post.id}`}>

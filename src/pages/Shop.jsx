@@ -1,63 +1,69 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useSearchParams } from "react-router"
 import { SlidersHorizontal, X } from "lucide-react"
 import ProductCard from "../components/ui/Product-card"
 import Button from "../components/ui/Button"
-import { getProducts, getCategories } from "../services/productService"
 import Breadcrumb from '../components/ui/Breadcrumb';
+import { useCatalog } from "../context/CatalogContext"
+import { getFinalPrice } from "../utils/product"
+
+const SORT_OPTIONS = [
+  { value: "featured", label: "Featured" },
+  { value: "newest", label: "Newest" },
+  { value: "price-low", label: "Price: Low to High" },
+  { value: "price-high", label: "Price: High to Low" },
+  { value: "rating", label: "Top Rated" },
+]
+
+const SORTERS = {
+  featured: (a, b) => Number(!!b.featured) - Number(!!a.featured), // stable: keeps catalog order within groups
+  newest: (a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""),
+  "price-low": (a, b) => getFinalPrice(a) - getFinalPrice(b),
+  "price-high": (a, b) => getFinalPrice(b) - getFinalPrice(a),
+  rating: (a, b) => b.rating - a.rating,
+}
 
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const categoryFromUrl = searchParams.get("category")
-  const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl || null)   
+  const { products, categories } = useCatalog()
 
-  const [sortBy, setSortBy] = useState("featured")
+  // Category and sort live in the URL so they're shareable (the promo banner links to ?sort=newest).
+  const selectedCategory = searchParams.get("category")
+  const sortParam = searchParams.get("sort")
+  const sortBy = SORT_OPTIONS.some((option) => option.value === sortParam) ? sortParam : "featured"
+
   const [minPrice, setMinPrice] = useState(0)
-  const [maxPrice, setMaxPrice] = useState(2000)
+  const [maxPrice, setMaxPrice] = useState(null) // null = no upper limit
   const [showFilters, setShowFilters] = useState(false)
 
-  const products = getProducts()
-  const categories = getCategories()
-
-  useEffect(() => {
-    setSelectedCategory(categoryFromUrl || null)
-  }, [categoryFromUrl])
-
-  const selectCategory = (name) => {
-    setSelectedCategory(name)
-    setSearchParams(name ? { category: name } : {})
+  const updateParams = (changes) => {
+    const next = new URLSearchParams(searchParams)
+    Object.entries(changes).forEach(([key, value]) => (value ? next.set(key, value) : next.delete(key)))
+    setSearchParams(next)
   }
 
-  // Filter products by category
-  let filtered = products.filter(product => {
-    if (selectedCategory && product.category !== selectedCategory) {
-      return false
-    }
-    if (product.price < minPrice || product.price > maxPrice) {
-      return false
-    }
+  const selectCategory = (name) => updateParams({ category: name })
+  const setSortBy = (value) => updateParams({ sort: value === "featured" ? null : value })
+
+  // Placeholder for the empty Max field: the most expensive final price, rounded up.
+  const priceCeiling = Math.ceil(Math.max(0, ...products.map(getFinalPrice)) / 100) * 100
+
+  const filtered = products.filter((product) => {
+    if (selectedCategory && product.category !== selectedCategory) return false
+    const price = getFinalPrice(product)
+    if (price < minPrice) return false
+    if (maxPrice !== null && price > maxPrice) return false
     return true
   })
 
-  // Sort products
-  if (sortBy === "price-low") {
-    filtered.sort((a, b) => a.price - b.price)
-  } else if (sortBy === "price-high") {
-    filtered.sort((a, b) => b.price - a.price)
-  } else if (sortBy === "rating") {
-    filtered.sort((a, b) => b.rating - a.rating)
-  } else if (sortBy === "newest") {
-    filtered.reverse()
-  }
+  filtered.sort(SORTERS[sortBy])
 
-  // Check if any filters are active
-  const hasFilters = selectedCategory || minPrice > 0 || maxPrice < 2000
+  const hasFilters = selectedCategory || minPrice > 0 || maxPrice !== null
 
   const clearFilters = () => {
-    selectCategory(null)
+    setSearchParams({})
     setMinPrice(0)
-    setMaxPrice(2000)
-    setSortBy("featured")
+    setMaxPrice(null)
   }
 
   return (
@@ -142,8 +148,9 @@ const Shop = () => {
                         <label className="text-xs text-slate-500 block mb-1">Max</label>
                         <input
                           type="number"
-                          value={maxPrice}
-                          onChange={(e) => setMaxPrice(Number(e.target.value))}
+                          value={maxPrice ?? ""}
+                          placeholder={priceCeiling}
+                          onChange={(e) => setMaxPrice(e.target.value === "" ? null : Number(e.target.value))}
                           className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
                           min="0"
                         />
@@ -194,11 +201,9 @@ const Shop = () => {
                     onChange={(e) => setSortBy(e.target.value)}
                     className="px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
                   >
-                    <option value="featured">Featured</option>
-                    <option value="newest">Newest</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="rating">Top Rated</option>
+                    {SORT_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -256,10 +261,10 @@ const Shop = () => {
                       />
                       <input
                         type="number"
-                        value={maxPrice}
-                        onChange={(e) => setMaxPrice(Number(e.target.value))}
+                        value={maxPrice ?? ""}
+                        placeholder={priceCeiling}
+                        onChange={(e) => setMaxPrice(e.target.value === "" ? null : Number(e.target.value))}
                         className="flex-1 px-3 py-2 rounded-lg border border-slate-300 text-sm"
-                        placeholder="Max"
                       />
                     </div>
                   </div>
@@ -291,13 +296,13 @@ const Shop = () => {
                       </button>
                     </div>
                   )}
-                  {(minPrice > 0 || maxPrice < 2000) && (
+                  {(minPrice > 0 || maxPrice !== null) && (
                     <div className="flex items-center gap-1 px-3 py-1 bg-slate-100 rounded-full text-sm font-medium">
-                      ${minPrice} - ${maxPrice}
+                      {maxPrice !== null ? `$${minPrice} - $${maxPrice}` : `$${minPrice}+`}
                       <button 
                         onClick={() => {
                           setMinPrice(0)
-                          setMaxPrice(2000)
+                          setMaxPrice(null)
                         }}
                         className="ml-1 hover:text-slate-600"
                       >

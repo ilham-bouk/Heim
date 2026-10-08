@@ -27,7 +27,7 @@ const PromoBanner = () => {
                   variant="secondary"
                   className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
                 >
-                  <Link to="/shop/new-arrivals" className='inline-flex items-center justify-center gap-3'>
+                  <Link to="/shop?sort=newest" className='inline-flex items-center justify-center gap-3'>
                     Shop New Arrivals
                     <ArrowRight className="h-4 w-4" />
                   </Link>

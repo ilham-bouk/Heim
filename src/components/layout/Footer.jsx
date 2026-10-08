@@ -1,13 +1,7 @@
 import { Link } from "react-router";
+import { useCatalog } from "../../context/CatalogContext";
 
 const footerLinks = {
-  shop: [
-    { name: "All Products", href: "/shop" },
-    { name: "Living Room", href: "/shop?category=Living+Room" },
-    { name: "Bedroom", href: "/shop?category=Bedroom" },
-    { name: "Kitchen", href: "/shop?category=Kitchen" },
-    { name: "Office", href: "/shop?category=Office" },
-  ],
   company: [
     { name: "About Us", href: "/about" },
     { name: "Careers", href: "/careers" },
@@ -24,6 +18,15 @@ const footerLinks = {
 }
 
 const Footer = () => {
+  const { categories } = useCatalog();
+  const shopLinks = [
+    { name: "All Products", href: "/shop" },
+    ...categories.slice(0, 4).map((category) => ({
+      name: category.name,
+      href: `/shop?category=${encodeURIComponent(category.name)}`,
+    })),
+  ];
+
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8 lg:pt-16 lg:pb-8">
@@ -42,7 +45,7 @@ const Footer = () => {
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider">Shop</h3>
             <ul className="mt-4 space-y-3">
-              {footerLinks.shop.map((link) => (
+              {shopLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.href}

@@ -6,11 +6,28 @@ import { useCart } from '../context/CartContext';
 import { getFinalPrice } from '../utils/product';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { FREE_SHIPPING_THRESHOLD } from '../utils/constants';
-import { getFeaturedProducts } from '../services/productService';
+import { useCatalog } from '../context/CatalogContext';
 import ProductCard from '../components/ui/Product-card';
 
+const UnavailableNotice = ({ count, onDismiss }) => (
+  <div role="status" className="mb-8 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-secondary p-4 text-sm text-foreground">
+    <p>
+      {count} {count === 1 ? 'item in your cart is' : 'items in your cart are'} no longer available.
+    </p>
+    <button
+      type="button"
+      onClick={onDismiss}
+      className="font-semibold underline underline-offset-2 transition-colors hover:text-muted-foreground"
+    >
+      Dismiss
+    </button>
+  </div>
+);
+
 const Cart = () => {
-  const { cartItems, removeFromCart, updateQuantity, subtotal, shipping, tax, discount, appliedPromo, applyPromo, total, itemCount } = useCart();
+  const { cartItems, unavailableCount, clearUnavailable, removeFromCart, updateQuantity, subtotal, shipping, tax, discount, appliedPromo, applyPromo, total, itemCount } = useCart();
+  const { products } = useCatalog();
+
   const [promoInput, setPromoInput] = useState('');
   const [promoError, setPromoError] = useState('');
 
@@ -20,12 +37,16 @@ const Cart = () => {
     setPromoError(result.ok ? '' : result.error);
   };
 
+  {/* Empty Cart */}
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-white">
         <Breadcrumb items={[{ label: 'Shopping Cart' }]} />
 
-        {/* Empty Cart */}
+        {unavailableCount > 0 && (
+          <UnavailableNotice count={unavailableCount} onDismiss={clearUnavailable} />
+        )}
+
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
           <div className="text-center">
             <div className="flex justify-center mb-6">
@@ -50,7 +71,8 @@ const Cart = () => {
   }
 
   // Recommend items not already in the cart
-  const relatedProducts = getFeaturedProducts(8)
+  const relatedProducts = [...products]
+    .sort((a, b) => Number(!!b.featured) - Number(!!a.featured))
     .filter((p) => !cartItems.some((item) => item.id === p.id))
     .slice(0, 4);
 
@@ -60,6 +82,10 @@ const Cart = () => {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-12 lg:py-20">
+        {unavailableCount > 0 && (
+          <UnavailableNotice count={unavailableCount} onDismiss={clearUnavailable} />
+        )}
+
         <div className="mb-12">
           <h1 className="text-4xl lg:text-5xl font-bold text-slate-900">Shopping Cart</h1>
           <p className="text-slate-600 mt-2">{itemCount} item{cartItems.length !== 1 ? 's' : ''} in your cart</p>
