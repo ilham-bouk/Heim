@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { User, Mail, Phone, Cake, Lock, Eye, EyeOff, AlertCircle, Check, LogOut, Trash2 } from 'lucide-react';
 import Button from '../components/ui/Button';
+import ConfirmInline from '../components/ui/ConfirmInline';
 import { useAuth } from '../context/AuthContext';
 
 const fieldClass =
@@ -277,20 +278,19 @@ const DeleteAccountSection = () => {
         Permanently delete your account. This action cannot be undone.
       </p>
 
-      {!confirming ? (
-        <Button variant="danger" className="gap-2" onClick={() => setConfirming(true)}>
-          <Trash2 className="w-4 h-4" />
-          Delete Account
-        </Button>
-      ) : (
-        <div className="flex flex-wrap items-center gap-3">
-          <p className="text-sm font-medium text-foreground">Are you sure? This can't be undone.</p>
-          <Button variant="danger" size="sm" onClick={handleDelete}>
-            Yes, delete my account
-          </Button>
-          <Button variant="ghost" size="sm" onClick={() => setConfirming(false)}>
-            Cancel
-          </Button>
+      {/* The trigger stays mounted so ConfirmInline can return focus to it on cancel. */}
+      <Button variant="danger" className="gap-2" aria-expanded={confirming} onClick={() => setConfirming(true)}>
+        <Trash2 className="w-4 h-4" />
+        Delete Account
+      </Button>
+      {confirming && (
+        <div className="mt-4">
+          <ConfirmInline
+            message="Are you sure? This can't be undone."
+            confirmLabel="Yes, delete my account"
+            onConfirm={handleDelete}
+            onCancel={() => setConfirming(false)}
+          />
         </div>
       )}
     </div>

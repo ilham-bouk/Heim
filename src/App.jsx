@@ -35,6 +35,8 @@ import CheckoutPayment from './pages/Checkout-payment'
 import CheckoutReview from './pages/Checkout-review'
 import CheckoutConfirmation from './pages/Checkout-confirmation'
 import AdminDashboard from './pages/Admin-dashboard'
+import AdminProducts from './pages/Admin-products'
+import AdminProductForm from './pages/Admin-product-form'
 
 import NotFound from './pages/NotFound'
 
@@ -84,6 +86,9 @@ function App() {
             <Route element={<ProtectedRoute requiredRole={ROLES.ADMIN} />}>
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="products/new" element={<AdminProductForm />} />
+                <Route path="products/:id/edit" element={<AdminProductForm />} />
               </Route>
             </Route>
 

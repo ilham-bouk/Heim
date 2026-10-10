@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="Product image placeholder">
+  <rect width="800" height="800" fill="#f2f0ed"/>
+  <g fill="none" stroke="#c9c2b8" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="250" y="290" width="300" height="150" rx="32"/>
+    <rect x="200" y="410" width="400" height="110" rx="28"/>
+    <path d="M250 520v44M550 520v44"/>
+  </g>
+</svg>
