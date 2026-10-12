@@ -15,6 +15,7 @@ export const STORAGE_KEYS = {
   categories: 'heim_categories',
   blogPosts: 'heim_blog_posts',
   idCounters: 'heim_id_counters',
+  blogIdCounters: 'heim_blog_id_counters',
 };
 
 // Kept when resetting demo data, so an admin isn't signed out mid-test.

@@ -13,6 +13,7 @@ export const getSeedProducts = () => products;
 export const getSeedCategories = () => categories;
 
 export const PLACEHOLDER_PRODUCT_IMAGE = placeholderImage;
+export const PLACEHOLDER_CATEGORY_IMAGE = placeholderImage;
 
 // The admin form edits these four spec rows (same labels as the seed data).
 export const SPEC_LABELS = ['Dimensions', 'Material', 'Weight', 'Color'];
@@ -86,3 +87,22 @@ export const applyProductInput = (product, input) =>
     },
     input
   );
+
+// Category names are matched case-insensitively (products reference them by name).
+export const isCategoryNameTaken = (categoryList, name, ignoreId = null) => {
+  const wanted = name.trim().toLowerCase();
+  return categoryList.some((c) => c.id !== ignoreId && c.name.trim().toLowerCase() === wanted);
+};
+
+/** Real backend: the server builds the category and returns it. */
+export const createCategory = ({ name }, id) => ({
+  id,
+  name: name.trim(),
+  image: PLACEHOLDER_CATEGORY_IMAGE,
+});
+
+export const applyCategoryInput = (category, { name }) => ({ ...category, name: name.trim() });
+
+/** Cascade for a category rename: products reference their category by name. */
+export const renameProductCategory = (productList, from, to) =>
+  productList.map((product) => (product.category === from ? { ...product, category: to } : product));

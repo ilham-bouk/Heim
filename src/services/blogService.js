@@ -2,8 +2,11 @@
 // context/BlogContext.jsx (see productService.js for the reasoning).
 
 import { blogPosts } from '../data/mockData';
+import placeholderImage from '../assets/product-placeholder.svg';
 
 export const getSeedBlogPosts = () => blogPosts;
+
+export const PLACEHOLDER_POST_IMAGE = placeholderImage;
 
 export const selectPublishedPosts = (posts) =>
   posts
@@ -43,7 +46,49 @@ export const searchBlogPosts = (posts, query = '', category = 'All') => {
   return posts.filter((post) => {
     const matchesCategory = category === 'All' || post.category === category;
     const matchesSearch =
-      post.title.toLowerCase().includes(q) || post.category.toLowerCase().includes(q);
+      post.title.toLowerCase().includes(q) ||
+      post.category.toLowerCase().includes(q) ||
+      (post.tags ?? []).some((tag) => tag.toLowerCase().includes(q)); // tag links on Blog Detail search by tag
     return matchesCategory && matchesSearch;
   });
 };
+
+const WORDS_PER_MINUTE = 200;
+
+/** "5 min read", at least 1 minute. */
+export const estimateReadTime = (content) => {
+  const words = content.trim().split(/\s+/).filter(Boolean).length;
+  return `${Math.max(1, Math.ceil(words / WORDS_PER_MINUTE))} min read`;
+};
+
+// The admin picks a calendar day; stored as noon UTC like the seed data so the
+// displayed day doesn't shift with the viewer's timezone.
+export const toPublishedAt = (dateString) => `${dateString}T12:00:00.000Z`;
+export const toDateInputValue = (iso) => iso.slice(0, 10);
+
+const pickEditableFields = (input) => ({
+  title: input.title,
+  excerpt: input.excerpt,
+  content: input.content,
+  author: input.author,
+  category: input.category,
+  tags: input.tags,
+  publishedAt: input.publishedAt,
+  status: input.status,
+  featured: input.featured,
+});
+
+/** Real backend: the server builds the post and returns it. */
+export const createPost = (input, id) => ({
+  id,
+  ...pickEditableFields(input),
+  image: PLACEHOLDER_POST_IMAGE,
+  readTime: estimateReadTime(input.content),
+});
+
+/** Applies admin input; id and image are kept, and read time only changes if the content did. */
+export const applyPostInput = (post, input) => ({
+  ...post,
+  ...pickEditableFields(input),
+  readTime: input.content === post.content ? post.readTime : estimateReadTime(input.content),
+});

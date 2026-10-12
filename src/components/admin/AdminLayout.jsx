@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router';
-import { ChevronDown, LayoutDashboard, LogOut, Menu, Package, Store } from 'lucide-react';
+import { ChevronDown, FileText, LayoutDashboard, LogOut, Menu, Package, Store, Tags } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Breadcrumb from '../ui/Breadcrumb';
 import { getInitials } from '../../utils/user';
@@ -13,7 +13,14 @@ const ADMIN_NAV = [
   },
   {
     group: 'Catalog',
-    items: [{ name: 'Products', href: '/admin/products', icon: Package }],
+    items: [
+      { name: 'Products', href: '/admin/products', icon: Package },
+      { name: 'Categories', href: '/admin/categories', icon: Tags },
+    ],
+  },
+  {
+    group: 'Content',
+    items: [{ name: 'Blog posts', href: '/admin/blog', icon: FileText }],
   },
 ];
 

@@ -21,7 +21,7 @@ const ImageField = ({ image, label = 'Image' }) => {
       <p className="mb-1.5 text-sm font-semibold text-foreground">{label}</p>
       <div className="flex flex-wrap items-start gap-4">
         <div className="h-28 w-28 shrink-0 overflow-hidden rounded-lg border border-border bg-secondary">
-          <img src={image} alt="Current product" className="h-full w-full object-cover" />
+          <img src={image} alt="Current image" className="h-full w-full object-cover" />
         </div>
         <div className="min-w-0 flex-1 space-y-3">
           <Button
@@ -44,7 +44,7 @@ const ImageField = ({ image, label = 'Image' }) => {
             className="w-full rounded-lg border border-border bg-secondary px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-60"
           />
           <p id={noteId} className="text-xs text-muted-foreground">
-            Image upload is disabled in this demo. New products use a placeholder image; editing keeps the current one.
+            Image upload is disabled in this demo. New items use a placeholder image; editing keeps the current one.
           </p>
         </div>
       </div>

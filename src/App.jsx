@@ -37,6 +37,9 @@ import CheckoutConfirmation from './pages/Checkout-confirmation'
 import AdminDashboard from './pages/Admin-dashboard'
 import AdminProducts from './pages/Admin-products'
 import AdminProductForm from './pages/Admin-product-form'
+import AdminCategories from './pages/Admin-categories'
+import AdminBlog from './pages/Admin-blog'
+import AdminBlogForm from './pages/Admin-blog-form'
 
 import NotFound from './pages/NotFound'
 
@@ -89,6 +92,10 @@ function App() {
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="products/new" element={<AdminProductForm />} />
                 <Route path="products/:id/edit" element={<AdminProductForm />} />
+                <Route path="categories" element={<AdminCategories />} />
+                <Route path="blog" element={<AdminBlog />} />
+                <Route path="blog/new" element={<AdminBlogForm />} />
+                <Route path="blog/:id/edit" element={<AdminBlogForm />} />
               </Route>
             </Route>
 
