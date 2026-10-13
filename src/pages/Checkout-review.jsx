@@ -22,7 +22,7 @@ const ReviewSection = ({ title, editHref, children }) => (
 
 const CheckoutReview = () => {
   const navigate = useNavigate();
-  const { cartItems, subtotal, shipping, tax, discount, total, clearCart } = useCart();
+  const { cartItems, subtotal, shipping, tax, discount, appliedPromo, total, clearCart } = useCart();
   const { draft, isPlacingOrder, setIsPlacingOrder } = useCheckout();
   const { placeOrder } = useOrders();
   const [error, setError] = useState('');
@@ -41,6 +41,7 @@ const CheckoutReview = () => {
         shippingAddress: address,
         payment,
         email,
+        promoCode: appliedPromo?.code,
       });
       clearCart();
       navigate(`${CHECKOUT_BASE_PATH}/confirmation/${order.id}`, { replace: true });

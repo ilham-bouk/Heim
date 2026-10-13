@@ -13,13 +13,15 @@ const fieldClassWithToggle =
   'w-full pl-10 pr-11 py-2.5 rounded-lg border border-border bg-card text-foreground text-sm ' +
   'placeholder:text-muted-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent';
 
-/* ─── Profile Information ─────────────────────────────────────────────── */
+const readOnlyFieldClass =
+  'w-full pl-10 pr-4 py-2.5 rounded-lg border border-border bg-secondary text-muted-foreground text-sm cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary';
+
+  /* ─── Profile Information ─────────────────────────────────────────────── */
 const ProfileSection = () => {
   const { user, updateProfile } = useAuth();
 
   const [formData, setFormData] = useState({
     fullName: user?.fullName || '',
-    email: user?.email || '',
     phone: user?.phone || '',
     birthday: user?.birthday || '',
   });
@@ -64,8 +66,12 @@ const ProfileSection = () => {
           </label>
           <div className="relative">
             <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-            <input id="email" name="email" type="email" value={formData.email} onChange={handleChange} className={fieldClass} />
+            {/* Read-only: orders (and Stage 7 customers) are keyed by email. A real backend would verify a new address before changing it. */}
+            <input id="email" name="email" type="email" value={user?.email ?? ''} readOnly aria-describedby="email-note" className={readOnlyFieldClass} />
           </div>
+          <p id="email-note" className="mt-1.5 text-xs text-muted-foreground">
+            Your email links your orders to your account, so it can't be changed in this demo.
+          </p>
         </div>
 
         <div>

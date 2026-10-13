@@ -1,12 +1,8 @@
 import { Package } from 'lucide-react';
+import StatusBadge from '../components/ui/StatusBadge';
 import { useOrders } from '../context/OrderContext';
-
-const STATUS_STYLES = {
-  Delivered: 'bg-success/10 text-success',
-  Shipped: 'bg-accent/10 text-accent',
-  Processing: 'bg-secondary text-muted-foreground',
-  Cancelled: 'bg-destructive/10 text-destructive',
-};
+import { getStatusTone } from '../services/orderService';
+import { formatDate } from '../utils/format';
 
 const AccountOrders = () => {
   const { orders } = useOrders();
@@ -40,22 +36,9 @@ const AccountOrders = () => {
             <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
               <div>
                 <p className="font-semibold text-foreground">{order.id}</p>
-                <p className="text-sm text-muted-foreground">
-                  Placed on{' '}
-                  {new Date(order.date).toLocaleDateString(undefined, {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </p>
+                <p className="text-sm text-muted-foreground">Placed on {formatDate(order.date)}</p>
               </div>
-              <span
-                className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                  STATUS_STYLES[order.status] || STATUS_STYLES.Processing
-                }`}
-              >
-                {order.status}
-              </span>
+              <StatusBadge tone={getStatusTone(order.status)}>{order.status}</StatusBadge>
             </div>
 
             {/* Item thumbnails */}

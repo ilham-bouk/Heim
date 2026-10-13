@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from 'react';
-import { getFinalPrice } from '../utils/product';
-import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST, TAX_RATE, PROMO_CODES } from '../utils/constants';
+import { PROMO_CODES } from '../utils/constants';
+import { calculateTotals } from '../utils/pricing';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { STORAGE_KEYS } from '../utils/storageKeys';
 import { useCatalog } from './CatalogContext';
@@ -81,18 +81,7 @@ export const CartProvider = ({ children }) => {
     return { ok: true };
   };
 
-  const subtotal = cartItems.reduce((total, item) => total + getFinalPrice(item) * item.quantity, 0);
-
-  const shipping = cartItems.length === 0
-    ? 0
-    : subtotal >= FREE_SHIPPING_THRESHOLD
-      ? 0
-      : STANDARD_SHIPPING_COST;
-  const tax = Math.round(subtotal * TAX_RATE);
-
-  // Mock simplification: shipping/tax are computed on the pre-discount subtotal.
-  const discount = appliedPromo ? Math.round(subtotal * appliedPromo.rate) : 0;
-  const total = subtotal + shipping + tax - discount;
+  const { subtotal, shipping, tax, discount, total } = calculateTotals(cartItems, appliedPromo?.rate);
 
   const value = {
     cartItems,

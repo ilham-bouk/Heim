@@ -6,7 +6,7 @@ import AuthLayout from '../components/auth/AuthLayout';
 import { useAuth } from '../context/AuthContext';
 import { isValidEmail } from '../utils/validators';
 import { ROLES } from '../utils/constants';
-import { DEMO_ADMIN } from '../config/demo';
+import DemoHint from '../components/auth/DemoHint';
 
 const FieldError = ({ message }) =>
   message ? (
@@ -64,7 +64,8 @@ const SignIn = () => {
 
     signIn({ email: formData.email, password: formData.password })
       .then((user) => {
-        navigate(user.role === ROLES.ADMIN ? '/admin' : '/account');
+        // Admins always land on /admin; customers return to where they came from (e.g. /checkout).
+        navigate(user.role === ROLES.ADMIN ? '/admin' : location.state?.from?.pathname || '/account');
       })
       .catch((err) => {
         setIsLoading(false);
@@ -212,14 +213,7 @@ const SignIn = () => {
         </button>
       </div>
 
-      {/* Demo hint */}
-      <div className="mt-6 space-y-1 text-center text-xs leading-relaxed text-muted-foreground">
-        <p>Demo: any valid email + password of 8+ characters will work.</p>
-        <p>
-          To enter as admin, sign in with email: <code className="font-semibold text-foreground">{DEMO_ADMIN.email}</code>{' '}
-          password: <code className="font-semibold text-foreground">{DEMO_ADMIN.password}</code>
-        </p>
-      </div>
+      <DemoHint />
 
       {/* Footer links */}
       <p className="mt-4 text-xs text-slate-400 text-center">

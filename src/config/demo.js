@@ -8,3 +8,10 @@ export const DEMO_ADMIN = {
   password: 'Admin1234',
   fullName: 'Heim Admin',
 };
+
+// A seeded customer that owns the sample orders (see data/orderSeed.js), so
+// testers can see a populated Account space. Any 8+ character password works.
+export const DEMO_CUSTOMER = {
+  email: 'jane.doe@example.com',
+  fullName: 'Jane Doe',
+};

@@ -5,7 +5,7 @@ import Button from '../components/ui/Button';
 import AuthLayout from '../components/auth/AuthLayout';
 import { useAuth } from '../context/AuthContext';
 import { isValidEmail } from '../utils/validators';
-import { DEMO_ADMIN } from '../config/demo';
+import DemoHint from '../components/auth/DemoHint';
 
 const FieldError = ({ message }) =>
   message ? (
@@ -340,13 +340,7 @@ const SignUp = () => {
         </button>
       </div>
       
-      <div className="mt-6 space-y-1 text-center text-xs leading-relaxed text-muted-foreground">
-        <p>Demo: any valid email + password of 8+ characters will work.</p>
-        <p>
-          To enter as admin, sign in with email: <code className="font-semibold text-foreground">{DEMO_ADMIN.email}</code>{' '}
-          password: <code className="font-semibold text-foreground">{DEMO_ADMIN.password}</code>
-        </p>
-      </div>
+      <DemoHint />
 
     </AuthLayout>
   );

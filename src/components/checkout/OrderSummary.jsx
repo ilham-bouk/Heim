@@ -30,7 +30,7 @@ const fromOrder = (order) => ({
     discount: order.discount ?? 0,
     total: order.total,
   },
-  promoCode: undefined,
+  promoCode: order.promoCode,
 });
 
 const Row = ({ label, value }) => (

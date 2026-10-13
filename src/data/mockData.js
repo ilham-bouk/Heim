@@ -14,6 +14,8 @@ import lighting from '../assets/lighting.jpeg'
 
 import blog1 from '../assets/cozy-living-room.jpeg'
 
+import { DEMO_CUSTOMER } from '../config/demo'
+
 // Specifications helper: keeps the product list below compact.
 const spec = (dimensions, material, weight, color) => [
   { label: 'Dimensions', value: dimensions },
@@ -79,66 +81,20 @@ export const blogPosts = [
   { id: 11, title: "Caring for Solid Wood Furniture", excerpt: "Simple habits that keep solid wood looking new for decades.", content: "Solid wood is built to last, but it still needs a little attention. Dust regularly, wipe spills immediately and keep pieces away from radiators and direct sun.\n\nOil or wax the surface once or twice a year, and use felt pads under anything that sits on top.", author: "Sarah Johnson", publishedAt: "2026-04-01T12:00:00.000Z", readTime: "4 min read", category: "Design Tips", tags: ["care", "wood"], image: blog1, featured: false, status: "draft" },
 ];
 
-export const mockOrders = [
-  {
-    id: 'HEIM-10231',
-    date: '2026-02-14',
-    status: 'Delivered',
-    items: [
-      { productId: 1, name: 'Modern Lounge Chair', image: chair, price: 299, quantity: 1 },
-      { productId: 4, name: 'Modern Floor Lamp', image: lamp, price: 189, quantity: 2 },
-    ],
-    subtotal: 677,
-    shipping: 0,
-    tax: 68,
-    total: 745,
-    shippingAddress: {
-      fullName: 'Jane Doe',
-      line1: '123 Design Street',
-      city: 'New York',
-      state: 'NY',
-      zip: '10001',
-      country: 'United States',
-    },
-  },
-  {
-    id: 'HEIM-10198',
-    date: '2026-01-02',
-    status: 'Shipped',
-    items: [
-      { productId: 3, name: 'Wooden Dining Table', image: table, price: 899, quantity: 1 },
-    ],
-    subtotal: 899,
-    shipping: 0,
-    tax: 90,
-    total: 989,
-    shippingAddress: {
-      fullName: 'Jane Doe',
-      line1: '123 Design Street',
-      city: 'New York',
-      state: 'NY',
-      zip: '10001',
-      country: 'United States',
-    },
-  },
-  {
-    id: 'HEIM-10102',
-    date: '2025-11-20',
-    status: 'Cancelled',
-    items: [
-      { productId: 2, name: 'Scandinavian Sofa', image: sofa, price: 1599, quantity: 1 },
-    ],
-    subtotal: 1599,
-    shipping: 0,
-    tax: 160,
-    total: 1759,
-    shippingAddress: {
-      fullName: 'Jane Doe',
-      line1: '123 Design Street',
-      city: 'New York',
-      state: 'NY',
-      zip: '10001',
-      country: 'United States',
-    },
-  },
+// Seed customer pool. The first one is the demo customer who owns the
+// hand-written sample orders. data/orderSeed.js gives orders to the next few;
+// Stage 7's admin Customers directory reuses this list.
+export const customers = [
+  { id: 1, fullName: DEMO_CUSTOMER.fullName, email: DEMO_CUSTOMER.email, phone: '+1 (555) 010-0101', address: { line1: '123 Design Street', city: 'New York', state: 'NY', zip: '10001', country: 'United States' } },
+  { id: 2, fullName: 'Liam Carter', email: 'liam.carter@example.com', phone: '+1 (555) 010-0102', address: { line1: '48 Maple Avenue', city: 'Austin', state: 'TX', zip: '78701', country: 'United States' } },
+  { id: 3, fullName: 'Sofia Martinez', email: 'sofia.martinez@example.com', phone: '+1 (555) 010-0103', address: { line1: '221 Ocean Drive', city: 'Miami', state: 'FL', zip: '33139', country: 'United States' } },
+  { id: 4, fullName: 'Noah Williams', email: 'noah.williams@example.com', phone: '+1 (555) 010-0104', address: { line1: '9 Birch Lane', city: 'Portland', state: 'OR', zip: '97205', country: 'United States' } },
+  { id: 5, fullName: 'Emma Johansson', email: 'emma.johansson@example.com', phone: '+1 (555) 010-0105', address: { line1: '17 Harbor Street', city: 'Seattle', state: 'WA', zip: '98101', country: 'United States' } },
+  { id: 6, fullName: 'Oliver Brown', email: 'oliver.brown@example.com', phone: '+1 (555) 010-0106', address: { line1: '305 Lakeview Road', city: 'Chicago', state: 'IL', zip: '60601', country: 'United States' } },
+  { id: 7, fullName: 'Ava Nguyen', email: 'ava.nguyen@example.com', phone: '+1 (555) 010-0107', address: { line1: '72 Elm Court', city: 'Denver', state: 'CO', zip: '80202', country: 'United States' } },
+  { id: 8, fullName: 'Mason Patel', email: 'mason.patel@example.com', phone: '+1 (555) 010-0108', address: { line1: '14 Cedar Row', city: 'Boston', state: 'MA', zip: '02108', country: 'United States' } },
+  { id: 9, fullName: 'Isabella Rossi', email: 'isabella.rossi@example.com', phone: '+1 (555) 010-0109', address: { line1: '56 Willow Way', city: 'San Diego', state: 'CA', zip: '92101', country: 'United States' } },
+  { id: 10, fullName: 'Ethan Kim', email: 'ethan.kim@example.com', phone: '+1 (555) 010-0110', address: { line1: '801 Pine Street', city: 'Nashville', state: 'TN', zip: '37203', country: 'United States' } },
+  { id: 11, fullName: 'Mia Thompson', email: 'mia.thompson@example.com', phone: '+1 (555) 010-0111', address: { line1: '3 Aspen Place', city: 'Minneapolis', state: 'MN', zip: '55401', country: 'United States' } },
+  { id: 12, fullName: 'Lucas Garcia', email: 'lucas.garcia@example.com', phone: '+1 (555) 010-0112', address: { line1: '190 Sunset Boulevard', city: 'Phoenix', state: 'AZ', zip: '85004', country: 'United States' } },
 ];

@@ -1,7 +1,66 @@
 import { Fragment, useId, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router';
 import { ArrowDown, ArrowUp, ChevronLeft, ChevronRight, ChevronsUpDown, Search } from 'lucide-react';
 import Button from '../ui/Button';
 import EmptyState from '../ui/EmptyState';
+
+// ── Table state (search / sort / page) ──────────────────────────────────────
+// Local by default. With `syncToUrl` it lives in ?q=…&sort=key:dir&page=N so
+// the state survives opening a row and coming back. Defaults are omitted from
+// the URL to keep it clean, and other params (e.g. a page's own ?status=) are
+// preserved. Updates use `replace`, so typing doesn't flood browser history.
+const parseSort = (value, fallback) => {
+  const [key, direction] = (value ?? '').split(':');
+  return key && (direction === 'asc' || direction === 'desc') ? { key, direction } : fallback;
+};
+
+const isSameSort = (a, b) => !!a && !!b && a.key === b.key && a.direction === b.direction;
+
+const setOrDelete = (params, key, value) => {
+  if (value) params.set(key, value);
+  else params.delete(key);
+};
+
+const useTableState = (syncToUrl, initialSort) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [localState, setLocalState] = useState({ query: '', sort: initialSort, page: 1 });
+
+  // Primitives in the deps keep `sort` referentially stable between renders.
+  const sortParam = searchParams.get('sort');
+  const defaultKey = initialSort?.key;
+  const defaultDirection = initialSort?.direction;
+  const defaultSort = useMemo(
+    () => (defaultKey ? { key: defaultKey, direction: defaultDirection } : null),
+    [defaultKey, defaultDirection]
+  );
+  const urlSort = useMemo(() => parseSort(sortParam, defaultSort), [sortParam, defaultSort]);
+
+  if (!syncToUrl) {
+    return [localState, (changes) => setLocalState((prev) => ({ ...prev, ...changes }))];
+  }
+
+  const state = {
+    query: searchParams.get('q') ?? '',
+    sort: urlSort,
+    page: Math.max(1, parseInt(searchParams.get('page'), 10) || 1),
+  };
+
+  const update = (changes) => {
+    const next = { ...state, ...changes };
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev);
+        setOrDelete(params, 'q', next.query);
+        setOrDelete(params, 'sort', next.sort && !isSameSort(next.sort, defaultSort) ? `${next.sort.key}:${next.sort.direction}` : '');
+        setOrDelete(params, 'page', next.page > 1 ? String(next.page) : '');
+        return params;
+      },
+      { replace: true }
+    );
+  };
+
+  return [state, update];
+};
 
 /**
  * Generic admin table: search, sort, pagination, empty states, row actions and
@@ -22,6 +81,7 @@ import EmptyState from '../ui/EmptyState';
  * @param {string} [searchLabel='Search']
  * @param {React.ReactNode} [toolbar] - extra controls next to the search box
  * @param {{key: string, direction: 'asc'|'desc'}} [initialSort]
+ * @param {boolean} [syncToUrl=false] - keep search/sort/page in the URL (?q, ?sort, ?page)
  * @param {number} [pageSize=10]
  * @param {(row) => React.ReactNode} [rowActions]
  * @param {string|number|null} [expandedRowId] - row that shows `renderExpandedRow` underneath
@@ -40,6 +100,7 @@ const DataTable = ({
   searchLabel = 'Search',
   toolbar,
   initialSort = null,
+  syncToUrl = false,
   pageSize = 10,
   rowActions,
   expandedRowId = null,
@@ -50,9 +111,7 @@ const DataTable = ({
   emptyAction,
 }) => {
   const searchId = useId();
-  const [query, setQuery] = useState('');
-  const [sort, setSort] = useState(initialSort);
-  const [page, setPage] = useState(1);
+  const [{ query, sort, page }, updateTable] = useTableState(syncToUrl, initialSort);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -82,12 +141,13 @@ const DataTable = ({
   const colSpan = columns.length + (rowActions ? 1 : 0);
 
   const toggleSort = (key) => {
-    setSort((prev) =>
-      prev?.key === key
-        ? { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' }
-        : { key, direction: 'asc' }
-    );
-    setPage(1);
+    updateTable({
+      sort:
+        sort?.key === key
+          ? { key, direction: sort.direction === 'asc' ? 'desc' : 'asc' }
+          : { key, direction: 'asc' },
+      page: 1,
+    });
   };
 
   const getAriaSort = (column) => {
@@ -109,8 +169,7 @@ const DataTable = ({
                 type="search"
                 value={query}
                 onChange={(e) => {
-                  setQuery(e.target.value);
-                  setPage(1);
+                  updateTable({ query: e.target.value, page: 1 });
                 }}
                 placeholder={`${searchLabel}…`}
                 className="w-full rounded-lg border border-border bg-card py-2.5 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
@@ -132,8 +191,8 @@ const DataTable = ({
             icon={Search}
             title="No results"
             message={`Nothing matches “${query.trim()}”.`}
-            action={<Button variant="outline" size="sm" onClick={() => setQuery('')}>Clear search</Button>}
-          />
+            action={<Button variant="outline" size="sm" onClick={() => updateTable({ query: '', page: 1 })}>Clear search</Button>}
+            />
         ) : (
           <EmptyState icon={emptyIcon} title={emptyTitle} message={emptyMessage} action={emptyAction} />
         )
@@ -222,7 +281,7 @@ const DataTable = ({
                   size="sm"
                   className="gap-1 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={currentPage === 1}
-                  onClick={() => setPage(currentPage - 1)}
+                  onClick={() => updateTable({ page: currentPage - 1 })}
                 >
                   <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                   Previous
@@ -233,7 +292,7 @@ const DataTable = ({
                   size="sm"
                   className="gap-1 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={currentPage === pageCount}
-                  onClick={() => setPage(currentPage + 1)}
+                  onClick={() => updateTable({ page: currentPage + 1 })}
                 >
                   Next
                   <ChevronRight className="h-4 w-4" aria-hidden="true" />

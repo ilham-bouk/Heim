@@ -40,6 +40,8 @@ import AdminProductForm from './pages/Admin-product-form'
 import AdminCategories from './pages/Admin-categories'
 import AdminBlog from './pages/Admin-blog'
 import AdminBlogForm from './pages/Admin-blog-form'
+import AdminOrders from './pages/Admin-orders'
+import AdminOrderDetail from './pages/Admin-order-detail'
 
 import NotFound from './pages/NotFound'
 
@@ -89,6 +91,8 @@ function App() {
             <Route element={<ProtectedRoute requiredRole={ROLES.ADMIN} />}>
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
+                <Route path="orders" element={<AdminOrders />} />
+                <Route path="orders/:id" element={<AdminOrderDetail />} />
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="products/new" element={<AdminProductForm />} />
                 <Route path="products/:id/edit" element={<AdminProductForm />} />

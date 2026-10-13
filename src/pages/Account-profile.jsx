@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import { User, Mail, Phone, Cake, Truck, Pencil } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useOrders } from '../context/OrderContext';
+import { formatDate } from '../utils/format';
 
 const STATUS_MESSAGE = {
   Processing: 'is being prepared',
@@ -47,7 +48,7 @@ const AccountProfile = () => {
               Order {order.id} {STATUS_MESSAGE[order.status] || 'is in progress'}
             </p>
             <p className="text-sm text-muted-foreground">
-              Placed on {new Date(order.date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })} · ${order.total.toLocaleString()}
+              Placed on {formatDate(order.date)} · ${order.total.toLocaleString()}
             </p>
           </div>
           <Link

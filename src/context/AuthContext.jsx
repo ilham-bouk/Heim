@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { STORAGE_KEYS } from '../utils/storageKeys';
 import { ROLES } from '../utils/constants';
-import { DEMO_ADMIN } from '../config/demo';
+import { DEMO_ADMIN, DEMO_CUSTOMER } from '../config/demo';
 
 const AuthContext = createContext();
 
@@ -19,6 +19,7 @@ const AuthContext = createContext();
 const MOCK_LATENCY_MS = 800; // simulated network delay — remove when wiring a real API
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const isDemoAdminEmail = (email) => email.trim().toLowerCase() === DEMO_ADMIN.email;
+const isDemoCustomerEmail = (email) => email.trim().toLowerCase() === DEMO_CUSTOMER.email;
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage(STORAGE_KEYS.auth, null);
@@ -32,8 +33,9 @@ export const AuthProvider = ({ children }) => {
     }
     const nextUser = {
       email: isAdmin ? DEMO_ADMIN.email : email.trim(),
-      fullName: isAdmin ? DEMO_ADMIN.fullName : fullName || email.split('@')[0],
-      role: isAdmin ? ROLES.ADMIN : ROLES.CUSTOMER,
+      fullName: isAdmin
+        ? DEMO_ADMIN.fullName
+        : fullName || (isDemoCustomerEmail(email) ? DEMO_CUSTOMER.fullName : email.split('@')[0]),      role: isAdmin ? ROLES.ADMIN : ROLES.CUSTOMER,
       phone: '',
       birthday: '',
     };

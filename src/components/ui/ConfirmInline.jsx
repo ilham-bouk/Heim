@@ -12,10 +12,11 @@ import Button from './Button';
  * @param {string} message
  * @param {string} [confirmLabel='Delete']
  * @param {boolean} [busy=false] - disables the confirm button while the action runs
+ * @param {string} [busyLabel='Deleting…'] - confirm button text while `busy` 
  * @param {() => void} onConfirm
  * @param {() => void} onCancel
  */
-const ConfirmInline = ({ message, confirmLabel = 'Delete', busy = false, onConfirm, onCancel }) => {
+const ConfirmInline = ({ message, confirmLabel = 'Delete', busy = false, busyLabel = 'Deleting…', onConfirm, onCancel }) => {
   const messageId = useId();
   const cancelRef = useRef(null);
 
@@ -58,7 +59,7 @@ const ConfirmInline = ({ message, confirmLabel = 'Delete', busy = false, onConfi
           className="disabled:cursor-not-allowed disabled:opacity-50"
           onClick={onConfirm}
         >
-          {busy ? 'Deleting…' : confirmLabel}
+          {busy ? busyLabel : confirmLabel}
         </Button>
       </div>
     </div>
