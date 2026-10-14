@@ -1,9 +1,10 @@
 import { createContext, useContext, useMemo } from 'react';
-import { PROMO_CODES } from '../utils/constants';
 import { calculateTotals } from '../utils/pricing';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { STORAGE_KEYS } from '../utils/storageKeys';
+import { validatePromo } from '../services/promoService';
 import { useCatalog } from './CatalogContext';
+import { usePromos } from './PromoContext';
 
 const CartContext = createContext();
 
@@ -11,13 +12,15 @@ const CART_STORAGE_KEY = STORAGE_KEYS.cart;
 const PROMO_STORAGE_KEY = STORAGE_KEYS.cartPromo;
 
 // Storage keeps only { id, quantity } per line and { code } for the promo.
-// Everything else (name, price, discount, rate...) is resolved against the live
-// catalog on every render, so admin edits apply immediately and deleted products
-// drop out. (Older saved carts hold full product copies; we only read id/quantity.)
+// Everything else (name, price, discount, promo type/value...) is resolved against
+// the live catalog and promo list on every render, so admin edits apply immediately
+// and deleted products or promos drop out. (Older saved carts hold full product
+// copies; we only read id/quantity.)
 // Real backend: this is the shape a cart API returns.
 
 export const CartProvider = ({ children }) => {
   const { getProductById } = useCatalog();
+  const { promos } = usePromos();
   const [storedItems, setStoredItems] = useLocalStorage(CART_STORAGE_KEY, []);
   const [storedPromo, setStoredPromo] = useLocalStorage(PROMO_STORAGE_KEY, null);
 
@@ -33,8 +36,12 @@ export const CartProvider = ({ children }) => {
   // Lines whose product no longer exists in the catalog.
   const unavailableCount = storedItems.length - cartItems.length;
 
-  const promoRate = storedPromo ? PROMO_CODES[storedPromo.code] : undefined;
-  const appliedPromo = promoRate ? { code: storedPromo.code, rate: promoRate } : null;
+  // A stored code only counts while it is still valid (exists, active, not expired).
+  // If an admin changes that under the customer, the discount disappears and
+  // `droppedPromo` explains why, so the total never changes silently.
+  const promoCheck = storedPromo ? validatePromo(promos, storedPromo.code) : null;
+  const appliedPromo = promoCheck?.ok ? promoCheck.promo : null;
+  const droppedPromo = promoCheck && !promoCheck.ok ? { code: storedPromo.code, reason: promoCheck.error } : null;
 
   const addToCart = (product, quantity = 1) => {
     setStoredItems((prev) => {
@@ -72,16 +79,30 @@ export const CartProvider = ({ children }) => {
     setStoredItems((prev) => prev.filter((item) => getProductById(item.id)));
   };
 
-  // Returns { ok: true } or { ok: false, error }. Swap for an API call later.
+  // Returns { ok: true } or { ok: false, error }. Swap for an API call later
+  // (a real API should return one generic error for every failure).
   const applyPromo = (rawCode) => {
-    const code = rawCode.trim().toUpperCase();
-    if (!PROMO_CODES[code]) return { ok: false, error: 'Invalid promo code' };
+    if (appliedPromo) {
+      const sameCode = appliedPromo.code === rawCode.trim().toUpperCase();
+      return {
+        ok: false,
+        error: sameCode
+          ? `“${appliedPromo.code}” is already applied.`
+          : `Remove “${appliedPromo.code}” before applying another code.`,
+      };
+    }
 
-    setStoredPromo({ code });
+    const result = validatePromo(promos, rawCode);
+    if (!result.ok) return result;
+
+    setStoredPromo({ code: result.promo.code });
     return { ok: true };
   };
 
-  const { subtotal, shipping, tax, discount, total } = calculateTotals(cartItems, appliedPromo?.rate);
+  // Also used to dismiss the "promo was removed" notice (it clears the stale code).
+  const removePromo = () => setStoredPromo(null);
+
+  const { subtotal, shipping, tax, discount, total } = calculateTotals(cartItems, appliedPromo);
 
   const value = {
     cartItems,
@@ -96,7 +117,9 @@ export const CartProvider = ({ children }) => {
     tax,
     discount,
     appliedPromo,
+    droppedPromo,
     applyPromo,
+    removePromo,
     total,
     itemCount: cartItems.reduce((count, item) => count + item.quantity, 0),
   };

@@ -42,6 +42,7 @@ import AdminBlog from './pages/Admin-blog'
 import AdminBlogForm from './pages/Admin-blog-form'
 import AdminOrders from './pages/Admin-orders'
 import AdminOrderDetail from './pages/Admin-order-detail'
+import AdminPromos from './pages/Admin-promos'
 
 import NotFound from './pages/NotFound'
 
@@ -93,6 +94,7 @@ function App() {
                 <Route index element={<AdminDashboard />} />
                 <Route path="orders" element={<AdminOrders />} />
                 <Route path="orders/:id" element={<AdminOrderDetail />} />
+                <Route path="promos" element={<AdminPromos />} />
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="products/new" element={<AdminProductForm />} />
                 <Route path="products/:id/edit" element={<AdminProductForm />} />

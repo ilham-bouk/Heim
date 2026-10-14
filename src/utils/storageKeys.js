@@ -10,6 +10,7 @@ export const STORAGE_KEYS = {
   addresses: 'heim_addresses',
   paymentMethods: 'heim_payment_methods',
   orders: 'heim_orders',
+  promos: 'heim_promos',
   checkoutDraft: 'heim_checkout_draft',
   products: 'heim_products',
   categories: 'heim_categories',

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Trash2, Minus, Plus, ShoppingBag, ArrowLeft, Truck, CheckCircle } from 'lucide-react';
+import { Trash2, Minus, Plus, ShoppingBag, ArrowLeft, Truck, CheckCircle, X } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
 import { useCart } from '../context/CartContext';
@@ -7,13 +7,13 @@ import { getFinalPrice } from '../utils/product';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { FREE_SHIPPING_THRESHOLD } from '../utils/constants';
 import { useCatalog } from '../context/CatalogContext';
+import { usePromos } from '../context/PromoContext';
+import { describePromo, selectActivePromos } from '../services/promoService';
 import ProductCard from '../components/ui/Product-card';
 
-const UnavailableNotice = ({ count, onDismiss }) => (
+const CartNotice = ({ onDismiss, children }) => (
   <div role="status" className="mb-8 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-secondary p-4 text-sm text-foreground">
-    <p>
-      {count} {count === 1 ? 'item in your cart is' : 'items in your cart are'} no longer available.
-    </p>
+    <p>{children}</p>
     <button
       type="button"
       onClick={onDismiss}
@@ -24,9 +24,16 @@ const UnavailableNotice = ({ count, onDismiss }) => (
   </div>
 );
 
+const UnavailableNotice = ({ count, onDismiss }) => (
+  <CartNotice onDismiss={onDismiss}>
+    {count} {count === 1 ? 'item in your cart is' : 'items in your cart are'} no longer available.
+  </CartNotice>
+);
+
 const Cart = () => {
-  const { cartItems, unavailableCount, clearUnavailable, removeFromCart, updateQuantity, subtotal, shipping, tax, discount, appliedPromo, applyPromo, total, itemCount } = useCart();
+  const { cartItems, unavailableCount, clearUnavailable, removeFromCart, updateQuantity, subtotal, shipping, tax, discount, appliedPromo, droppedPromo, applyPromo, removePromo, total, itemCount } = useCart();
   const { products } = useCatalog();
+  const { promos } = usePromos();
 
   const [promoInput, setPromoInput] = useState('');
   const [promoError, setPromoError] = useState('');
@@ -35,7 +42,15 @@ const Cart = () => {
     if (!promoInput.trim()) return;
     const result = applyPromo(promoInput);
     setPromoError(result.ok ? '' : result.error);
+    if (result.ok) setPromoInput(''); // the field now shows the applied code
   };
+
+  const handleRemovePromo = () => {
+    removePromo();
+    setPromoError('');
+  };
+
+  const hintPromo = selectActivePromos(promos)[0];
 
   {/* Empty Cart */}
   if (cartItems.length === 0) {
@@ -84,6 +99,12 @@ const Cart = () => {
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-12 lg:py-20">
         {unavailableCount > 0 && (
           <UnavailableNotice count={unavailableCount} onDismiss={clearUnavailable} />
+        )}
+
+        {droppedPromo && (
+          <CartNotice onDismiss={removePromo}>
+            The promo code “{droppedPromo.code}” was removed from your cart. {droppedPromo.reason}
+          </CartNotice>
         )}
 
         <div className="mb-12">
@@ -253,27 +274,39 @@ const Cart = () => {
                     type="text"
                     id="promo"
                     placeholder="Enter code"
-                    value={promoInput}
+                    value={appliedPromo ? appliedPromo.code : promoInput}
                     onChange={(e) => setPromoInput(e.target.value)}
                     disabled={!!appliedPromo}
                     className="flex-1 px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-sm disabled:bg-slate-50 disabled:text-slate-400"
                   />
-                  <button
-                    onClick={handleApplyPromo}
-                    disabled={!!appliedPromo}
-                    className="px-3 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Apply
-                  </button>
+                  {appliedPromo ? (
+                    <button
+                      type="button"
+                      onClick={handleRemovePromo}
+                      className="px-3 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium"
+                    >
+                      Remove
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleApplyPromo}
+                      className="px-3 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors text-sm font-medium"
+                    >
+                      Apply
+                    </button>
+                  )}
                 </div>
 
                 {appliedPromo && (
                   <p className="flex items-center gap-1.5 text-xs text-success">
-                    <CheckCircle className="w-3.5 h-3.5" /> "{appliedPromo.code}" applied
+                    <CheckCircle className="w-3.5 h-3.5" /> "{appliedPromo.code}" applied ({describePromo(appliedPromo)})
                   </p>
                 )}
-                {promoError && <p className="text-xs text-destructive">{promoError}</p>}
-                <p className="text-xs text-slate-400">Try code: HEIM10</p>
+                {promoError && <p role="alert" className="text-xs text-destructive">{promoError}</p>}
+                {!appliedPromo && hintPromo && (
+                  <p className="text-xs text-slate-400">Try code: {hintPromo.code}</p>
+                )}
               </div>
 
               {/* Free Shipping Info */}

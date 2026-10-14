@@ -7,7 +7,7 @@
 //                dashboard always looks alive instead of going stale)
 //   status     → keep it plausible for the age (recent = Processing/Shipped)
 //   lines      → [[productId, quantity], ...] with ids from `products` in mockData.js
-//   promoCode  → optional, a key of PROMO_CODES
+//   promoCode  → optional, a code from data/promoSeed.js
 //
 // Totals come from the same calculateTotals the cart uses. Orders are stored
 // once (see OrderContext + useSeededCollection), so admin edits survive until
@@ -15,7 +15,7 @@
 
 import { products, customers } from './mockData';
 import { calculateTotals } from '../utils/pricing';
-import { PROMO_CODES } from '../utils/constants';
+import { getSeedPromos } from './promoSeed';
 import { formatOrderId, toOrderItem } from '../services/orderService';
 
 const SEED_ORDERS = [
@@ -23,7 +23,6 @@ const SEED_ORDERS = [
   { customerId: 1, daysAgo: 4, status: 'Shipped', lines: [[3, 1]] },
   { customerId: 1, daysAgo: 38, status: 'Delivered', lines: [[1, 1], [4, 2]] },
   { customerId: 1, daysAgo: 96, status: 'Cancelled', lines: [[2, 1]] },
-
   // Everyone else
   { customerId: 2, daysAgo: 0, status: 'Processing', lines: [[19, 1]] },
   { customerId: 3, daysAgo: 1, status: 'Processing', lines: [[27, 2], [28, 1]] },
@@ -90,7 +89,8 @@ const createOrder = ({ customerId, status, lines, promoCode }, placedAt, now) =>
     ...products.find((product) => product.id === productId),
     quantity,
   }));
-  const totals = calculateTotals(items, promoCode ? PROMO_CODES[promoCode] : 0);
+  const promo = promoCode ? getSeedPromos().find((p) => p.code === promoCode) : null;
+  const totals = calculateTotals(items, promo);
 
   return {
     date: new Date(placedAt).toISOString(),
