@@ -1,5 +1,7 @@
 import { Link } from "react-router";
 import { useCatalog } from "../../context/CatalogContext";
+import { useSettings } from "../../context/SettingsContext";
+import { SOCIAL_NETWORKS } from "../../services/settingsService";
 
 const footerLinks = {
   company: [
@@ -19,6 +21,13 @@ const footerLinks = {
 
 const Footer = () => {
   const { categories } = useCatalog();
+  const { settings } = useSettings();
+  const { name, tagline } = settings.store;
+
+  const socialLinks = SOCIAL_NETWORKS
+    .filter(({ key }) => settings.social[key])
+    .map(({ key, label }) => ({ key, label, href: settings.social[key] }));
+
   const shopLinks = [
     { name: "All Products", href: "/shop" },
     ...categories.slice(0, 4).map((category) => ({
@@ -34,11 +43,28 @@ const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link to="/" className="text-2xl font-bold">
-              Heim
+              {name}
             </Link>
             <p className="mt-4 text-sm text-primary-foreground/70 leading-relaxed">
-              Beautifully crafted modern furniture for your home. We believe in quality, sustainability, and timeless design.
+              {tagline}
             </p>
+            {socialLinks.length > 0 && (
+              <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+                {socialLinks.map(({ key, label, href }) => (
+                  <li key={key}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+                    >
+                      {label}
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           {/* Links */}
@@ -95,7 +121,7 @@ const Footer = () => {
         <div className="mt-12 border-t border-primary-foreground/10 pt-8">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <p className="text-sm text-primary-foreground/60">
-              &copy; 2026 Heim. All rights reserved.
+              &copy; 2026 {name}. All rights reserved.
             </p>
             <div className="flex gap-6">
               <Link to="/privacy" className="text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors">

@@ -1,12 +1,8 @@
 import { getFinalPrice } from './product';
-import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST, TAX_RATE } from './constants';
+import { defaultSettings } from '../config/site';
 
-// Stage 6 replaces this default with values from the Settings store.
-const DEFAULT_RULES = {
-  taxRate: TAX_RATE,
-  freeShippingThreshold: FREE_SHIPPING_THRESHOLD,
-  standardShippingCost: STANDARD_SHIPPING_COST,
-};
+// Defaults only. CartContext passes the live (admin-edited) rules; the order seeder uses these.
+const DEFAULT_RULES = defaultSettings.pricing;
 
 /** Discount a promo gives on a subtotal, never more than the subtotal itself. */
 export const getPromoDiscount = (subtotal, promo) => {

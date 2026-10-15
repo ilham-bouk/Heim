@@ -4,9 +4,12 @@ import { Link } from 'react-router';
 import Button from '../components/ui/Button';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { isValidEmail } from '../utils/validators';
-import { contact as contactInfoConfig } from '../config/site';
+import { useSettings } from '../context/SettingsContext';
 
 const Contact = () => {
+  const { settings } = useSettings();
+  const contactInfoConfig = settings.contact;
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -72,13 +75,13 @@ const Contact = () => {
     {
       icon: Phone,
       title: "Call Us",
-      details: [contactInfoConfig.phone, contactInfoConfig.phoneAlt],
+      details: [contactInfoConfig.phone, contactInfoConfig.phoneAlt].filter(Boolean),
       link: `tel:${contactInfoConfig.phone.replace(/[^\d+]/g, '')}`
     },
     {
       icon: Mail,
       title: "Email Us",
-      details: [contactInfoConfig.email, contactInfoConfig.supportEmail],
+      details: [contactInfoConfig.email, contactInfoConfig.supportEmail].filter(Boolean),
       link: `mailto:${contactInfoConfig.email}`
     },
     {

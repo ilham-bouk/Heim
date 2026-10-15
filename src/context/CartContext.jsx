@@ -5,6 +5,7 @@ import { STORAGE_KEYS } from '../utils/storageKeys';
 import { validatePromo } from '../services/promoService';
 import { useCatalog } from './CatalogContext';
 import { usePromos } from './PromoContext';
+import { useSettings } from './SettingsContext';
 
 const CartContext = createContext();
 
@@ -21,6 +22,7 @@ const PROMO_STORAGE_KEY = STORAGE_KEYS.cartPromo;
 export const CartProvider = ({ children }) => {
   const { getProductById } = useCatalog();
   const { promos } = usePromos();
+  const { settings } = useSettings();
   const [storedItems, setStoredItems] = useLocalStorage(CART_STORAGE_KEY, []);
   const [storedPromo, setStoredPromo] = useLocalStorage(PROMO_STORAGE_KEY, null);
 
@@ -102,7 +104,7 @@ export const CartProvider = ({ children }) => {
   // Also used to dismiss the "promo was removed" notice (it clears the stale code).
   const removePromo = () => setStoredPromo(null);
 
-  const { subtotal, shipping, tax, discount, total } = calculateTotals(cartItems, appliedPromo);
+  const { subtotal, shipping, tax, discount, total } = calculateTotals(cartItems, appliedPromo, settings.pricing);
 
   const value = {
     cartItems,

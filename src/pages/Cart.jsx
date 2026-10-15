@@ -5,7 +5,8 @@ import Button from '../components/ui/Button';
 import { useCart } from '../context/CartContext';
 import { getFinalPrice } from '../utils/product';
 import Breadcrumb from '../components/ui/Breadcrumb';
-import { FREE_SHIPPING_THRESHOLD } from '../utils/constants';
+import { useSettings } from '../context/SettingsContext';
+import { toPercent } from '../services/settingsService';
 import { useCatalog } from '../context/CatalogContext';
 import { usePromos } from '../context/PromoContext';
 import { describePromo, selectActivePromos } from '../services/promoService';
@@ -34,6 +35,8 @@ const Cart = () => {
   const { cartItems, unavailableCount, clearUnavailable, removeFromCart, updateQuantity, subtotal, shipping, tax, discount, appliedPromo, droppedPromo, applyPromo, removePromo, total, itemCount } = useCart();
   const { products } = useCatalog();
   const { promos } = usePromos();
+  const { settings } = useSettings();
+  const { taxRate, freeShippingThreshold } = settings.pricing;
 
   const [promoInput, setPromoInput] = useState('');
   const [promoError, setPromoError] = useState('');
@@ -241,7 +244,7 @@ const Cart = () => {
 
               {/* Tax */}
               <div className="flex justify-between mb-6 pb-6 border-b border-slate-200">
-                <span className="text-slate-600">Tax (10%)</span>
+                <span className="text-slate-600">Tax ({toPercent(taxRate)}%)</span>
                 <span className="font-semibold text-slate-900">${tax}</span>
               </div>
 
@@ -310,10 +313,10 @@ const Cart = () => {
               </div>
 
               {/* Free Shipping Info */}
-              {subtotal < FREE_SHIPPING_THRESHOLD && (
+              {subtotal < freeShippingThreshold && (
                 <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <p className="text-xs text-blue-900">
-                    <span className="font-semibold">Free shipping</span> on orders over ${FREE_SHIPPING_THRESHOLD}. You're ${(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(2)} away!
+                    <span className="font-semibold">Free shipping</span> on orders over ${freeShippingThreshold}. You're ${(freeShippingThreshold - subtotal).toFixed(2)} away!
                   </p>
                 </div>
               )}

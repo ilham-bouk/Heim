@@ -1,8 +1,10 @@
 import { Link } from 'react-router';
 import { ShoppingBag } from 'lucide-react';
-import { FREE_SHIPPING_THRESHOLD } from '../../utils/constants';
+import { useSettings } from '../../context/SettingsContext';
 
 const AuthLayout = ({ quote, subtext, children }) => {
+  const { settings } = useSettings();
+  
   return (
     <div className="min-h-screen bg-white flex">
 
@@ -27,7 +29,7 @@ const AuthLayout = ({ quote, subtext, children }) => {
           <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg">
             <ShoppingBag className="w-5 h-5 text-slate-900" />
           </div>
-          <span className="text-white font-bold text-xl tracking-tight">Heim</span>
+          <span className="text-white font-bold text-xl tracking-tight">{settings.store.name}</span>
         </Link>
 
         {/* Quote */}
@@ -42,7 +44,7 @@ const AuthLayout = ({ quote, subtext, children }) => {
         {/* Trust signals */}
         <div className="relative z-10 space-y-3">
           {[
-            `Free shipping on orders over $${FREE_SHIPPING_THRESHOLD}`,
+            `Free shipping on orders over $${settings.pricing.freeShippingThreshold}`,
             '30-day hassle-free returns',
             '2-year warranty on all products',
           ].map((item) => (
@@ -63,7 +65,7 @@ const AuthLayout = ({ quote, subtext, children }) => {
             <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
               <ShoppingBag className="w-4 h-4 text-white" />
             </div>
-            <span className="text-slate-900 font-bold text-lg tracking-tight">Heim</span>
+            <span className="text-slate-900 font-bold text-lg tracking-tight">{settings.store.name}</span>
           </Link>
 
           {children}

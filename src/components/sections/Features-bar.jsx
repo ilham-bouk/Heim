@@ -1,30 +1,32 @@
 import { Truck, Shield, Headphones, RefreshCw } from "lucide-react"
-import { FREE_SHIPPING_THRESHOLD } from '../../utils/constants';
-
-const features = [
-  {
-    icon: Truck,
-    title: "Free Delivery",
-    description: `On orders over $${FREE_SHIPPING_THRESHOLD}`
-  },
-  {
-    icon: Shield,
-    title: "Secure Payment",
-    description: "100% protected"
-  },
-  {
-    icon: Headphones,
-    title: "24/7 Support",
-    description: "Dedicated support"
-  },
-  {
-    icon: RefreshCw,
-    title: "Easy Returns",
-    description: "30 day return policy"
-  }
-]
+import { useSettings } from '../../context/SettingsContext';
 
 const FeaturesBar = () => {
+  const { settings } = useSettings();
+
+  const features = [
+    {
+      icon: Truck,
+      title: "Free Delivery",
+      description: `On orders over $${settings.pricing.freeShippingThreshold}`
+    },
+    {
+      icon: Shield,
+      title: "Secure Payment",
+      description: "100% protected"
+    },
+    {
+      icon: Headphones,
+      title: "24/7 Support",
+      description: "Dedicated support"
+    },
+    {
+      icon: RefreshCw,
+      title: "Easy Returns",
+      description: "30 day return policy"
+    }
+  ]
+
   return (
     <section className="border-y border-border bg-card">
       <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">

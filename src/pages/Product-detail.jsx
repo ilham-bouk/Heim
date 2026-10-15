@@ -6,6 +6,7 @@ import NotFound from './NotFound';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useCatalog } from '../context/CatalogContext';
+import { useSettings } from '../context/SettingsContext';
 import { getFinalPrice, getBadgeClass } from '../utils/product';
 import Breadcrumb from '../components/ui/Breadcrumb';
 
@@ -14,6 +15,7 @@ const ProductDetail = () => {
   const { addToCart, cartItems } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { getProductById, getRelatedProducts } = useCatalog();
+  const { settings } = useSettings();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -217,7 +219,7 @@ const ProductDetail = () => {
             {/* Trust features */}
             <div className="space-y-4">
               {[
-                { Icon: Truck,     title: 'Free Shipping',   sub: 'On orders over $100' },
+                { Icon: Truck,     title: 'Free Shipping',   sub: `On orders over $${settings.pricing.freeShippingThreshold}` },
                 { Icon: Shield,    title: '2-Year Warranty', sub: 'Comprehensive coverage included' },
                 { Icon: RotateCcw, title: '30-Day Returns',  sub: 'Easy returns for any reason' },
               ].map(({ Icon, title, sub }) => (

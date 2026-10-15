@@ -43,6 +43,7 @@ import AdminBlogForm from './pages/Admin-blog-form'
 import AdminOrders from './pages/Admin-orders'
 import AdminOrderDetail from './pages/Admin-order-detail'
 import AdminPromos from './pages/Admin-promos'
+import AdminSettings from './pages/Admin-settings'
 
 import NotFound from './pages/NotFound'
 
@@ -102,6 +103,7 @@ function App() {
                 <Route path="blog" element={<AdminBlog />} />
                 <Route path="blog/new" element={<AdminBlogForm />} />
                 <Route path="blog/:id/edit" element={<AdminBlogForm />} />
+                <Route path="settings" element={<AdminSettings />} />
               </Route>
             </Route>
 

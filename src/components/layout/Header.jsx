@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
+import { useSettings } from '../../context/SettingsContext';
 import { ROLES } from '../../utils/constants';
 
 const NAV_LINKS = [
@@ -30,6 +31,7 @@ const Header = () => {
   const { itemCount } = useCart();
   const { wishlistCount } = useWishlist();
   const { isAuthenticated, hasRole } = useAuth();
+  const { settings } = useSettings();
 
   const userHref = !isAuthenticated ? '/signin' : hasRole(ROLES.ADMIN) ? '/admin' : '/account';
   const userLabel = !isAuthenticated ? 'Sign in' : hasRole(ROLES.ADMIN) ? 'Admin dashboard' : 'My Account';
@@ -49,7 +51,7 @@ const Header = () => {
             to="/"
             className="-m-1.5 p-1.5 text-2xl font-bold tracking-tight text-foreground"
           >
-            Heim
+            {settings.store.name}
           </Link>
         </div>
 
