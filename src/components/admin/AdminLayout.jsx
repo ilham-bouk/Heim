@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router';
-import { ChevronDown, FileText, LayoutDashboard, LogOut, Menu, Package, Receipt, Settings, Store, Tags, Ticket } from 'lucide-react';
+import { ChevronDown, FileText, LayoutDashboard, LogOut, Menu, Package, Receipt, Settings, Store, Tags, Ticket, Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Breadcrumb from '../ui/Breadcrumb';
 import { getInitials } from '../../utils/user';
@@ -15,6 +15,7 @@ const ADMIN_NAV = [
     group: 'Sales',
     items: [
       { name: 'Orders', href: '/admin/orders', icon: Receipt },
+      { name: 'Customers', href: '/admin/customers', icon: Users },
       { name: 'Promos', href: '/admin/promos', icon: Ticket },
     ],
   },
