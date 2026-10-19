@@ -44,6 +44,7 @@ import AdminOrders from './pages/Admin-orders'
 import AdminOrderDetail from './pages/Admin-order-detail'
 import AdminCustomers from './pages/Admin-customers'
 import AdminPromos from './pages/Admin-promos'
+import AdminSubscribers from './pages/Admin-subscribers'
 import AdminSettings from './pages/Admin-settings'
 
 import NotFound from './pages/NotFound'
@@ -105,6 +106,7 @@ function App() {
                 <Route path="blog" element={<AdminBlog />} />
                 <Route path="blog/new" element={<AdminBlogForm />} />
                 <Route path="blog/:id/edit" element={<AdminBlogForm />} />
+                <Route path="subscribers" element={<AdminSubscribers />} />
                 <Route path="settings" element={<AdminSettings />} />
               </Route>
             </Route>

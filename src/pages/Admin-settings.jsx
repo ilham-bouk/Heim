@@ -28,7 +28,7 @@ const ResetDemoDataSection = () => {
     <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 lg:p-8">
       <h2 className="mb-1 text-xl font-bold text-destructive">Reset demo data</h2>
       <p className="mb-6 max-w-xl text-sm text-muted-foreground">
-        Restores products, categories, blog posts, orders, promos and settings to the original sample data, and empties
+        Restores products, categories, blog posts, orders, promos, settings and subscribers to the original sample data, and empties
         carts, wishlists, saved addresses and cards. You stay signed in. Only this browser is affected, and sample
         order dates are counted from the last page load.
       </p>
