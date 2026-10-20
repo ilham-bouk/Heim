@@ -12,6 +12,8 @@ export const STORAGE_KEYS = {
   orders: 'heim_orders',
   promos: 'heim_promos',
   subscribers: 'heim_subscribers',
+  messages: 'heim_messages',
+  messageIdCounters: 'heim_message_id_counters',
   settings: 'heim_settings',
   checkoutDraft: 'heim_checkout_draft',
   products: 'heim_products',

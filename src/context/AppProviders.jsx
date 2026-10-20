@@ -5,6 +5,7 @@ import { BlogProvider } from './BlogContext';
 import { SettingsProvider } from './SettingsContext';
 import { PromoProvider } from './PromoContext';
 import { SubscriberProvider } from './SubscriberContext';
+import { MessageProvider } from './MessageContext';
 import { CartProvider } from './CartContext';
 import { WishlistProvider } from './WishlistContext';
 import { AddressProvider } from './AddressContext';
@@ -27,6 +28,7 @@ const PROVIDERS = [
   SettingsProvider,
   PromoProvider,
   SubscriberProvider,
+  MessageProvider,
   CartProvider,
   WishlistProvider,
   AddressProvider,

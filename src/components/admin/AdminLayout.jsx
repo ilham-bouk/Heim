@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router';
-import { ChevronDown, FileText, LayoutDashboard, LogOut, Mail, Menu, Package, Receipt, Settings, Store, Tags, Ticket, Users } from 'lucide-react';
+import { ChevronDown, FileText, LayoutDashboard, LogOut, Mail, Menu, MessageSquare, Package, Receipt, Settings, Store, Tags, Ticket, Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useMessages } from '../../context/MessageContext';
 import Breadcrumb from '../ui/Breadcrumb';
 import { getInitials } from '../../utils/user';
 
@@ -30,6 +31,7 @@ const ADMIN_NAV = [
     group: 'Content',
     items: [
       { name: 'Blog posts', href: '/admin/blog', icon: FileText },
+      { name: 'Messages', href: '/admin/messages', icon: MessageSquare, countKey: 'unreadMessages' },
       { name: 'Subscribers', href: '/admin/subscribers', icon: Mail },
     ],
   },
@@ -41,7 +43,11 @@ const ADMIN_NAV = [
 
 const AdminLayout = () => {
   const { user, signOut } = useAuth();
+  const { unreadCount } = useMessages();
   const navigate = useNavigate();
+
+  // Nav items with a `countKey` show a count badge (hidden at 0).
+  const badgeCounts = { unreadMessages: unreadCount };
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -108,6 +114,12 @@ const AdminLayout = () => {
                         >
                           <item.icon className="h-4 w-4" aria-hidden="true" />
                           {item.name}
+                          {item.countKey && badgeCounts[item.countKey] > 0 && (
+                            <span className="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-semibold text-accent-foreground">
+                              {badgeCounts[item.countKey]}
+                              <span className="sr-only"> unread</span>
+                            </span>
+                          )}
                         </NavLink>
                       ))}
                     </div>

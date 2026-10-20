@@ -40,6 +40,8 @@ import AdminProductForm from './pages/Admin-product-form'
 import AdminCategories from './pages/Admin-categories'
 import AdminBlog from './pages/Admin-blog'
 import AdminBlogForm from './pages/Admin-blog-form'
+import AdminMessages from './pages/Admin-messages'
+import AdminMessageDetail from './pages/Admin-message-detail'
 import AdminOrders from './pages/Admin-orders'
 import AdminOrderDetail from './pages/Admin-order-detail'
 import AdminCustomers from './pages/Admin-customers'
@@ -106,6 +108,8 @@ function App() {
                 <Route path="blog" element={<AdminBlog />} />
                 <Route path="blog/new" element={<AdminBlogForm />} />
                 <Route path="blog/:id/edit" element={<AdminBlogForm />} />
+                <Route path="messages" element={<AdminMessages />} />
+                <Route path="messages/:id" element={<AdminMessageDetail />} />
                 <Route path="subscribers" element={<AdminSubscribers />} />
                 <Route path="settings" element={<AdminSettings />} />
               </Route>

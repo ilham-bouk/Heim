@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, MessageSquare, AlertCircle, CheckCircle, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { isValidEmail } from '../utils/validators';
 import { useSettings } from '../context/SettingsContext';
+import { useMessages } from '../context/MessageContext';
+import { MESSAGE_SUBJECTS } from '../services/messageService';
 
 const Contact = () => {
   const { settings } = useSettings();
   const contactInfoConfig = settings.contact;
+  const { sendMessage } = useMessages();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -20,6 +23,12 @@ const Contact = () => {
 
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isSending, setIsSending] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const timerRef = useRef(null);
+
+  // Don't leave the banner timer running after the page unmounts.
+  useEffect(() => () => clearTimeout(timerRef.current), []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,36 +42,42 @@ const Contact = () => {
   const validate = () => {
     const nextErrors = {};
 
-    if (!formData.name) nextErrors.name = 'Full name is required';
-    if (!formData.email) nextErrors.email = 'Email is required';
-    else if (!isValidEmail(formData.email)) nextErrors.email = 'Please enter a valid email address';
+    if (!formData.name.trim()) nextErrors.name = 'Full name is required';
+    if (!formData.email.trim()) nextErrors.email = 'Email is required';
+    else if (!isValidEmail(formData.email.trim())) nextErrors.email = 'Please enter a valid email address';
     if (!formData.subject) nextErrors.subject = 'Please select a subject';
-    if (!formData.message) nextErrors.message = 'Message is required';
+    if (!formData.message.trim()) nextErrors.message = 'Message is required';
     
     return nextErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const nextErrors = validate();
 
+    const nextErrors = validate();
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
       return;
     }
-    
-    setFormSubmitted(true);
-    setErrors({});
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
-    });
 
-    setTimeout(() => setFormSubmitted(false), 5000);
+    setErrors({});
+    setSubmitError('');
+    setIsSending(true);
+
+    try {
+      await sendMessage(formData);
+    } catch {
+      setSubmitError("Your message couldn't be sent. Please try again.");
+      setIsSending(false);
+      return;
+    }
+
+    setIsSending(false);
+    setFormSubmitted(true);
+    setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setFormSubmitted(false), 5000);
   };
 
   const contactInfo = [
@@ -190,7 +205,7 @@ const Contact = () => {
                   Fill out the form below and we'll get back to you as soon as possible.
                 </p>
                 
-                <form onSubmit={handleSubmit} className="space-y-6 mb-8">
+                <form onSubmit={handleSubmit} noValidate className="space-y-6 mb-8">
                   {/* Name */}
                   <div>
                     <label htmlFor="name" className="block text-sm font-semibold text-slate-900 mb-2">
@@ -276,12 +291,9 @@ const Contact = () => {
                       }`}
                     >
                       <option value="">Select a subject</option>
-                      <option value="product-inquiry">Product Inquiry</option>
-                      <option value="custom-order">Custom Order</option>
-                      <option value="delivery-issue">Delivery Issue</option>
-                      <option value="warranty-claim">Warranty Claim</option>
-                      <option value="general-question">General Question</option>
-                      <option value="partnership">Partnership Opportunity</option>
+                      {MESSAGE_SUBJECTS.map(({ value, label }) => (
+                        <option key={value} value={value}>{label}</option>
+                      ))}
                     </select>
                     {errors.subject && (
                       <p id="subject-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive">
@@ -319,11 +331,12 @@ const Contact = () => {
                   <Button
                     variant="primary"
                     size="lg"
-                    className="w-full flex justify-center gap-2"
+                    className="w-full flex justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
                     type="submit"
+                    disabled={isSending}
                   >
                     <Send className="w-5 h-5" />
-                    Send Message
+                    {isSending ? 'Sending…' : 'Send Message'}
                   </Button>
                 </form>
 
@@ -341,6 +354,13 @@ const Contact = () => {
                   <div className="mb-6 p-4 bg-danger/10 border border-danger/30 rounded-lg flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-danger mt-0.5 shrink-0" />
                     <p className="font-semibold text-danger">Please fix the highlighted fields</p>
+                  </div>
+                )}
+
+                {submitError && (
+                  <div role="alert" className="mb-6 p-4 bg-danger/10 border border-danger/30 rounded-lg flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-danger mt-0.5 shrink-0" />
+                    <p className="font-semibold text-danger">{submitError}</p>
                   </div>
                 )}
 
