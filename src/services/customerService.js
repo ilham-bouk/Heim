@@ -20,7 +20,7 @@ import { normalizeEmail } from '../utils/user';
  *   email: string,
  *   fullName: string,
  *   location: string,        // "City, ST" or ''
- *   orderCount: number,      // every order, including cancelled
+ *   orderCount: number,      // orders that are NOT cancelled
  *   totalSpent: number,      // excludes cancelled orders
  *   lastOrderAt: string|null // ISO timestamp of the newest order
  * }
@@ -74,9 +74,11 @@ export const deriveCustomers = (orders, seedCustomers = getSeedCustomers(), excl
       byEmail.set(id, customer);
     }
 
-    customer.orderCount += 1;
-    if (order.status !== 'Cancelled') customer.totalSpent += order.total;
-
+    if (order.status !== 'Cancelled') {
+      customer.orderCount += 1;
+      customer.totalSpent += order.total;
+    }
+    
     // ISO timestamps compare correctly as strings.
     if (!customer.lastOrderAt || order.date > customer.lastOrderAt) {
       customer.lastOrderAt = order.date;

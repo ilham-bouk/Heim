@@ -83,7 +83,7 @@ const AdminCustomers = () => {
         syncToUrl
         rowActions={(customer) => (
           <div className="flex items-center justify-end">
-            {customer.orderCount > 0 && (
+            {customer.lastOrderAt && (
               <Link
                 to={`/admin/orders?q=${encodeURIComponent(customer.email)}`}
                 aria-label={`View orders from ${customer.fullName}`}
