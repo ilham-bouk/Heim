@@ -18,6 +18,7 @@ import { ORDER_STATUSES, getStatusTone, isActiveOrder } from './orderService';
 export const KPI_WINDOW_DAYS = 30;
 export const REVENUE_MONTHS = 6;
 export const TOP_PRODUCTS_LIMIT = 5;
+export const RECENT_LIMIT = 5;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -150,3 +151,11 @@ export const getTopProducts = (orders, limit = TOP_PRODUCTS_LIMIT) => {
     .sort((a, b) => b.units - a.units || b.revenue - a.revenue)
     .slice(0, limit);
 };
+
+/** Newest orders first (any status, cancelled included: it is an activity feed). */
+export const getRecentOrders = (orders, limit = RECENT_LIMIT) =>
+  [...orders].sort((a, b) => b.date.localeCompare(a.date)).slice(0, limit);
+
+/** Newest messages first, read or unread. */
+export const getRecentMessages = (messages, limit = RECENT_LIMIT) =>
+  [...messages].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, limit);

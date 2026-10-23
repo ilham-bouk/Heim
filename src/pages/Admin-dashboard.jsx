@@ -4,13 +4,17 @@ import BarList from '../components/admin/BarList';
 import ColumnChart from '../components/admin/ColumnChart';
 import DashboardCard from '../components/admin/DashboardCard';
 import PageHeader from '../components/admin/PageHeader';
+import RecentList from '../components/admin/RecentList';
 import StatCard from '../components/admin/StatCard';
+import StatusBadge from '../components/ui/StatusBadge';
 import { useAuth } from '../context/AuthContext';
 import { useMessages } from '../context/MessageContext';
 import { useOrders } from '../context/OrderContext';
 import { useSubscribers } from '../context/SubscriberContext';
 import { DEMO_ADMIN } from '../config/demo';
 import { deriveCustomers } from '../services/customerService';
+import { getSubjectLabel } from '../services/messageService';
+import { getStatusTone } from '../services/orderService';
 import {
   KPI_WINDOW_DAYS,
   REVENUE_MONTHS,
@@ -18,9 +22,12 @@ import {
   getCategorySales,
   getMonthlyRevenue,
   getOrderKpis,
+  getRecentMessages,
+  getRecentOrders,
   getStatusBreakdown,
   getTopProducts,
 } from '../services/dashboardService';
+import { formatDate } from '../utils/format';
 
 const money = (amount) => `$${amount.toLocaleString()}`;
 const WINDOW_HINT = `Last ${KPI_WINDOW_DAYS} days`;
@@ -50,6 +57,31 @@ const AdminDashboard = () => {
   const statuses = useMemo(() => getStatusBreakdown(allOrders), [allOrders]);
   const categorySales = useMemo(() => getCategorySales(allOrders), [allOrders]);
   const topProducts = useMemo(() => getTopProducts(allOrders), [allOrders]);
+
+  const recentOrders = useMemo(
+    () =>
+      getRecentOrders(allOrders).map((order) => ({
+        key: order.id,
+        to: `/admin/orders/${order.id}`,
+        title: `${order.id} · ${order.shippingAddress.fullName}`,
+        subtitle: `${formatDate(order.date)} · ${money(order.total)}`,
+        badge: <StatusBadge tone={getStatusTone(order.status)}>{order.status}</StatusBadge>,
+      })),
+    [allOrders]
+  );
+
+  const recentMessages = useMemo(
+    () =>
+      getRecentMessages(messages).map((message) => ({
+        key: String(message.id),
+        to: `/admin/messages/${message.id}`,
+        title: message.name,
+        subtitle: `${getSubjectLabel(message.subject)} · ${formatDate(message.createdAt)}`,
+        emphasis: !message.read,
+        badge: message.read ? null : <StatusBadge tone="accent">Unread</StatusBadge>,
+      })),
+    [messages]
+  );
 
   // Real backend: GET /admin/customers. Same derivation and admin exclusion as /admin/customers.
   const customers = useMemo(() => deriveCustomers(allOrders, undefined, DEMO_ADMIN.email), [allOrders]);
@@ -130,6 +162,22 @@ const AdminDashboard = () => {
             />
           ) : (
             <EmptyNote>Revenue appears here once orders are placed.</EmptyNote>
+          )}
+        </DashboardCard>
+
+        <DashboardCard title="Recent orders" action={{ to: '/admin/orders', label: 'View all' }}>
+          {recentOrders.length > 0 ? (
+            <RecentList items={recentOrders} />
+          ) : (
+            <EmptyNote>Orders appear here once they are placed.</EmptyNote>
+          )}
+        </DashboardCard>
+
+        <DashboardCard title="Recent messages" action={{ to: '/admin/messages', label: 'View all' }}>
+          {recentMessages.length > 0 ? (
+            <RecentList items={recentMessages} />
+          ) : (
+            <EmptyNote>Messages sent from the contact form appear here.</EmptyNote>
           )}
         </DashboardCard>
 
