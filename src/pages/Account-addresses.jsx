@@ -72,7 +72,7 @@ const AccountAddresses = () => {
           {addresses.map((address) => (
             <div key={address.id} className="relative border border-border rounded-lg p-5">
               {address.isDefault && (
-                <span className="absolute top-4 right-4 flex items-center gap-1 text-xs font-semibold text-success">
+                <span className="absolute top-4 right-4 flex items-center gap-1 text-xs font-semibold text-success-text">
                   <Check className="w-3.5 h-3.5" /> Default
                 </span>
               )}

@@ -23,7 +23,7 @@ const PageHeader = ({ title, description, actions, backTo, backLabel = 'Back' })
       {backTo && (
         <Link
           to={backTo}
-          className="mb-4 inline-flex items-center gap-2 text-sm text-accent transition-colors hover:text-accent/80"
+          className="mb-4 inline-flex items-center gap-2 text-sm text-accent-text transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           {backLabel}

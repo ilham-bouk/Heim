@@ -99,7 +99,7 @@ const ProfileSection = () => {
             {isSaving ? 'Saving…' : 'Save Changes'}
           </Button>
           {saved && (
-            <span className="flex items-center gap-1.5 text-sm text-success">
+            <span className="flex items-center gap-1.5 text-sm text-success-text">
               <Check className="w-4 h-4" /> Saved
             </span>
           )}
@@ -228,7 +228,7 @@ const PasswordSection = () => {
             {isSaving ? 'Updating…' : 'Update Password'}
           </Button>
           {success && (
-            <span className="flex items-center gap-1.5 text-sm text-success">
+            <span className="flex items-center gap-1.5 text-sm text-success-text">
               <Check className="w-4 h-4" /> Password updated
             </span>
           )}

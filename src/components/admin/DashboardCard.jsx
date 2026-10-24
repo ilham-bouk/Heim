@@ -23,7 +23,7 @@ const DashboardCard = ({ title, description, action, className = '', children })
         {action && (
           <Link
             to={action.to}
-            className="shrink-0 text-sm font-semibold text-accent transition-colors hover:text-accent/80"
+            className="shrink-0 text-sm font-semibold text-accent-text transition-colors hover:text-foreground"
           >
             {action.label}
           </Link>

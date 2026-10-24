@@ -1,7 +1,7 @@
 const TONES = {
   neutral: 'bg-secondary text-muted-foreground',
-  success: 'bg-success/10 text-success',
-  accent: 'bg-accent/10 text-accent',
+  success: 'bg-success/10 text-success-text',
+  accent: 'bg-accent/10 text-accent-text',
   danger: 'bg-destructive/10 text-destructive',
 };
 

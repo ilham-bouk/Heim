@@ -72,7 +72,7 @@ const AccountWallet = () => {
             {paymentMethods.map((method) => (
               <div key={method.id} className="relative border border-border rounded-lg p-5">
                 {method.isDefault && (
-                  <span className="absolute top-4 right-4 flex items-center gap-1 text-xs font-semibold text-success">
+                  <span className="absolute top-4 right-4 flex items-center gap-1 text-xs font-semibold text-success-text">
                     <Check className="w-3.5 h-3.5" /> Default
                   </span>
                 )}
@@ -93,7 +93,7 @@ const AccountWallet = () => {
                   {!method.isDefault && (
                     <button
                       onClick={() => setDefaultPaymentMethod(method.id)}
-                      className="inline-flex items-center gap-1.5 text-sm text-accent hover:text-accent/80 transition-colors ml-auto"
+                      className="inline-flex items-center gap-1.5 text-sm text-accent-text hover:text-foreground transition-colors ml-auto"
                     >
                       Set as default
                     </button>

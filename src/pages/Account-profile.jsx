@@ -53,7 +53,7 @@ const AccountProfile = () => {
           </div>
           <Link
             to="/account/orders"
-            className="text-sm font-semibold text-accent hover:text-accent/80 transition-colors shrink-0"
+            className="text-sm font-semibold text-accent-text hover:text-foreground transition-colors shrink-0"
           >
             Track Order
           </Link>
@@ -71,7 +71,7 @@ const AccountProfile = () => {
           </div>
           <Link
             to="/account/settings"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors shrink-0"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text hover:text-foreground transition-colors shrink-0"
           >
             <Pencil className="w-3.5 h-3.5" />
             Edit
