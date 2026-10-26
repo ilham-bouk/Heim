@@ -3,12 +3,20 @@ import { Upload } from 'lucide-react';
 import Button from '../ui/Button';
 
 /**
- * Image preview with upload / URL controls. DISABLED in the demo on purpose.
+ * Image preview with upload / URL controls. DISABLED in the demo on purpose. 
  *
- * Real upload seam: add an `onChange(url)` prop, enable the controls, upload
- * the file to your own endpoint, and pass the returned URL up. ProductForm
- * then includes `image` in its payload. Until then it never sends `image`,
- * so saving an edit keeps the current picture.
+ * Real upload seam (services/mediaService.js is the mock to replace):
+ *   1. Add an `onChange(url)` prop and remove `disabled` from the button and URL input.
+ *   2. Add a hidden <input type="file" accept={ALLOWED_IMAGE_TYPES.join(',')}>; on change,
+ *      run validateImageFile(file) and show its error, otherwise `await uploadImage(file)`
+ *      with a busy state, then call onChange(result.url).
+ *   3. In ProductForm and BlogPostForm keep the URL in state and add `image` to toInput.
+ *      CategoryForm has no toInput: add `image` to its onSubmit payload. Then update
+ *      createProduct/applyProductInput and createCategory/applyCategoryInput
+ *      (productService.js) and createPost/applyPostInput (blogService.js), which ignore
+ *      `image` today (the category functions destructure only `{ name }`).
+ *   4. Don't keep data URLs in localStorage: replace uploadImage with a real endpoint first.
+ * Until then no form sends `image`, so saving an edit keeps the current picture.
  *
  * @param {string} image - URL of the image to preview
  * @param {string} [label='Image']
