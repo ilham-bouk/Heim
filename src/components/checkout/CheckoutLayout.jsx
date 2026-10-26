@@ -16,7 +16,7 @@ const CheckoutLayout = () => {
   const showSummary = isStep && CHECKOUT_STEPS[stepIndex].showSummary;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Breadcrumb items={[{ label: 'Checkout' }]} />
 
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-12 lg:py-16">

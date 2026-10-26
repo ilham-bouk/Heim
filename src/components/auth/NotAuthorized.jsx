@@ -12,7 +12,7 @@ const NotAuthorized = ({
   backTo = '/account',
   backLabel = 'Back to my account',
 }) => (
-  <div className="flex min-h-screen items-center justify-center bg-white px-4 py-20">
+  <div className="flex min-h-screen items-center justify-center bg-background px-4 py-20">
     <div role="alert" className="w-full max-w-md text-center">
       <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-secondary">
         <ShieldAlert className="h-10 w-10 text-muted-foreground" aria-hidden="true" />

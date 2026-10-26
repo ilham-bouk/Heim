@@ -106,7 +106,7 @@ const CheckoutPayment = () => {
 
       <Link
         to={getPreviousStepHref('payment')}
-        className="inline-flex items-center gap-2 text-sm text-accent hover:text-accent/80 transition-colors"
+        className="inline-flex items-center gap-2 text-sm text-accent-text hover:text-foreground transition-colors"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Back to shipping

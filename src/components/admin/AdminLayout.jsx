@@ -52,7 +52,7 @@ const AdminLayout = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Breadcrumb items={[{ label: 'Admin' }]} />
 
       <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8 lg:py-16">

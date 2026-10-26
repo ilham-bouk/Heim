@@ -23,7 +23,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="group bg-white">
+    <div className="group">
       {/* Image Container */}
       <div className="relative aspect-square rounded-xl overflow-hidden bg-secondary">
         <img
@@ -47,7 +47,7 @@ const ProductCard = ({ product }) => {
           aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           aria-pressed={wishlisted}
           className={`absolute top-3 right-3 flex transition-all cursor-pointer ${
-            wishlisted ? 'text-destructive' : 'text-gray-400 hover:text-foreground'
+            wishlisted ? 'text-destructive' : 'text-muted-foreground hover:text-foreground'
           }`}
         >
           <Heart className={`h-4 w-4 ${wishlisted ? 'fill-destructive' : 'fill-card'}`} />
@@ -87,7 +87,7 @@ const ProductCard = ({ product }) => {
                 key={i}
                 className={`w-3.5 h-3.5 ${
                   i < Math.floor(product.rating)
-                    ? 'fill-yellow-500 text-yellow-500'
+                    ? 'fill-rating text-rating'
                     : 'fill-border text-border'
                 }`}
               />
