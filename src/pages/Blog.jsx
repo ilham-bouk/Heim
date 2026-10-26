@@ -106,10 +106,12 @@ const Blog = () => {
                       </div>
                       <span className="text-sm font-medium text-slate-900">{post.author}</span>
                     </div>
-                    <Link to={`/blog/${post.id}`}>
-                      <button className="text-accent hover:text-accent/80 transition-colors cursor-pointer">
-                        <ArrowRight className="w-5 h-5" />
-                      </button>
+                    <Link 
+                      to={`/blog/${post.id}`}
+                      aria-label={`Read ${post.title}`}
+                      className="text-accent hover:text-accent/80 transition-colors"
+                    >
+                      <ArrowRight className="w-5 h-5" aria-hidden="true" />
                     </Link>
                   </div>
                 </div>
@@ -190,10 +192,12 @@ const Blog = () => {
                               {formatDate(post.publishedAt)}
                             </div>
                           </div>
-                          <Link to={`/blog/${post.id}`}>
-                            <button className="text-accent hover:text-accent/80 transition-colors cursor-pointer">
-                              <ArrowRight className="w-5 h-5" />
-                            </button>
+                          <Link
+                            to={`/blog/${post.id}`}
+                            aria-label={`Read ${post.title}`}
+                            className="text-accent hover:text-accent/80 transition-colors"
+                          >
+                            <ArrowRight className="w-5 h-5" aria-hidden="true" />
                           </Link>
                         </div>
                       </div>
@@ -281,11 +285,9 @@ const Blog = () => {
           <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
             Explore our collection and bring your design inspiration to life with Heim's curated furniture selection.
           </p>
-          <Link to="/shop">
-            <Button variant="primary" size="lg">
-              Shop Now
-            </Button>
-          </Link>
+          <Button as={Link} to="/shop" variant="primary" size="lg">
+            Shop Now
+          </Button>
         </div>
       </section>
     </div>

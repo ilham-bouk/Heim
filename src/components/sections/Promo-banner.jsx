@@ -22,15 +22,15 @@ const PromoBanner = () => {
                 Enjoy up to 30% off on selected items.
               </p>
               <div className="mt-8">
-                <Button 
+                <Button
+                  as={Link}
+                  to="/shop?sort=newest"
                   size="md" 
-                  variant="secondary"
-                  className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                  variant="inverse"
+                  className="gap-3"
                 >
-                  <Link to="/shop?sort=newest" className='inline-flex items-center justify-center gap-3'>
-                    Shop New Arrivals
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
+                  Shop New Arrivals
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </div>
             </div>

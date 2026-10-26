@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Trash2, Minus, Plus, ShoppingBag, ArrowLeft, Truck, CheckCircle, X } from 'lucide-react';
+import { Trash2, Minus, Plus, ShoppingBag, ArrowLeft, Truck, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
 import { useCart } from '../context/CartContext';
@@ -76,12 +76,10 @@ const Cart = () => {
             <p className="text-slate-600 mb-8 max-w-md">
               Looks like you haven't added any items to your cart yet. Explore our collection and find something you love!
             </p>
-            <Link to="/shop">
-              <Button variant="primary" size="lg" className="flex justify-center gap-2">
-                <ShoppingBag className="w-5 h-5" />
-                Start Shopping
-              </Button>
-            </Link>
+            <Button as={Link} to="/shop" variant="primary" size="lg" className="gap-2">
+              <ShoppingBag className="w-5 h-5" />
+              Start Shopping
+            </Button>
           </div>
         </div>
       </div>

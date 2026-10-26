@@ -48,16 +48,10 @@ const NotFound = ({
                 <ArrowLeft className="w-4 h-4" />
                 Go Back
               </Button>
-              <Link to={backTo} className="w-full sm:w-auto">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="w-full flex justify-center items-center gap-2 cursor-pointer"
-                >
-                  <Home className="w-4 h-4" />
-                  {backLabel}
-                </Button>
-              </Link>
+              <Button as={Link} to={backTo} variant="outline" size="lg" className="w-full sm:w-auto gap-2">
+                <Home className="w-4 h-4" />
+                {backLabel}
+              </Button>
             </div>
           </div>
         </div>

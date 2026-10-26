@@ -1,24 +1,14 @@
-import { ChevronRight, Users, Lightbulb, Target, Award, Heart, Zap, Check } from 'lucide-react';
+import { Users, Lightbulb, Target, Award, Heart, Zap, Check } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
+import Breadcrumb from '../components/ui/Breadcrumb';
 import aboutImg from '../assets/aboutImg.jpeg'
 import teamImg from '../assets/team-member.jpeg'
 
 const About = () => {
   return (
     <div className="min-h-screen bg-white">
-      {/* Breadcrumb */}
-      <div className="bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-4">
-          <nav className="flex items-center gap-2 text-sm text-slate-500">
-            <Link to="/" className="hover:text-slate-900 transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-slate-900 font-medium">About Us</span>
-          </nav>
-        </div>
-      </div>
+      <Breadcrumb items={[{ label: 'About Us' }]} />
 
       {/* Hero Section */}
       <section className="bg-secondary py-12 lg:py-24">
@@ -39,11 +29,9 @@ const About = () => {
                 Our mission is to create timeless pieces that combine stunning aesthetics with sustainable practices, ensuring that every purchase contributes to a better tomorrow.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link to="/shop">
-                  <Button variant="primary" size="lg">
-                    Explore Collection
-                  </Button>
-                </Link>
+                <Button as={Link} to="/shop" variant="primary" size="lg">
+                  Explore Collection
+                </Button>
               </div>
             </div>
 
@@ -445,11 +433,9 @@ const About = () => {
               </div>
 
               <div className="mt-8">
-                <Link to="/shop">
-                  <Button variant="primary" size="lg">
-                    Shop Our Collection
-                  </Button>
-                </Link>
+                <Button as={Link} to="/shop" variant="primary" size="lg">
+                  Shop Our Collection
+                </Button>
               </div>
             </div>
 
@@ -477,11 +463,9 @@ const About = () => {
           <p className="text-lg mb-8 max-w-2xl mx-auto">
             Explore our curated collection and discover furniture that speaks to your style and values.
           </p>
-          <Link to="/shop">
-            <Button variant="primary" size="lg">
-              Start Shopping
-            </Button>
-          </Link>
+          <Button as={Link} to="/shop" variant="primary" size="lg">
+            Start Shopping
+          </Button>
         </div>
       </section>
     </div>

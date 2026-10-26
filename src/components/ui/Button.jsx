@@ -1,7 +1,7 @@
 /**
  * Base button primitive used across the template.
  *
- * @param {'primary'|'outline'|'ghost'|'danger'} [variant='primary']
+ * @param {'primary'|'outline'|'ghost'|'danger'|'inverse'} [variant='primary']
  * @param {'sm'|'md'|'lg'} [size='md']
  * @param {React.ElementType} [as='button'] - render as another element/component, e.g. react-router's Link
  * @param {string} [className] - extra classes, merged after variant/size
@@ -13,7 +13,8 @@ const Button = ({ as: Component = 'button', children,  variant = 'primary', size
     primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
     outline: 'border-2 border-primary text-primary hover:bg-secondary',
     ghost: 'text-primary hover:bg-secondary',
-    danger: 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+    danger: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+    inverse: 'bg-primary-foreground text-primary hover:bg-primary-foreground/90'
   };
 
   const sizes = {

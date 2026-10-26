@@ -23,11 +23,9 @@ const ProductSection = ({ title, subtitle, products, viewAllLink = '/shop' }) =>
               {subtitle}
             </p>
           </div>
-          <Button variant="ghost">
-            <Link to={viewAllLink} className="inline-flex items-center justify-center gap-3">
-              View All
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+          <Button as={Link} to={viewAllLink} variant="ghost" className="gap-3">
+            View All
+            <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
         {/* Product grid */}

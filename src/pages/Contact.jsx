@@ -466,11 +466,9 @@ const Contact = () => {
           <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
             Explore our collection and start shopping today. New customers get 10% off their first order!
           </p>
-          <Link to="/shop">
-            <Button variant="primary" size="lg">
-              Start Shopping
-            </Button>
-          </Link>
+          <Button as={Link} to="/shop" variant="primary" size="lg">
+            Start Shopping
+          </Button>
         </div>
       </section>
     </div>

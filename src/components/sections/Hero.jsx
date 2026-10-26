@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react"
 import heroImg from '../../assets/heroImg.png';
 import { Link } from "react-router";
+import Button from '../ui/Button';
 
 const Hero = () => {
   return (
@@ -20,12 +21,15 @@ const Hero = () => {
               Designed for comfort, built for longevity.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              {/* asChild  */}
-              <Link to="/shop" className="font-medium gap-2 hover:gap-4 rounded-lg transition-all duration-200 inline-flex items-center justify-center px-6 py-2 bg-primary hover:bg-primary/90 bg-slate-900 text-white hover:bg-slate-800">
+              <Button as={Link} to="/shop" size="lg" className="gap-2 hover:gap-4">
                 Shop Now
                 <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link to="/about" className="font-medium rounded-lg transition-all duration-200 inline-flex items-center justify-center px-6 py-2 border-2 border-slate-900 text-slate-900 hover:bg-slate-100">
+              </Button>
+              {/* Plain link: the outline Button variant hovers to `secondary`, which is this section's background. */}
+              <Link
+                to="/about"
+                className="inline-flex items-center justify-center rounded-lg border-2 border-primary px-6 py-3 text-lg font-medium text-primary transition-all duration-200 hover:bg-card"
+              >
                 Learn More
               </Link>
             </div>

@@ -20,11 +20,9 @@ const BlogSection = () => {
               Discover the latest trends, tips, and inspiration for your home.
             </p>
           </div>
-          <Button variant="ghost" className="self-start sm:self-auto">
-            <Link to="/blog" className="inline-flex items-center justify-center gap-3">
-              View All Posts
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+          <Button as={Link} to="/blog" variant="ghost" className="gap-3 self-start sm:self-auto">
+            View All Posts
+            <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
 

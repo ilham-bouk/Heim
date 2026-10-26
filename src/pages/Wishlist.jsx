@@ -23,12 +23,10 @@ const EmptyWishlist = () => (
         <p className="text-slate-600 mb-8 max-w-md">
           You haven't saved any items yet. Explore our collection and click the heart icon on any product to save it here.
         </p>
-        <Link to="/shop">
-          <Button variant="primary" size="lg" className="flex justify-center gap-2">
-            <ShoppingBag className="w-5 h-5" />
-            Start Shopping
-          </Button>
-        </Link>
+        <Button as={Link} to="/shop" variant="primary" size="lg" className="gap-2">
+          <ShoppingBag className="w-5 h-5" />
+          Start Shopping
+        </Button>
       </div>
     </div>
   </div>
@@ -139,10 +137,11 @@ const WishlistCard = ({ item, onRemove, onAddToCart }) => {
           </Button>
 
           <div className="flex gap-2">
-            <Link to={`/shop/${item.id}`} className="flex-1">
-              <button className="w-full px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700">
-                View Details
-              </button>
+            <Link 
+              to={`/shop/${item.id}`}
+              className="flex-1 px-4 py-2 text-center border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700"
+            >
+              View Details
             </Link>
             <button
               onClick={() => onRemove(item.id)}
