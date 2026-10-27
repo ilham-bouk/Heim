@@ -9,18 +9,18 @@ import Breadcrumb from '../components/ui/Breadcrumb';
 
 /* Empty state */
 const EmptyWishlist = () => (
-  <div className="min-h-screen bg-white">
+  <div className="min-h-screen bg-background">
     <Breadcrumb items={[{ label: 'Wishlist' }]} />
 
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
       <div className="text-center">
         <div className="flex justify-center mb-6">
-          <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center">
-            <Heart className="w-12 h-12 text-slate-400" />
+          <div className="w-24 h-24 rounded-full bg-secondary flex items-center justify-center">
+            <Heart className="w-12 h-12 text-muted-foreground" />
           </div>
         </div>
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Your Wishlist is Empty</h1>
-        <p className="text-slate-600 mb-8 max-w-md">
+        <h1 className="text-3xl font-bold text-foreground mb-2">Your Wishlist is Empty</h1>
+        <p className="text-foreground/80 mb-8 max-w-md">
           You haven't saved any items yet. Explore our collection and click the heart icon on any product to save it here.
         </p>
         <Button as={Link} to="/shop" variant="primary" size="lg" className="gap-2">
@@ -42,11 +42,13 @@ const WishlistCard = ({ item, onRemove, onAddToCart }) => {
     setTimeout(() => setAddedFeedback(false), 2000);
   };
 
+  const removeLabel = `Remove ${item.name} from wishlist`;
+
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow duration-300 group">
+    <div className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-md transition-shadow duration-300 group">
 
       {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-slate-100">
+      <div className="relative aspect-square overflow-hidden bg-secondary">
         <Link to={`/shop/${item.id}`}>
           <img
             src={item.image}
@@ -64,20 +66,20 @@ const WishlistCard = ({ item, onRemove, onAddToCart }) => {
           </span>
         )}
 
-        {/* Single remove button — appears on hover */}
+        {/* Quick remove: appears on hover, and on keyboard focus so it isn't mouse-only */}
         <button
           onClick={() => onRemove(item.id)}
-          aria-label="Remove from wishlist"
-          className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full shadow flex items-center justify-center text-slate-400 hover:text-red-500 hover:shadow-md transition-all opacity-0 group-hover:opacity-100"
+          aria-label={removeLabel}
+          className="absolute top-3 right-3 w-8 h-8 bg-card rounded-full shadow flex items-center justify-center text-muted-foreground hover:text-destructive hover:shadow-md transition-all opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
         >
-          <X className="w-4 h-4" />
+          <X className="w-4 h-4" aria-hidden="true" />
         </button>
       </div>
 
       {/* Info */}
       <div className="p-5">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-slate-400 uppercase tracking-wide font-medium">
+          <span className="text-xs text-muted-foreground uppercase tracking-wide font-medium">
             {item.category}
           </span>
           {item.rating && (
@@ -88,30 +90,30 @@ const WishlistCard = ({ item, onRemove, onAddToCart }) => {
                     key={i}
                     className={`w-3 h-3 ${
                       i < Math.floor(item.rating)
-                        ? 'fill-yellow-400 text-yellow-400'
-                        : 'fill-slate-200 text-slate-200'
+                        ? 'fill-rating text-rating'
+                        : 'fill-border text-border'
                     }`}
                   />
                 ))}
               </div>
-              <span className="text-xs text-slate-400">({item.rating})</span>
+              <span className="text-xs text-muted-foreground">({item.rating})</span>
             </div>
           )}
         </div>
 
         <Link to={`/shop/${item.id}`}>
-          <h3 className="font-bold text-slate-900 hover:text-accent transition-colors line-clamp-2 mb-3 leading-snug">
+          <h3 className="font-bold text-foreground hover:text-accent-text transition-colors line-clamp-2 mb-3 leading-snug">
             {item.name}
           </h3>
         </Link>
 
         {/* Price */}
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-xl font-bold text-slate-900">${getFinalPrice(item)}</span>
+          <span className="text-xl font-bold text-foreground">${getFinalPrice(item)}</span>
           {item.discount && (
             <>
-              <span className="text-sm text-slate-400 line-through">${item.price}</span>
-              <span className="px-1.5 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded">
+              <span className="text-sm text-muted-foreground line-through">${item.price}</span>
+              <span className="px-1.5 py-0.5 bg-destructive/10 text-destructive-text text-xs font-semibold rounded">
                 -{item.discount}%
               </span>
             </>
@@ -139,16 +141,16 @@ const WishlistCard = ({ item, onRemove, onAddToCart }) => {
           <div className="flex gap-2">
             <Link 
               to={`/shop/${item.id}`}
-              className="flex-1 px-4 py-2 text-center border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700"
+              className="flex-1 px-4 py-2 text-center border border-border rounded-lg hover:bg-secondary transition-colors text-sm font-medium text-foreground/80"
             >
               View Details
             </Link>
             <button
               onClick={() => onRemove(item.id)}
-              aria-label="Remove from wishlist"
-              className="w-9 h-9 flex items-center justify-center border border-slate-200 rounded-lg text-slate-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all shrink-0"
+              aria-label={removeLabel}
+              className="w-9 h-9 flex items-center justify-center border border-border rounded-lg text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/10 transition-all shrink-0"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -174,7 +176,7 @@ const Wishlist = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Breadcrumb items={[{ label: 'Wishlist' }]} />
 
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-12 lg:py-20">
@@ -182,8 +184,8 @@ const Wishlist = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
           <div>
-            <h1 className="text-4xl lg:text-5xl font-bold text-slate-900">My Wishlist</h1>
-            <p className="text-slate-500 mt-2">
+            <h1 className="text-4xl lg:text-5xl font-bold text-foreground">My Wishlist</h1>
+            <p className="text-muted-foreground mt-2">
               {wishlistItems.length} saved {wishlistItems.length === 1 ? 'item' : 'items'}
             </p>
           </div>
@@ -201,7 +203,7 @@ const Wishlist = () => {
             </Button>
             <button
               onClick={clearWishlist}
-              className="flex items-center gap-1.5 px-4 py-2 text-sm text-slate-500 hover:text-red-600 border border-slate-200 hover:border-red-200 hover:bg-red-50 rounded-lg transition-all"
+              className="flex items-center gap-1.5 px-4 py-2 text-sm text-muted-foreground hover:text-destructive-text border border-border hover:border-destructive/30 hover:bg-destructive/10 rounded-lg transition-all"
             >
               <Trash2 className="w-4 h-4" />
               Clear all
@@ -224,7 +226,7 @@ const Wishlist = () => {
         {/* Continue shopping */}
         <Link
           to="/shop"
-          className="inline-flex items-center gap-2 mt-12 text-accent hover:text-accent/80 transition-colors"
+          className="inline-flex items-center gap-2 mt-12 text-accent-text hover:text-foreground transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           <span className="font-medium">Continue Shopping</span>

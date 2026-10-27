@@ -18,22 +18,22 @@ const NotFound = ({
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
 
       {/* Main content */}
       <div className="flex-1 flex items-center justify-center px-4 py-20">
         <div className="max-w-lg w-full text-center">
 
-          <p className="text-[10rem] lg:text-[14rem] font-bold leading-none text-slate-200 select-none">
+          <p aria-hidden="true" className="text-[10rem] lg:text-[14rem] font-bold leading-none text-border select-none">
             404
           </p>
 
           {/* Floating card — sits over the 404 text */}
           <div className="-mt-10 lg:-mt-16 relative z-10">
-            <h1 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-3">
+            <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-3">
               {title}
             </h1>
-            <p className="text-slate-500 mb-10 max-w-sm mx-auto leading-relaxed">
+            <p className="text-muted-foreground mb-10 max-w-sm mx-auto leading-relaxed">
               {message}
             </p>
 

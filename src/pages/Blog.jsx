@@ -122,7 +122,7 @@ const Blog = () => {
       </section>
 
       {/* Blog Content Section */}
-      <section className="py-8 lg:py-16 bg-secondary">
+      <section className="py-8 lg:py-16">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12">
             
@@ -278,7 +278,7 @@ const Blog = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 lg:py-24">
+      <section className="py-16 lg:py-24 bg-secondary">
         <div className="max-w-4xl mx-auto px-4 lg:px-8 text-center">
           <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
             Ready to Redesign Your Space?

@@ -77,7 +77,7 @@ const Header = () => {
               className={`relative text-sm font-medium transition-colors pb-0.5 ${
                 isActive(item.href)
                   ? 'text-foreground'
-                  : 'text-foreground/60 hover:text-foreground'
+                  : 'text-foreground/70 hover:text-foreground'
               }`}
             >
               {item.name}

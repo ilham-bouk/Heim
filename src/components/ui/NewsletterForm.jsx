@@ -77,8 +77,8 @@ const NewsletterForm = ({ layout = 'row', inputClassName = '', onSubscribe }) =>
           }}
           aria-invalid={!!error}
           aria-describedby={error ? errorId : undefined}
-          className={`flex-1 px-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2 focus:ring-slate-900 text-sm ${
-            error ? 'border-destructive' : 'border-slate-300'
+          className={`flex-1 px-4 py-2.5 rounded-lg border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm ${
+            error ? 'border-destructive' : 'border-border'
           } ${inputClassName}`}
         />
         <Button type="submit" variant="primary" disabled={isSubmitting} className="disabled:cursor-not-allowed disabled:opacity-50">
@@ -86,7 +86,7 @@ const NewsletterForm = ({ layout = 'row', inputClassName = '', onSubscribe }) =>
         </Button>
       </div>
       {error && (
-        <p id={errorId} role="alert" className="mt-2 text-xs text-destructive">
+        <p id={errorId} role="alert" className="mt-2 text-xs text-destructive-text">
           {error}
         </p>
       )}

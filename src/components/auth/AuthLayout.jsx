@@ -6,7 +6,7 @@ const AuthLayout = ({ quote, subtext, children }) => {
   const { settings } = useSettings();
   
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-background flex">
 
       {/* Left decorative panel */}
       <div className="hidden lg:flex lg:w-5/12 xl:w-1/2 bg-slate-800 flex-col justify-between p-14 xl:p-20 relative overflow-hidden shrink-0">        
@@ -26,8 +26,8 @@ const AuthLayout = ({ quote, subtext, children }) => {
 
         {/* Brand */}
         <Link to="/" className="relative z-10 flex items-center gap-3 w-fit">
-          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg">
-            <ShoppingBag className="w-5 h-5 text-slate-900" />
+          <div className="w-10 h-10 bg-primary-foreground rounded-xl flex items-center justify-center shadow-lg">
+            <ShoppingBag className="w-5 h-5 text-primary" />
           </div>
           <span className="text-white font-bold text-xl tracking-tight">{settings.store.name}</span>
         </Link>
@@ -38,7 +38,7 @@ const AuthLayout = ({ quote, subtext, children }) => {
           <blockquote className="text-white/90 text-2xl xl:text-3xl font-light leading-relaxed mb-5">
             "{quote}"
           </blockquote>
-          <p className="text-white/45 text-sm">{subtext}</p>
+          <p className="text-white/70 text-sm">{subtext}</p>
         </div>
 
         {/* Trust signals */}
@@ -50,7 +50,7 @@ const AuthLayout = ({ quote, subtext, children }) => {
           ].map((item) => (
             <div key={item} className="flex items-center gap-3">
               <div className="w-1.5 h-1.5 rounded-full bg-white/50 shrink-0" />
-              <span className="text-white/50 text-sm">{item}</span>
+              <span className="text-white/70 text-sm">{item}</span>
             </div>
           ))}
         </div>
@@ -62,10 +62,10 @@ const AuthLayout = ({ quote, subtext, children }) => {
 
           {/* Mobile brand */}
           <Link to="/" className="flex items-center gap-2.5 mb-10 lg:hidden">
-            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
-              <ShoppingBag className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <ShoppingBag className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="text-slate-900 font-bold text-lg tracking-tight">{settings.store.name}</span>
+            <span className="text-foreground font-bold text-lg tracking-tight">{settings.store.name}</span>
           </Link>
 
           {children}

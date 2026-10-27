@@ -9,41 +9,42 @@ import DemoHint from '../components/auth/DemoHint';
 
 const FieldError = ({ message }) =>
   message ? (
-    <p className="mt-1.5 flex items-center gap-1.5 text-xs text-red-600">
+    <p className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive-text">
       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
       {message}
     </p>
   ) : null;
 
 const inputClass = (hasError) =>
-  `w-full py-2.5 rounded-lg border text-slate-900 text-sm placeholder:text-slate-400
+  `w-full py-2.5 rounded-lg border text-foreground text-sm placeholder:text-muted-foreground
    transition-colors focus:outline-none focus:ring-2 focus:border-transparent
    ${hasError
-     ? 'pl-10 pr-4 border-red-400 bg-red-50 focus:ring-red-400'
-     : 'pl-10 pr-4 border-slate-300 bg-white hover:border-slate-400 focus:ring-slate-900'}`;
+     ? 'pl-10 pr-4 border-destructive bg-destructive/10 focus:ring-destructive'
+     : 'pl-10 pr-4 border-border bg-card hover:border-muted-foreground focus:ring-primary'}`;
 
-/* Password strength */
+/* Password strength. Full class names on purpose (Tailwind only generates classes it can see).
+   Three tones for five levels: the label and the number of filled segments carry the meaning. */
+const STRENGTH_LEVELS = [
+  { label: 'Too short', bar: 'bg-destructive', text: 'text-destructive-text' },
+  { label: 'Weak', bar: 'bg-destructive', text: 'text-destructive-text' },
+  { label: 'Fair', bar: 'bg-accent', text: 'text-accent-text' },
+  { label: 'Good', bar: 'bg-success', text: 'text-success-text' },
+  { label: 'Strong', bar: 'bg-success', text: 'text-success-text' },
+];
+
 const getStrength = (pw) => {
-  if (!pw) return { score: 0, label: '', color: '' };
+  if (!pw) return { score: 0, label: '', bar: '', text: '' };
   let score = 0;
   if (pw.length >= 8)  score++;
   if (pw.length >= 12) score++;
   if (/[A-Z]/.test(pw)) score++;
   if (/[0-9!@#$%^&*]/.test(pw)) score++;
 
-  const levels = [
-    { label: 'Too short', color: 'bg-red-400' },
-    { label: 'Weak', color: 'bg-orange-400' },
-    { label: 'Fair', color: 'bg-yellow-400' },
-    { label: 'Good', color: 'bg-blue-400' },
-    { label: 'Strong', color: 'bg-green-500' },
-  ];
-  
-  return { score, ...levels[score] };
+  return { score, ...STRENGTH_LEVELS[score] };
 };
 
 const PasswordStrengthBar = ({ password }) => {
-  const { score, label, color } = getStrength(password);
+  const { score, label, bar, text } = getStrength(password);
   if (!password) return null;
 
   return (
@@ -53,17 +54,12 @@ const PasswordStrengthBar = ({ password }) => {
           <div
             key={i}
             className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-              i < score ? color : 'bg-slate-200'
+              i < score ? bar : 'bg-border'
             }`}
           />
         ))}
       </div>
-      <p className={`text-xs font-medium ${
-        score <= 1 ? 'text-red-500'
-        : score === 2 ? 'text-yellow-600'
-        : score === 3 ? 'text-blue-500'
-        : 'text-green-600'
-      }`}>
+      <p className={`text-xs font-medium ${text}`}>
         {label}
       </p>
     </div>
@@ -145,13 +141,13 @@ const SignUp = () => {
     >
       {/* Heading */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-1.5">Create account</h1>
-        <p className="text-sm text-slate-500">
+        <h1 className="text-3xl font-bold text-foreground mb-1.5">Create account</h1>
+        <p className="text-sm text-muted-foreground">
           Already have an account?{' '}
           <Link
             to="/signin"
             state={location.state}
-            className="text-slate-900 font-semibold underline underline-offset-2 hover:text-slate-600 transition-colors"
+            className="text-foreground font-semibold underline underline-offset-2 hover:text-muted-foreground transition-colors"
           >
             Sign in
           </Link>
@@ -163,11 +159,11 @@ const SignUp = () => {
 
         {/* Full Name */}
         <div>
-          <label htmlFor="fullName" className="block text-sm font-semibold text-slate-800 mb-1.5">
+          <label htmlFor="fullName" className="block text-sm font-semibold text-foreground mb-1.5">
             Full name
           </label>
           <div className="relative">
-            <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
             <input
               id="fullName"
               name="fullName"
@@ -184,11 +180,11 @@ const SignUp = () => {
 
         {/* Email */}
         <div>
-          <label htmlFor="email" className="block text-sm font-semibold text-slate-800 mb-1.5">
+          <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-1.5">
             Email address
           </label>
           <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
             <input
               id="email"
               name="email"
@@ -205,11 +201,11 @@ const SignUp = () => {
 
         {/* Password */}
         <div>
-          <label htmlFor="password" className="block text-sm font-semibold text-slate-800 mb-1.5">
+          <label htmlFor="password" className="block text-sm font-semibold text-foreground mb-1.5">
             Password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
             <input
               id="password"
               name="password"
@@ -224,7 +220,7 @@ const SignUp = () => {
               type="button"
               onClick={() => setShowPassword(v => !v)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
@@ -238,11 +234,11 @@ const SignUp = () => {
 
         {/* Confirm Password */}
         <div>
-          <label htmlFor="confirmPassword" className="block text-sm font-semibold text-slate-800 mb-1.5">
+          <label htmlFor="confirmPassword" className="block text-sm font-semibold text-foreground mb-1.5">
             Confirm password
           </label>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
             <input
               id="confirmPassword"
               name="confirmPassword"
@@ -257,7 +253,7 @@ const SignUp = () => {
               type="button"
               onClick={() => setShowConfirm(v => !v)}
               aria-label={showConfirm ? 'Hide password' : 'Show password'}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
             >
               {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
@@ -275,15 +271,15 @@ const SignUp = () => {
                 setAgreedToTerms(e.target.checked);
                 if (errors.terms) setErrors(prev => ({ ...prev, terms: '' }));
               }}
-              className="w-4 h-4 mt-0.5 rounded border-slate-300 accent-slate-900 cursor-pointer shrink-0"
+              className="w-4 h-4 mt-0.5 rounded border-border accent-primary cursor-pointer shrink-0"
             />
-            <span className="text-sm text-slate-600 leading-snug">
+            <span className="text-sm text-foreground/80 leading-snug">
               I agree to the{' '}
-              <Link to="/terms" className="text-slate-900 font-semibold underline underline-offset-2 hover:text-slate-600 transition-colors">
+              <Link to="/terms" className="text-foreground font-semibold underline underline-offset-2 hover:text-muted-foreground transition-colors">
                 Terms of Service
               </Link>{' '}
               and{' '}
-              <Link to="/privacy" className="text-slate-900 font-semibold underline underline-offset-2 hover:text-slate-600 transition-colors">
+              <Link to="/privacy" className="text-foreground font-semibold underline underline-offset-2 hover:text-muted-foreground transition-colors">
                 Privacy Policy
               </Link>
             </span>
@@ -293,7 +289,7 @@ const SignUp = () => {
 
         {/* Submit */}
         {errors.form && (
-          <p role="alert" className="flex items-center gap-1.5 text-sm text-destructive">
+          <p role="alert" className="flex items-center gap-1.5 text-sm text-destructive-text">
             <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" /> {errors.form}
           </p>
         )}
@@ -316,10 +312,10 @@ const SignUp = () => {
 
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-200" />
+          <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs">
-          <span className="px-3 bg-white text-slate-400 font-medium uppercase tracking-wide">
+          <span className="px-3 bg-background text-muted-foreground font-medium uppercase tracking-wide">
             or sign up with
           </span>
         </div>
@@ -327,14 +323,14 @@ const SignUp = () => {
       <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
-          className="flex items-center justify-center gap-2.5 px-4 py-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 active:bg-slate-100 transition-colors text-sm font-medium text-slate-700"
+          className="flex items-center justify-center gap-2.5 px-4 py-2.5 border border-border rounded-lg hover:bg-secondary active:bg-muted transition-colors text-sm font-medium text-foreground/80"
         >
           Google
         </button>
 
         <button
           type="button"
-          className="flex items-center justify-center gap-2.5 px-4 py-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 active:bg-slate-100 transition-colors text-sm font-medium text-slate-700"
+          className="flex items-center justify-center gap-2.5 px-4 py-2.5 border border-border rounded-lg hover:bg-secondary active:bg-muted transition-colors text-sm font-medium text-foreground/80"
         >
           Facebook
         </button>

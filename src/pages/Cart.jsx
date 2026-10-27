@@ -55,10 +55,10 @@ const Cart = () => {
 
   const hintPromo = selectActivePromos(promos)[0];
 
-  {/* Empty Cart */}
+  // Empty cart
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-background">
         <Breadcrumb items={[{ label: 'Shopping Cart' }]} />
 
         {unavailableCount > 0 && (
@@ -68,12 +68,12 @@ const Cart = () => {
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
           <div className="text-center">
             <div className="flex justify-center mb-6">
-              <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center">
-                <ShoppingBag className="w-12 h-12 text-slate-400" />
+              <div className="w-24 h-24 rounded-full bg-secondary flex items-center justify-center">
+                <ShoppingBag className="w-12 h-12 text-muted-foreground" />
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Your Cart is Empty</h1>
-            <p className="text-slate-600 mb-8 max-w-md">
+            <h1 className="text-3xl font-bold text-foreground mb-2">Your Cart is Empty</h1>
+            <p className="text-foreground/80 mb-8 max-w-md">
               Looks like you haven't added any items to your cart yet. Explore our collection and find something you love!
             </p>
             <Button as={Link} to="/shop" variant="primary" size="lg" className="gap-2">
@@ -93,7 +93,7 @@ const Cart = () => {
     .slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Breadcrumb items={[{ label: 'Shopping Cart' }]} />
 
       {/* Main Content */}
@@ -109,8 +109,8 @@ const Cart = () => {
         )}
 
         <div className="mb-12">
-          <h1 className="text-4xl lg:text-5xl font-bold text-slate-900">Shopping Cart</h1>
-          <p className="text-slate-600 mt-2">{itemCount} item{cartItems.length !== 1 ? 's' : ''} in your cart</p>
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground">Shopping Cart</h1>
+          <p className="text-foreground/80 mt-2">{itemCount} item{cartItems.length !== 1 ? 's' : ''} in your cart</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -121,12 +121,12 @@ const Cart = () => {
                 return (
                   <div
                     key={item.id}
-                    className="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-md transition-shadow"
+                    className="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow"
                   >
                     <div className="flex gap-6">
                       {/* Product Image */}
                       <div className="shrink-0">
-                        <div className="w-32 h-32 rounded-lg overflow-hidden bg-slate-100">
+                        <div className="w-32 h-32 rounded-lg overflow-hidden bg-secondary">
                           <img
                             src={item.image}
                             alt={item.name}
@@ -141,16 +141,16 @@ const Cart = () => {
                         <div className="flex items-start justify-between mb-4">
                           <div>
                             <Link to={`/shop/${item.id}`}>
-                              <h3 className="text-lg font-bold text-slate-900 hover:text-accent transition-colors">
+                              <h3 className="text-lg font-bold text-foreground hover:text-accent-text transition-colors">
                                 {item.name}
                               </h3>
                             </Link>
-                            <p className="text-sm text-slate-500 mt-1">{item.category}</p>
+                            <p className="text-sm text-muted-foreground mt-1">{item.category}</p>
                           </div>
                           <button
                             onClick={() => removeFromCart(item.id)}
-                            className="text-red-600 hover:text-red-700 transition-colors p-2 hover:bg-red-50 rounded-lg"
-                            aria-label="Remove from cart"
+                            className="text-destructive-text hover:text-destructive-text/80 transition-colors p-2 hover:bg-destructive/10 rounded-lg"
+                            aria-label={`Remove ${item.name} from cart`}
                           >
                             <Trash2 className="w-5 h-5" />
                           </button>
@@ -158,15 +158,15 @@ const Cart = () => {
 
                         {/* Price and Discount */}
                         <div className="mb-4 flex items-center gap-3">
-                          <span className="text-2xl font-bold text-slate-900">
+                          <span className="text-2xl font-bold text-foreground">
                             ${getFinalPrice(item)}
                           </span>
                           {item.discount && (
                             <>
-                              <span className="text-lg text-slate-400 line-through">
+                              <span className="text-lg text-muted-foreground line-through">
                                 ${item.price}
                               </span>
-                              <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded">
+                              <span className="px-2 py-1 bg-destructive/10 text-destructive-text text-xs font-semibold rounded">
                                 -{item.discount}%
                               </span>
                             </>
@@ -175,30 +175,30 @@ const Cart = () => {
 
                         {/* Quantity Selector */}
                         <div className="flex items-center gap-4">
-                          <div className="flex items-center border border-slate-300 rounded-lg">
+                          <div className="flex items-center border border-border rounded-lg">
                             <button
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="p-2 hover:bg-slate-50 transition-colors"
+                              className="p-2 hover:bg-secondary transition-colors rounded-l-lg"
                               aria-label="Decrease quantity"
                             >
-                              <Minus className="w-4 h-4 text-slate-600" />
+                              <Minus className="w-4 h-4 text-foreground/70" />
                             </button>
-                            <span className="w-12 text-center font-semibold text-slate-900">
+                            <span className="w-12 text-center font-semibold text-foreground">
                               {item.quantity}
                             </span>
                             <button
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="p-2 hover:bg-slate-50 transition-colors"
+                              className="p-2 hover:bg-secondary transition-colors rounded-r-lg"
                               aria-label="Increase quantity"
                             >
-                              <Plus className="w-4 h-4 text-slate-600" />
+                              <Plus className="w-4 h-4 text-foreground/70" />
                             </button>
                           </div>
 
                           {/* Subtotal for item */}
                           <div className="ml-auto text-right">
-                            <p className="text-sm text-slate-500 mb-1">Subtotal</p>
-                            <p className="text-2xl font-bold text-slate-900">
+                            <p className="text-sm text-muted-foreground mb-1">Subtotal</p>
+                            <p className="text-2xl font-bold text-foreground">
                               ${(getFinalPrice(item) * item.quantity).toLocaleString()}
                             </p>
                           </div>
@@ -211,7 +211,7 @@ const Cart = () => {
             </div>
 
             {/* Continue Shopping */}
-            <Link to="/shop" className="inline-flex items-center gap-2 mt-8 text-accent hover:text-accent/80 transition-colors">
+            <Link to="/shop" className="inline-flex items-center gap-2 mt-8 text-accent-text hover:text-foreground transition-colors">
               <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">Continue Shopping</span>
             </Link>
@@ -220,35 +220,35 @@ const Cart = () => {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             {/* Summary Card */}
-            <div className="bg-slate-50 rounded-lg p-6 border border-slate-200 sticky top-24">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">Order Summary</h2>
+            <div className="bg-secondary rounded-lg p-6 border border-border sticky top-24">
+              <h2 className="text-2xl font-bold text-foreground mb-6">Order Summary</h2>
 
               {/* Subtotal */}
-              <div className="flex justify-between mb-4 pb-4 border-b border-slate-200">
-                <span className="text-slate-600">Subtotal</span>
-                <span className="font-semibold text-slate-900">${subtotal.toLocaleString()}</span>
+              <div className="flex justify-between mb-4 pb-4 border-b border-border">
+                <span className="text-foreground/80">Subtotal</span>
+                <span className="font-semibold text-foreground">${subtotal.toLocaleString()}</span>
               </div>
 
               {/* Shipping */}
-              <div className="flex justify-between mb-4 pb-4 border-b border-slate-200">
+              <div className="flex justify-between mb-4 pb-4 border-b border-border">
                 <div className="flex items-center gap-2">
-                  <Truck className="w-4 h-4 text-slate-500" />
-                  <span className="text-slate-600">Shipping</span>
+                  <Truck className="w-4 h-4 text-foreground/70" />
+                  <span className="text-foreground/80">Shipping</span>
                 </div>
-                <span className="font-semibold text-slate-900">
+                <span className="font-semibold text-foreground">
                   {shipping === 0 ? 'FREE' : `$${shipping}`}
                 </span>
               </div>
 
               {/* Tax */}
-              <div className="flex justify-between mb-6 pb-6 border-b border-slate-200">
-                <span className="text-slate-600">Tax ({toPercent(taxRate)}%)</span>
-                <span className="font-semibold text-slate-900">${tax}</span>
+              <div className="flex justify-between mb-6 pb-6 border-b border-border">
+                <span className="text-foreground/80">Tax ({toPercent(taxRate)}%)</span>
+                <span className="font-semibold text-foreground">${tax}</span>
               </div>
 
               {/* Promo discount */}
               {appliedPromo && (
-                <div className="flex justify-between mb-4 pb-4 border-b border-slate-200 text-success">
+                <div className="flex justify-between mb-4 pb-4 border-b border-border text-success-text">
                   <span>Promo ({appliedPromo.code})</span>
                   <span className="font-semibold">-${discount.toLocaleString()}</span>
                 </div>
@@ -256,7 +256,7 @@ const Cart = () => {
 
               {/* Total */}
               <div className="flex justify-between mb-6">
-                <span className="text-lg font-bold text-slate-900">Total</span>
+                <span className="text-lg font-bold text-foreground">Total</span>
                 <span className="text-2xl font-bold text-accent">${total.toLocaleString()}</span>
               </div>
 
@@ -267,7 +267,7 @@ const Cart = () => {
 
               {/* Promo Code */}
               <div className="space-y-2">
-                <label htmlFor="promo" className="text-sm font-medium text-slate-600">
+                <label htmlFor="promo" className="text-sm font-medium text-foreground/80">
                   Have a promo code?
                 </label>
                 <div className="flex gap-2">
@@ -278,13 +278,13 @@ const Cart = () => {
                     value={appliedPromo ? appliedPromo.code : promoInput}
                     onChange={(e) => setPromoInput(e.target.value)}
                     disabled={!!appliedPromo}
-                    className="flex-1 px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-sm disabled:bg-slate-50 disabled:text-slate-400"
+                    className="flex-1 px-3 py-2 rounded-lg border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm disabled:bg-secondary disabled:text-muted-foreground"
                   />
                   {appliedPromo ? (
                     <button
                       type="button"
                       onClick={handleRemovePromo}
-                      className="px-3 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium"
+                      className="px-3 py-2 border border-border text-foreground/80 rounded-lg hover:bg-card transition-colors text-sm font-medium"
                     >
                       Remove
                     </button>
@@ -292,7 +292,7 @@ const Cart = () => {
                     <button
                       type="button"
                       onClick={handleApplyPromo}
-                      className="px-3 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors text-sm font-medium"
+                      className="px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
                     >
                       Apply
                     </button>
@@ -300,28 +300,28 @@ const Cart = () => {
                 </div>
 
                 {appliedPromo && (
-                  <p className="flex items-center gap-1.5 text-xs text-success">
+                  <p className="flex items-center gap-1.5 text-xs text-success-text">
                     <CheckCircle className="w-3.5 h-3.5" /> "{appliedPromo.code}" applied ({describePromo(appliedPromo)})
                   </p>
                 )}
-                {promoError && <p role="alert" className="text-xs text-destructive">{promoError}</p>}
+                {promoError && <p role="alert" className="text-xs text-destructive-text">{promoError}</p>}
                 {!appliedPromo && hintPromo && (
-                  <p className="text-xs text-slate-400">Try code: {hintPromo.code}</p>
+                  <p className="text-xs text-foreground/70">Try code: {hintPromo.code}</p>
                 )}
               </div>
 
               {/* Free Shipping Info */}
               {subtotal < freeShippingThreshold && (
-                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-xs text-blue-900">
+                <div className="mt-6 p-4 bg-accent/10 border border-accent/30 rounded-lg">
+                  <p className="text-xs text-foreground">
                     <span className="font-semibold">Free shipping</span> on orders over ${freeShippingThreshold}. You're ${(freeShippingThreshold - subtotal).toFixed(2)} away!
                   </p>
                 </div>
               )}
 
               {/* Security Info */}
-              <div className="mt-6 pt-6 border-t border-slate-200">
-                <p className="text-xs text-slate-500 text-center">
+              <div className="mt-6 pt-6 border-t border-border">
+                <p className="text-xs text-foreground/70 text-center">
                   ✓ Secure checkout with SSL encryption
                 </p>
               </div>
@@ -330,8 +330,8 @@ const Cart = () => {
         </div>
 
         {/* Recommendations */}
-        <div className="mt-16 pt-16 border-t border-slate-200">
-          <h2 className="text-3xl font-bold text-slate-900 mb-8">You Might Also Like</h2>
+        <div className="mt-16 pt-16 border-t border-border">
+          <h2 className="text-3xl font-bold text-foreground mb-8">You Might Also Like</h2>
           <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
             {relatedProducts.map((product) => (
               <ProductCard key={product.id} product={product} />

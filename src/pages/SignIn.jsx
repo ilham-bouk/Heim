@@ -10,18 +10,18 @@ import DemoHint from '../components/auth/DemoHint';
 
 const FieldError = ({ message }) =>
   message ? (
-    <p className="mt-1.5 flex items-center gap-1.5 text-xs text-red-600">
+    <p className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive-text">
       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
       {message}
     </p>
   ) : null;
 
 const inputClass = (hasError) =>
-  `w-full py-2.5 rounded-lg border text-slate-900 text-sm placeholder:text-slate-400
+  `w-full py-2.5 rounded-lg border text-foreground text-sm placeholder:text-muted-foreground
    transition-colors focus:outline-none focus:ring-2 focus:border-transparent
    ${hasError
-     ? 'pl-10 pr-4 border-red-400 bg-red-50 focus:ring-red-400'
-     : 'pl-10 pr-4 border-slate-300 bg-white hover:border-slate-400 focus:ring-slate-900'}`;
+     ? 'pl-10 pr-4 border-destructive bg-destructive/10 focus:ring-destructive'
+     : 'pl-10 pr-4 border-border bg-card hover:border-muted-foreground focus:ring-primary'}`;
 
 
 const SignIn = () => {
@@ -80,13 +80,13 @@ const SignIn = () => {
     >
       {/* Heading */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-1.5">Welcome back</h1>
-        <p className="text-sm text-slate-500">
+        <h1 className="text-3xl font-bold text-foreground mb-1.5">Welcome back</h1>
+        <p className="text-sm text-muted-foreground">
           Don't have an account?{' '}
           <Link
             to="/signup"
             state={location.state}
-            className="text-slate-900 font-semibold underline underline-offset-2 hover:text-slate-600 transition-colors"
+            className="text-foreground font-semibold underline underline-offset-2 hover:text-muted-foreground transition-colors"
           >
             Sign up free
           </Link>
@@ -98,11 +98,11 @@ const SignIn = () => {
 
         {/* Email */}
         <div>
-          <label htmlFor="email" className="block text-sm font-semibold text-slate-800 mb-1.5">
+          <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-1.5">
             Email address
           </label>
           <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
             <input
               id="email"
               name="email"
@@ -120,18 +120,18 @@ const SignIn = () => {
         {/* Password */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label htmlFor="password" className="block text-sm font-semibold text-slate-800">
+            <label htmlFor="password" className="block text-sm font-semibold text-foreground">
               Password
             </label>
             <Link
               to="/forgot-password"
-              className="text-xs text-slate-500 underline underline-offset-2 hover:text-slate-800 transition-colors"
+              className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
             >
               Forgot password?
             </Link>
           </div>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
             <input
               id="password"
               name="password"
@@ -146,7 +146,7 @@ const SignIn = () => {
               type="button"
               onClick={() => setShowPassword(v => !v)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
@@ -158,14 +158,14 @@ const SignIn = () => {
         <label className="flex items-center gap-2.5 cursor-pointer select-none w-fit">
           <input
             type="checkbox"
-            className="w-4 h-4 rounded border-slate-300 accent-slate-900 cursor-pointer"
+            className="w-4 h-4 rounded border-border accent-primary cursor-pointer"
           />
-          <span className="text-sm text-slate-600">Remember me for 30 days</span>
+          <span className="text-sm text-foreground/80">Remember me for 30 days</span>
         </label>
 
         {/* Submit */}
         {errors.form && (
-          <p role="alert" className="flex items-center gap-1.5 text-sm text-destructive">
+          <p role="alert" className="flex items-center gap-1.5 text-sm text-destructive-text">
             <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" /> {errors.form}
           </p>
         )}
@@ -188,10 +188,10 @@ const SignIn = () => {
 
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-200" />
+          <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs">
-          <span className="px-3 bg-white text-slate-400 font-medium uppercase tracking-wide">
+          <span className="px-3 bg-background text-muted-foreground font-medium uppercase tracking-wide">
             or continue with
           </span>
         </div>
@@ -200,14 +200,14 @@ const SignIn = () => {
       <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
-          className="flex items-center justify-center gap-2.5 px-4 py-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 active:bg-slate-100 transition-colors text-sm font-medium text-slate-700"
+          className="flex items-center justify-center gap-2.5 px-4 py-2.5 border border-border rounded-lg hover:bg-secondary active:bg-muted transition-colors text-sm font-medium text-foreground/80"
         >
           Google
         </button>
 
         <button
           type="button"
-          className="flex items-center justify-center gap-2.5 px-4 py-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 active:bg-slate-100 transition-colors text-sm font-medium text-slate-700"
+          className="flex items-center justify-center gap-2.5 px-4 py-2.5 border border-border rounded-lg hover:bg-secondary active:bg-muted transition-colors text-sm font-medium text-foreground/80"
         >
           Facebook
         </button>
@@ -216,11 +216,11 @@ const SignIn = () => {
       <DemoHint />
 
       {/* Footer links */}
-      <p className="mt-4 text-xs text-slate-400 text-center">
+      <p className="mt-4 text-xs text-muted-foreground text-center">
         By signing in you agree to our{' '}
-        <Link to="/terms" className="underline underline-offset-2 hover:text-slate-600 transition-colors">Terms</Link>
+        <Link to="/terms" className="underline underline-offset-2 hover:text-foreground transition-colors">Terms</Link>
         {' '}and{' '}
-        <Link to="/privacy" className="underline underline-offset-2 hover:text-slate-600 transition-colors">Privacy Policy</Link>.
+        <Link to="/privacy" className="underline underline-offset-2 hover:text-foreground transition-colors">Privacy Policy</Link>.
       </p>
 
     </AuthLayout>
