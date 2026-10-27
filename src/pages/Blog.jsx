@@ -29,20 +29,20 @@ const Blog = () => {
   const filteredPosts = searchBlogPosts(blogPosts, searchQuery, selectedCategory);
 
   return (
-    <div className="min-h-screen bg-white">      
+    <div className="min-h-screen bg-background">
       <Breadcrumb items={[{ label: 'Blog' }]} />
 
       {/* Hero Section */}
       <section className="py-12 lg:py-20 bg-secondary">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block text-sm font-medium text-accent uppercase tracking-wider mb-4">
+            <span className="inline-block text-sm font-medium text-accent-text uppercase tracking-wider mb-4">
               Insights & Ideas
             </span>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance mb-4">
               Design Inspiration & Expert Tips
             </h1>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg text-foreground/70">
               Discover curated articles, design trends, and expert advice to help you create your perfect space.
             </p>
           </div>
@@ -52,16 +52,16 @@ const Blog = () => {
       {/* Featured Articles Section */}
       <section className="py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-12">Featured Articles</h2>
+          <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-12">Featured Articles</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {getFeaturedBlogPosts(3).map((post) => (
               <article 
                 key={post.id} 
-                className="group bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-lg transition-all duration-300"
+                className="group bg-card rounded-xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300"
               >
                 {/* Image */}
-                <div className="relative aspect-video overflow-hidden bg-slate-100">
+                <div className="relative aspect-video overflow-hidden bg-secondary">
                   <img
                     src={post.image}
                     alt={post.title}
@@ -69,7 +69,7 @@ const Blog = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute top-4 left-4">
-                    <span className="inline-block px-3 py-1 bg-accent text-white text-xs font-semibold rounded-lg">
+                    <span className="inline-block px-3 py-1 bg-accent-text text-primary-foreground text-xs font-semibold rounded-lg">
                       {post.category}
                     </span>
                   </div>
@@ -78,16 +78,16 @@ const Blog = () => {
                 {/* Content */}
                 <div className="p-6">
                   <Link to={`/blog/${post.id}`}>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3 line-clamp-2 group-hover:text-accent transition-colors">
+                    <h3 className="text-xl font-bold text-foreground mb-3 line-clamp-2 group-hover:text-accent-text transition-colors">
                       {post.title}
                     </h3>
                   </Link>
-                  <p className="text-slate-600 text-sm mb-4 line-clamp-2">
+                  <p className="text-foreground/80 text-sm mb-4 line-clamp-2">
                     {post.excerpt}
                   </p>
 
                   {/* Meta Info */}
-                  <div className="flex flex-wrap gap-4 text-sm text-slate-500 mb-4 pb-4 border-b border-slate-200">
+                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-4 pb-4 border-b border-border">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
                       {formatDate(post.publishedAt)}
@@ -104,12 +104,12 @@ const Blog = () => {
                       <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
                         <User className="w-4 h-4 text-accent" />
                       </div>
-                      <span className="text-sm font-medium text-slate-900">{post.author}</span>
+                      <span className="text-sm font-medium text-foreground">{post.author}</span>
                     </div>
                     <Link 
                       to={`/blog/${post.id}`}
                       aria-label={`Read ${post.title}`}
-                      className="text-accent hover:text-accent/80 transition-colors"
+                      className="text-accent-text hover:text-foreground transition-colors"
                     >
                       <ArrowRight className="w-5 h-5" aria-hidden="true" />
                     </Link>
@@ -122,7 +122,7 @@ const Blog = () => {
       </section>
 
       {/* Blog Content Section */}
-      <section className="py-8 lg:py-16 bg-slate-50">
+      <section className="py-8 lg:py-16 bg-secondary">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12">
             
@@ -131,13 +131,14 @@ const Blog = () => {
               {/* Search Bar */}
               <div className="mb-12">
                 <div className="relative">
-                  <Search className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
+                  <Search className="absolute left-4 top-3.5 w-5 h-5 text-muted-foreground" aria-hidden="true" />
                   <input
                     type="text"
+                    aria-label="Search articles"
                     placeholder="Search articles..."
                     value={searchQuery}
                     onChange={handleSearchChange}
-                    className="w-full pl-12 pr-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 placeholder-slate-400"
+                    className="w-full pl-12 pr-4 py-3 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary text-foreground placeholder:text-muted-foreground"
                   />
                 </div>
               </div>
@@ -148,7 +149,7 @@ const Blog = () => {
                   {filteredPosts.map((post) => (
                     <article 
                       key={post.id}
-                      className="bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-lg transition-all duration-300 flex flex-col sm:flex-row"
+                      className="bg-card rounded-xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300 flex flex-col sm:flex-row"
                     >
                       {/* Image */}
                       <div className="sm:w-48 shrink-0">
@@ -164,24 +165,24 @@ const Blog = () => {
                       <div className="flex-1 p-6 flex flex-col justify-between">
                         <div>
                           <div className="flex items-center gap-3 mb-3">
-                            <span className="px-3 py-1 bg-accent/10 text-accent text-xs font-semibold rounded-lg">
+                            <span className="px-3 py-1 bg-accent/10 text-accent-text text-xs font-semibold rounded-lg">
                               {post.category}
                             </span>
-                            <span className="text-xs text-slate-500">{post.readTime}</span>
+                            <span className="text-xs text-muted-foreground">{post.readTime}</span>
                           </div>
                           <Link to={`/blog/${post.id}`}>
-                            <h3 className="text-xl font-bold text-slate-900 hover:text-accent transition-colors mb-2 line-clamp-2">
+                            <h3 className="text-xl font-bold text-foreground hover:text-accent-text transition-colors mb-2 line-clamp-2">
                               {post.title}
                             </h3>
                           </Link>
-                          <p className="text-slate-600 mb-4 line-clamp-2">
+                          <p className="text-foreground/80 mb-4 line-clamp-2">
                             {post.excerpt}
                           </p>
                         </div>
 
                         {/* Footer */}
-                        <div className="flex items-center justify-between pt-4 border-t border-slate-200">
-                          <div className="flex items-center gap-3 text-sm text-slate-500">
+                        <div className="flex items-center justify-between pt-4 border-t border-border">
+                          <div className="flex items-center gap-3 text-sm text-muted-foreground">
                             <div className="flex items-center gap-1">
                               <User className="w-4 h-4" />
                               {post.author}
@@ -195,7 +196,7 @@ const Blog = () => {
                           <Link
                             to={`/blog/${post.id}`}
                             aria-label={`Read ${post.title}`}
-                            className="text-accent hover:text-accent/80 transition-colors"
+                            className="text-accent-text hover:text-foreground transition-colors"
                           >
                             <ArrowRight className="w-5 h-5" aria-hidden="true" />
                           </Link>
@@ -206,7 +207,7 @@ const Blog = () => {
                 </div>
               ) : (
                 <div className="text-center py-16">
-                  <p className="text-slate-600 text-lg mb-4">No articles found matching your search.</p>
+                  <p className="text-foreground/80 text-lg mb-4">No articles found matching your search.</p>
                   <Button
                     variant="primary"
                     onClick={() => {
@@ -224,8 +225,8 @@ const Blog = () => {
             {/* Sidebar */}
             <aside className="lg:w-80 shrink-0">
               {/* Categories Widget */}
-              <div className="bg-white rounded-xl p-6 border border-slate-200 mb-8 top-24">
-                <h3 className="text-xl font-bold text-slate-900 mb-6">Categories</h3>
+              <div className="bg-card rounded-xl p-6 border border-border mb-8 top-24">
+                <h3 className="text-xl font-bold text-foreground mb-6">Categories</h3>
                 <div className="space-y-3">
                   {blogCategories.map((category) => (
                     <button
@@ -233,8 +234,8 @@ const Blog = () => {
                       onClick={() => setSelectedCategory(category.name)}
                       className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                         selectedCategory === category.name
-                          ? 'bg-slate-900 text-white'
-                          : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-secondary text-foreground/80 hover:bg-border'
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -247,16 +248,16 @@ const Blog = () => {
               </div>
 
               {/* Recent Posts Widget */}
-              <div className="bg-white rounded-xl p-6 border border-slate-200 mb-8">
-                <h3 className="text-xl font-bold text-slate-900 mb-6">Recent Articles</h3>
+              <div className="bg-card rounded-xl p-6 border border-border mb-8">
+                <h3 className="text-xl font-bold text-foreground mb-6">Recent Articles</h3>
                 <div className="space-y-4">
                   {blogPosts.slice(0, 5).map((post) => (
                     <Link key={post.id} to={`/blog/${post.id}`}>
-                      <div className="pb-4 border-b border-slate-200 last:border-0 hover:text-accent transition-colors">
-                        <h4 className="font-semibold text-slate-900 line-clamp-2 mb-2 hover:text-accent">
+                      <div className="pb-4 border-b border-border last:border-0 hover:text-accent-text transition-colors">
+                        <h4 className="font-semibold text-foreground line-clamp-2 mb-2 hover:text-accent-text">
                           {post.title}
                         </h4>
-                        <p className="text-xs text-slate-500">{formatDate(post.publishedAt)}</p>
+                        <p className="text-xs text-muted-foreground">{formatDate(post.publishedAt)}</p>
                       </div>
                     </Link>
                   ))}
@@ -264,9 +265,9 @@ const Blog = () => {
               </div>
 
               {/* Newsletter Widget */}
-              <div className="bg-secondary rounded-xl p-6 border border-slate-200">
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Stay Updated</h3>
-                <p className="text-slate-600 text-sm mb-4">
+              <div className="bg-card rounded-xl p-6 border border-border">
+                <h3 className="text-xl font-bold text-foreground mb-2">Stay Updated</h3>
+                <p className="text-foreground/80 text-sm mb-4">
                   Subscribe to get the latest design articles and inspiration delivered to your inbox.
                 </p>
                 <NewsletterForm layout="stack" />
@@ -279,10 +280,10 @@ const Blog = () => {
       {/* CTA Section */}
       <section className="py-16 lg:py-24">
         <div className="max-w-4xl mx-auto px-4 lg:px-8 text-center">
-          <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
+          <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
             Ready to Redesign Your Space?
           </h2>
-          <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-foreground/80 mb-8 max-w-2xl mx-auto">
             Explore our collection and bring your design inspiration to life with Heim's curated furniture selection.
           </p>
           <Button as={Link} to="/shop" variant="primary" size="lg">

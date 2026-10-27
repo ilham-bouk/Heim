@@ -55,7 +55,7 @@ const ProductDetail = () => {
   const relatedProducts = getRelatedProducts(product, 4);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Breadcrumb
         items={[
           { label: 'Shop', href: '/shop' },
@@ -71,7 +71,7 @@ const ProductDetail = () => {
           {/* Images */}
           <div>
             {/* Main image */}
-            <div className="relative mb-4 bg-slate-50 rounded-2xl overflow-hidden aspect-square">
+            <div className="relative mb-4 bg-secondary rounded-2xl overflow-hidden aspect-square">
               <img
                 src={productImages[selectedImage]}
                 alt={product.name}
@@ -95,8 +95,8 @@ const ProductDetail = () => {
                     aria-label={`View image ${index + 1}`}
                     className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                       selectedImage === index
-                        ? 'border-slate-900'
-                        : 'border-slate-200 hover:border-slate-400'
+                        ? 'border-primary'
+                        : 'border-border hover:border-muted-foreground'
                     }`}
                   >
                     <img src={image} alt={`View ${index + 1}`} loading="lazy" className="w-full h-full object-cover" />
@@ -111,62 +111,62 @@ const ProductDetail = () => {
 
             {/* Category + title */}
             <div className="mb-6">
-              <p className="text-sm text-slate-500 uppercase tracking-wide mb-2">{product.category}</p>
-              <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-4">{product.name}</h1>
-              <p className="text-lg text-slate-600 leading-relaxed">{product.description}</p>
+              <p className="text-sm text-muted-foreground uppercase tracking-wide mb-2">{product.category}</p>
+              <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">{product.name}</h1>
+              <p className="text-lg text-foreground/80 leading-relaxed">{product.description}</p>
             </div>
 
             {/* Rating */}
-            <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-200">
+            <div className="flex items-center gap-4 mb-6 pb-6 border-b border-border">
               <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
                     className={`w-4 h-4 ${
                       i < Math.floor(product.rating)
-                        ? 'fill-yellow-500 text-yellow-500'
-                        : 'fill-slate-200 text-slate-200'
+                        ? 'fill-rating text-rating'
+                        : 'fill-border text-border'
                     }`}
                   />
                 ))}
               </div>
-              <span className="text-sm text-slate-600">
+              <span className="text-sm text-muted-foreground">
                 {product.rating} ({product.reviews} reviews)
               </span>
             </div>
 
             {/* Price */}
-            <div className="mb-6 pb-6 border-b border-slate-200">
+            <div className="mb-6 pb-6 border-b border-border">
               <div className="flex items-baseline gap-3 mb-1">
-                <span className="text-4xl font-bold text-slate-900">${getFinalPrice(product)}</span>
+                <span className="text-4xl font-bold text-foreground">${getFinalPrice(product)}</span>
                 {product.discount && (
-                  <span className="text-xl text-slate-400 line-through">${product.price}</span>
+                  <span className="text-xl text-muted-foreground line-through">${product.price}</span>
                 )}
               </div>
             </div>
 
             {/* Add to cart section */}
-            <div className="mb-6 pb-6 border-b border-slate-200">
+            <div className="mb-6 pb-6 border-b border-border">
               <div className="flex items-center gap-4 mb-4">
 
                 {/* Quantity */}
-                <div className="flex items-center border border-slate-300 rounded-lg">
+                <div className="flex items-center border border-border rounded-lg bg-card">
                   <button
                     onClick={decQuantity}
                     aria-label="Decrease quantity"
-                    className="p-2 hover:bg-slate-100 transition-colors rounded-l-lg cursor-pointer"
+                    className="p-2 hover:bg-secondary transition-colors rounded-l-lg cursor-pointer"
                   >
-                    <Minus className="w-4 h-4 text-slate-600" />
+                    <Minus className="w-4 h-4 text-foreground/70" />
                   </button>
-                  <span className="w-12 text-center font-semibold text-slate-900 select-none">
+                  <span className="w-12 text-center font-semibold text-foreground select-none">
                     {quantity}
                   </span>
                   <button
                     onClick={incQuantity}
                     aria-label="Increase quantity"
-                    className="p-2 hover:bg-slate-100 transition-colors rounded-r-lg cursor-pointer"
+                    className="p-2 hover:bg-secondary transition-colors rounded-r-lg cursor-pointer"
                   >
-                    <Plus className="w-4 h-4 text-slate-600" />
+                    <Plus className="w-4 h-4 text-foreground/70" />
                   </button>
                 </div>
 
@@ -176,11 +176,11 @@ const ProductDetail = () => {
                   aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
                   className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border-2 font-medium transition-all cursor-pointer ${
                     wishlisted
-                      ? 'border-red-500 bg-red-50 text-red-600'
-                      : 'border-slate-300 text-slate-600 hover:border-slate-400'
+                      ? 'border-destructive bg-destructive/10 text-destructive-text'
+                      : 'border-border text-foreground/80 hover:border-muted-foreground'
                   }`}
                 >
-                  <Heart className={`w-5 h-5 ${wishlisted ? 'fill-red-600' : ''}`} />
+                  <Heart className={`w-5 h-5 ${wishlisted ? 'fill-destructive' : ''}`} />
                   {wishlisted ? 'Wishlisted' : 'Add to Wishlist'}
                 </button>
               </div>
@@ -209,7 +209,7 @@ const ProductDetail = () => {
               {isInCart && !addedToCart && (
                 <Link
                   to="/cart"
-                  className="mt-3 flex items-center justify-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition-colors underline underline-offset-2"
+                  className="mt-3 flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
                 >
                   View Cart · {cartItem.quantity} {cartItem.quantity === 1 ? 'item' : 'items'}
                 </Link>
@@ -224,26 +224,26 @@ const ProductDetail = () => {
                 { Icon: RotateCcw, title: '30-Day Returns',  sub: 'Easy returns for any reason' },
               ].map(({ Icon, title, sub }) => (
                 <div key={title} className="flex items-start gap-4">
-                  <Icon className="w-5 h-5 text-slate-900 shrink-0 mt-0.5" />
+                  <Icon className="w-5 h-5 text-foreground shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-semibold text-slate-900">{title}</p>
-                    <p className="text-sm text-slate-500">{sub}</p>
+                    <p className="font-semibold text-foreground">{title}</p>
+                    <p className="text-sm text-muted-foreground">{sub}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Share */}
-            <div className="mt-auto pt-6 border-t border-slate-200">
-              <p className="text-sm text-slate-600 mb-3">Share this product:</p>
+            <div className="mt-auto pt-6 border-t border-border">
+              <p className="text-sm text-muted-foreground mb-3">Share this product:</p>
               <div className="flex gap-3">
-                <button className="p-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer">
-                  <Share2 className="w-5 h-5 text-slate-600" />
+                <button aria-label="Share" className="p-2.5 border border-border rounded-lg hover:bg-secondary transition-colors cursor-pointer">
+                  <Share2 className="w-5 h-5 text-foreground/70" />
                 </button>
-                <button className="flex-1 px-4 py-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors text-sm text-slate-600 font-medium cursor-pointer">
+                <button className="flex-1 px-4 py-2.5 border border-border rounded-lg hover:bg-secondary transition-colors text-sm text-foreground/80 font-medium cursor-pointer">
                   Share on Facebook
                 </button>
-                <button className="flex-1 px-4 py-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors text-sm text-slate-600 font-medium cursor-pointer">
+                <button className="flex-1 px-4 py-2.5 border border-border rounded-lg hover:bg-secondary transition-colors text-sm text-foreground/80 font-medium cursor-pointer">
                   Share on Twitter
                 </button>
               </div>
@@ -252,11 +252,11 @@ const ProductDetail = () => {
         </div>
 
         {/* Product info tabs */}
-        <div className="border-t border-slate-200 pt-12 mb-16">
+        <div className="border-t border-border pt-12 mb-16">
           <div className={`grid grid-cols-1 gap-8 ${product.specs?.length ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
             <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-4">Description</h3>
-              <p className="text-slate-600 leading-relaxed">
+              <h3 className="text-xl font-bold text-foreground mb-4">Description</h3>
+              <p className="text-foreground/80 leading-relaxed">
                 {product.description} This premium piece combines modern aesthetics with superior
                 craftsmanship. Made from high-quality materials, it's designed to last for years
                 while maintaining its elegant appearance.
@@ -264,20 +264,20 @@ const ProductDetail = () => {
             </div>
             {product.specs?.length > 0 && (
               <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-4">Specifications</h3>
-                <ul className="space-y-3 text-slate-600">
+                <h3 className="text-xl font-bold text-foreground mb-4">Specifications</h3>
+                <ul className="space-y-3 text-foreground/80">
                   {product.specs.map(({ label, value }) => (
                     <li key={label} className="flex justify-between gap-4">
                       <span>{label}</span>
-                      <span className="font-medium text-slate-900 text-right">{value}</span>
+                      <span className="font-medium text-foreground text-right">{value}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
             <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-4">Care Instructions</h3>
-              <ul className="space-y-2 text-slate-600 text-sm">
+              <h3 className="text-xl font-bold text-foreground mb-4">Care Instructions</h3>
+              <ul className="space-y-2 text-foreground/80 text-sm">
                 {[
                   'Dust regularly with a soft, dry cloth',
                   'Use furniture polish every 3–4 months',
@@ -286,7 +286,7 @@ const ProductDetail = () => {
                   'Use coasters for hot or cold items',
                 ].map((tip) => (
                   <li key={tip} className="flex gap-2">
-                    <span className="text-slate-400 shrink-0">•</span>
+                    <span className="text-muted-foreground shrink-0">•</span>
                     {tip}
                   </li>
                 ))}
@@ -297,15 +297,15 @@ const ProductDetail = () => {
 
         {/* ── Related products ────────────────────────────────────────────── */}
         {relatedProducts.length > 0 && (
-          <div className="border-t border-slate-200 pt-12">
-            <h2 className="text-3xl font-bold text-slate-900 mb-8">Related Products</h2>
+          <div className="border-t border-border pt-12">
+            <h2 className="text-3xl font-bold text-foreground mb-8">Related Products</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map((rel) => {
                 const relPrice = getFinalPrice(rel);
                 return (
                   <Link key={rel.id} to={`/shop/${rel.id}`}>
-                    <div className="group bg-white">
-                      <div className="relative aspect-square rounded-xl overflow-hidden bg-slate-100">
+                    <div className="group">
+                      <div className="relative aspect-square rounded-xl overflow-hidden bg-secondary">
                         <img
                           src={rel.image}
                           alt={rel.name}
@@ -319,16 +319,16 @@ const ProductDetail = () => {
                         )}
                       </div>
                       <div className="pt-4">
-                        <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">
+                        <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
                           {rel.category}
                         </p>
-                        <h3 className="font-semibold text-slate-900 line-clamp-2 mb-2">
+                        <h3 className="font-semibold text-foreground line-clamp-2 mb-2">
                           {rel.name}
                         </h3>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-lg font-bold text-slate-900">${relPrice}</span>
+                          <span className="text-lg font-bold text-foreground">${relPrice}</span>
                           {rel.discount && (
-                            <span className="text-sm text-slate-400 line-through">${rel.price}</span>
+                            <span className="text-sm text-muted-foreground line-through">${rel.price}</span>
                           )}
                         </div>
                       </div>

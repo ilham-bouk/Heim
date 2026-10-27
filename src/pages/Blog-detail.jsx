@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router';
-import { Calendar, User, Clock, ArrowLeft, ArrowRight, Share2, MessageCircle } from 'lucide-react';
+import { Calendar, User, Clock, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useBlog } from '../context/BlogContext';
 import { formatDate } from '../utils/format';
 import Breadcrumb from '../components/ui/Breadcrumb';
@@ -30,14 +30,14 @@ const BlogDetail = () => {
   const paragraphs = (post.content ?? '').split(/\n{2,}/).filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Breadcrumb
         maxWidthClassName="max-w-4xl"
         items={[{ label: 'Blog', href: '/blog' }, { label: post.title }]}
       />
 
       {/* Hero Image Section */}
-      <section className="relative h-96 md:h-125 lg:h-150 bg-slate-200 overflow-hidden">
+      <section className="relative h-96 md:h-125 lg:h-150 bg-muted overflow-hidden">
         <img
           src={post.image}
           alt={post.title}
@@ -47,16 +47,16 @@ const BlogDetail = () => {
 
         {/* Category Badge */}
         <div className="absolute bottom-6 left-4 lg:left-8">
-          <span className="inline-block px-4 py-2 bg-accent text-white text-sm font-semibold rounded-lg">
+          <span className="inline-block px-4 py-2 bg-accent-text text-primary-foreground text-sm font-semibold rounded-lg">
             {post.category}
           </span>
         </div>
       </section>
 
       {/* Article Header */}
-      <section className="py-12 lg:py-16 border-slate-200">
+      <section className="py-12 lg:py-16">
         <div className="max-w-4xl mx-auto px-4 lg:px-8">
-          <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
             {post.title}
           </h1>
           
@@ -67,17 +67,17 @@ const BlogDetail = () => {
                 <User className="w-6 h-6 text-accent" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-slate-900">{post.author}</p>
-                <p className="text-xs text-slate-500">Author</p>
+                <p className="text-sm font-semibold text-foreground">{post.author}</p>
+                <p className="text-xs text-muted-foreground">Author</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 text-slate-600">
+            <div className="flex items-center gap-2 text-foreground/80">
               <Calendar className="w-5 h-5" />
               <span className="text-sm">{formatDate(post.publishedAt)}</span>
             </div>
 
-            <div className="flex items-center gap-2 text-slate-600">
+            <div className="flex items-center gap-2 text-foreground/80">
               <Clock className="w-5 h-5" />
               <span className="text-sm">{post.readTime}</span>
             </div>
@@ -85,13 +85,13 @@ const BlogDetail = () => {
 
           {/* Article Tags */}
           {post.tags?.length > 0 && (
-            <div className="py-8 border-b border-slate-200">
+            <div className="py-8 border-b border-border">
               <div className="flex flex-wrap gap-3">
-                <span className="text-sm font-medium text-slate-600">Tags:</span>
+                <span className="text-sm font-medium text-foreground/80">Tags:</span>
                 <div className="flex flex-wrap gap-2">
                   {post.tags.map((tag) => (
                     <Link key={tag} to={`/blog?search=${tag}`}>
-                      <span className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm rounded-full transition-colors cursor-pointer">
+                      <span className="px-3 py-1 bg-secondary hover:bg-border text-foreground/80 text-sm rounded-full transition-colors cursor-pointer">
                         #{tag}
                       </span>
                     </Link>
@@ -109,21 +109,21 @@ const BlogDetail = () => {
         <div className="max-w-4xl mx-auto px-4 lg:px-8">
           <article className="prose prose-lg max-w-none">
             {/* Excerpt */}
-            <p className="text-lg text-slate-600 italic mb-8 pb-8 border-b border-slate-200">
+            <p className="text-lg text-foreground/80 italic mb-8 pb-8 border-b border-border">
               {post.excerpt}
             </p>
 
             {/* Content Sections */}
             {paragraphs.map((paragraph, index) => (
-              <p key={index} className="text-slate-600 leading-relaxed mb-6">
+              <p key={index} className="text-foreground/80 leading-relaxed mb-6">
                 {paragraph}
               </p>
             ))}
 
             {/* Conclusion Note */}
             <div className="bg-secondary p-6 rounded-xl mt-12">
-              <p className="text-slate-600">
-                We hope this article has inspired you to create a beautiful and functional space. If you have any questions or would like to explore our collection of furniture, feel free to <Link to="/shop" className="text-accent font-semibold hover:underline">visit our shop</Link>.
+              <p className="text-foreground/80">
+                We hope this article has inspired you to create a beautiful and functional space. If you have any questions or would like to explore our collection of furniture, feel free to <Link to="/shop" className="text-accent-text font-semibold hover:underline">visit our shop</Link>.
               </p>
             </div>
           </article>
@@ -134,35 +134,35 @@ const BlogDetail = () => {
       {(previousPost || nextPost) && (
         <section className="py-12 lg:py-20 bg-slate-50">
           <div className="max-w-4xl mx-auto px-4 lg:px-8">
-            <h3 className="text-2xl font-bold text-slate-900 mb-8">Read More</h3>
+            <h3 className="text-2xl font-bold text-foreground mb-8">Read More</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {previousPost && (
                 <Link to={`/blog/${previousPost.id}`}>
-                  <div className="group cursor-pointer p-4 border border-slate-200 rounded-xl">
+                  <div className="group cursor-pointer p-4 bg-card border border-border rounded-xl">
                     <div className="flex items-center gap-2 mb-2">
-                      <ArrowLeft className="w-4 h-4 text-accent" />
-                      <span className="text-sm text-accent font-semibold">Previous Article</span>
+                      <ArrowLeft className="w-4 h-4 text-accent-text" />
+                      <span className="text-sm text-accent-text font-semibold">Previous Article</span>
                     </div>
-                    <h4 className="text-lg font-bold text-slate-900 group-hover:text-accent transition-colors line-clamp-2">
+                    <h4 className="text-lg font-bold text-foreground group-hover:text-accent-text transition-colors line-clamp-2">
                       {previousPost.title}
                     </h4>
-                    <p className="text-sm text-slate-500 mt-2">{formatDate(previousPost.publishedAt)}</p>
+                    <p className="text-sm text-muted-foreground mt-2">{formatDate(previousPost.publishedAt)}</p>
                   </div>
                 </Link>
               )}
 
               {nextPost && (
                 <Link to={`/blog/${nextPost.id}`}>
-                  <div className="group cursor-pointer text-end p-4 border border-slate-200 rounded-xl">
+                  <div className="group cursor-pointer text-end p-4 bg-card border border-border rounded-xl">
                     <div className="flex items-center justify-end gap-2 mb-2">
-                      <span className="text-sm text-accent font-semibold">Next Article</span>
-                      <ArrowRight className="w-4 h-4 text-accent" />
+                      <span className="text-sm text-accent-text font-semibold">Next Article</span>
+                      <ArrowRight className="w-4 h-4 text-accent-text" />
                     </div>
-                    <h4 className="text-lg font-bold text-slate-900 group-hover:text-accent transition-colors line-clamp-2">
+                    <h4 className="text-lg font-bold text-foreground group-hover:text-accent-text transition-colors line-clamp-2">
                       {nextPost.title}
                     </h4>
-                    <p className="text-sm text-slate-500 mt-2">{formatDate(nextPost.publishedAt)}</p>
+                    <p className="text-sm text-muted-foreground mt-2">{formatDate(nextPost.publishedAt)}</p>
                   </div>
                 </Link>
               )}
@@ -175,14 +175,14 @@ const BlogDetail = () => {
       {relatedPosts.length > 0 && (
         <section className="py-12 lg:py-20">
           <div className="max-w-4xl mx-auto px-4 lg:px-8">
-            <h3 className="text-2xl font-bold text-slate-900 mb-8">Related Articles in {post.category}</h3>
+            <h3 className="text-2xl font-bold text-foreground mb-8">Related Articles in {post.category}</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {relatedPosts.map((relPost) => (
                 <Link key={relPost.id} to={`/blog/${relPost.id}`}>
-                  <article className="group h-full bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-lg transition-all duration-300">
+                  <article className="group h-full bg-card rounded-xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300">
                     {/* Image */}
-                    <div className="relative aspect-video overflow-hidden bg-slate-100">
+                    <div className="relative aspect-video overflow-hidden bg-secondary">
                       <img
                         src={relPost.image}
                         alt={relPost.title}
@@ -194,23 +194,23 @@ const BlogDetail = () => {
                     {/* Content */}
                     <div className="p-6">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="px-3 py-1 bg-accent/10 text-accent text-xs font-semibold rounded-lg">
+                        <span className="px-3 py-1 bg-accent/10 text-accent-text text-xs font-semibold rounded-lg">
                           {relPost.category}
                         </span>
-                        <span className="text-xs text-slate-500">{relPost.readTime}</span>
+                        <span className="text-xs text-muted-foreground">{relPost.readTime}</span>
                       </div>
 
-                      <h4 className="text-lg font-bold text-slate-900 group-hover:text-accent transition-colors mb-2 line-clamp-2">
+                      <h4 className="text-lg font-bold text-foreground group-hover:text-accent-text transition-colors mb-2 line-clamp-2">
                         {relPost.title}
                       </h4>
 
-                      <p className="text-sm text-slate-600 line-clamp-2 mb-4">
+                      <p className="text-sm text-foreground/80 line-clamp-2 mb-4">
                         {relPost.excerpt}
                       </p>
 
-                      <div className="flex items-center justify-between pt-4 border-t border-slate-200">
-                        <span className="text-xs text-slate-500">{formatDate(relPost.publishedAt)}</span>
-                        <ArrowRight className="w-4 h-4 text-accent" />
+                      <div className="flex items-center justify-between pt-4 border-t border-border">
+                        <span className="text-xs text-muted-foreground">{formatDate(relPost.publishedAt)}</span>
+                        <ArrowRight className="w-4 h-4 text-accent-text" aria-hidden="true" />
                       </div>
                     </div>
                   </article>
@@ -224,10 +224,10 @@ const BlogDetail = () => {
       {/* Newsletter CTA */}
       <section className="py-12 lg:py-20 bg-secondary">
         <div className="max-w-4xl mx-auto px-4 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
             Don't Miss Our Latest Articles
           </h2>
-          <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-foreground/80 mb-8 max-w-2xl mx-auto">
             Subscribe to our newsletter and get the latest design tips and inspiration delivered to your inbox.
           </p>
           

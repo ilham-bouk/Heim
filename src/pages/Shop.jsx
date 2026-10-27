@@ -23,6 +23,9 @@ const SORTERS = {
   rating: (a, b) => b.rating - a.rating,
 }
 
+const inputClass =
+  "w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { products, categories } = useCatalog()
@@ -67,7 +70,7 @@ const Shop = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <main>
         <Breadcrumb
           items={selectedCategory
@@ -77,12 +80,12 @@ const Shop = () => {
         />
 
         {/* Page Header */}
-        <div className="bg-slate-50 border-b border-slate-200 pb-8">
+        <div className="bg-secondary border-b border-border pb-8">
           <div className="max-w-7xl mx-auto px-4 py-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-900">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground">
               {selectedCategory ? selectedCategory : "All Products"}
             </h1>
-            <p className="mt-2 text-slate-600">
+            <p className="mt-2 text-foreground/70">
               {filtered.length} products found
             </p>
           </div>
@@ -96,16 +99,16 @@ const Shop = () => {
               <div className="sticky top-24 space-y-6">
                 
                 {/* Categories Filter */}
-                <div className="bg-white rounded-lg p-6 border border-slate-200">
-                  <h3 className="font-bold text-slate-900 mb-4">Categories</h3>
+                <div className="bg-card rounded-lg p-6 border border-border">
+                  <h3 className="font-bold text-foreground mb-4">Categories</h3>
                   <ul className="space-y-2">
                     <li>
                       <button
                         onClick={() => selectCategory(null)}
                         className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors font-medium ${
                           selectedCategory === null
-                            ? "bg-slate-900 text-white"
-                            : "text-slate-600 hover:bg-slate-100"
+                            ? "bg-primary text-primary-foreground"
+                            : "text-foreground/80 hover:bg-secondary"
                         }`}
                       >
                         All Products
@@ -117,8 +120,8 @@ const Shop = () => {
                           onClick={() => selectCategory(cat.name)}
                           className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors font-medium flex justify-between ${
                             selectedCategory === cat.name
-                              ? "bg-slate-900 text-white"
-                              : "text-slate-600 hover:bg-slate-100"
+                              ? "bg-primary text-primary-foreground"
+                              : "text-foreground/80 hover:bg-secondary"
                           }`}
                         >
                           <span>{cat.name}</span>
@@ -130,28 +133,30 @@ const Shop = () => {
                 </div>
 
                 {/* Price Filter */}
-                <div className="bg-white rounded-lg p-6 border border-slate-200">
-                  <h3 className="font-bold text-slate-900 mb-4">Price Range</h3>
+                <div className="bg-card rounded-lg p-6 border border-border">
+                  <h3 className="font-bold text-foreground mb-4">Price Range</h3>
                   <div className="space-y-4">
                     <div className="flex gap-3">
                       <div className="flex-1">
-                        <label className="text-xs text-slate-500 block mb-1">Min</label>
+                        <label htmlFor="price-min" className="text-xs text-muted-foreground block mb-1">Min</label>
                         <input
+                          id="price-min"
                           type="number"
                           value={minPrice}
                           onChange={(e) => setMinPrice(Number(e.target.value))}
-                          className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
+                          className={inputClass}
                           min="0"
                         />
                       </div>
                       <div className="flex-1">
-                        <label className="text-xs text-slate-500 block mb-1">Max</label>
+                        <label htmlFor="price-max" className="text-xs text-muted-foreground block mb-1">Max</label>
                         <input
+                          id="price-max"
                           type="number"
                           value={maxPrice ?? ""}
                           placeholder={priceCeiling}
                           onChange={(e) => setMaxPrice(e.target.value === "" ? null : Number(e.target.value))}
-                          className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
+                          className={`${inputClass} placeholder:text-muted-foreground`}
                           min="0"
                         />
                       </div>
@@ -176,7 +181,7 @@ const Shop = () => {
             <div className="flex-1">
               
               {/* Toolbar - Sort and Mobile Filters */}
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-200">
+              <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
                 
                 {/* Mobile Filter Button */}
                 <Button
@@ -187,7 +192,7 @@ const Shop = () => {
                   <SlidersHorizontal className="w-4 h-4 mr-2" />
                   Filters
                   {hasFilters && (
-                    <span className="ml-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center">
+                    <span className="ml-2 w-5 h-5 rounded-full bg-destructive text-primary-foreground text-xs font-bold flex items-center justify-center">
                       !
                     </span>
                   )}
@@ -195,11 +200,12 @@ const Shop = () => {
 
                 {/* Sort Dropdown */}
                 <div className="flex items-center gap-3 ml-auto">
-                  <label className="text-sm text-slate-600 hidden sm:block">Sort:</label>
+                  <label htmlFor="shop-sort" className="text-sm text-foreground/80 hidden sm:block">Sort:</label>
                   <select
+                    id="shop-sort"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="px-3 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
+                    className="px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     {SORT_OPTIONS.map((option) => (
                       <option key={option.value} value={option.value}>{option.label}</option>
@@ -210,24 +216,24 @@ const Shop = () => {
 
               {/* Mobile Filters Panel */}
               {showFilters && (
-                <div className="lg:hidden mb-6 p-4 bg-white rounded-lg border border-slate-200">
+                <div className="lg:hidden mb-6 p-4 bg-card rounded-lg border border-border">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-slate-900">Filters</h3>
-                    <button onClick={() => setShowFilters(false)}>
-                      <X className="w-5 h-5" />
+                    <h3 className="font-bold text-foreground">Filters</h3>
+                    <button onClick={() => setShowFilters(false)} aria-label="Close filters">
+                      <X className="w-5 h-5" aria-hidden="true" />
                     </button>
                   </div>
 
                   {/* Categories - Mobile */}
                   <div className="mb-6">
-                    <h4 className="text-sm font-bold text-slate-900 mb-3">Categories</h4>
+                    <h4 className="text-sm font-bold text-foreground mb-3">Categories</h4>
                     <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => selectCategory(null)}
                         className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                           selectedCategory === null
-                            ? "bg-slate-900 text-white"
-                            : "bg-slate-100 text-slate-600"
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-secondary text-foreground/80"
                         }`}
                       >
                         All
@@ -238,8 +244,8 @@ const Shop = () => {
                           onClick={() => selectCategory(cat.name)}
                           className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                             selectedCategory === cat.name
-                              ? "bg-slate-900 text-white"
-                              : "bg-slate-100 text-slate-600"
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-secondary text-foreground/80"
                           }`}
                         >
                           {cat.name}
@@ -250,21 +256,23 @@ const Shop = () => {
 
                   {/* Price Range - Mobile */}
                   <div className="mb-4">
-                    <h4 className="text-sm font-bold text-slate-900 mb-3">Price Range</h4>
+                    <h4 className="text-sm font-bold text-foreground mb-3">Price Range</h4>
                     <div className="flex gap-2">
                       <input
                         type="number"
+                        aria-label="Minimum price"
                         value={minPrice}
                         onChange={(e) => setMinPrice(Number(e.target.value))}
-                        className="flex-1 px-3 py-2 rounded-lg border border-slate-300 text-sm"
+                        className={`flex-1 ${inputClass}`}
                         placeholder="Min"
                       />
                       <input
                         type="number"
+                        aria-label="Maximum price"
                         value={maxPrice ?? ""}
                         placeholder={priceCeiling}
                         onChange={(e) => setMaxPrice(e.target.value === "" ? null : Number(e.target.value))}
-                        className="flex-1 px-3 py-2 rounded-lg border border-slate-300 text-sm"
+                        className={`flex-1 ${inputClass} placeholder:text-muted-foreground`}
                       />
                     </div>
                   </div>
@@ -284,29 +292,31 @@ const Shop = () => {
               {/* Active Filter Tags */}
               {hasFilters && (
                 <div className="flex flex-wrap items-center gap-2 mb-6">
-                  <span className="text-sm text-slate-600">Active:</span>
+                  <span className="text-sm text-foreground/80">Active:</span>
                   {selectedCategory && (
-                    <div className="flex items-center gap-1 px-3 py-1 bg-slate-100 rounded-full text-sm font-medium">
+                    <div className="flex items-center gap-1 px-3 py-1 bg-secondary rounded-full text-sm font-medium text-foreground">
                       {selectedCategory}
-                      <button 
+                      <button
                         onClick={() => selectCategory(null)}
-                        className="ml-1 hover:text-slate-600"
+                        aria-label={`Remove ${selectedCategory} filter`}
+                        className="ml-1 hover:text-muted-foreground"
                       >
-                        <X className="w-3 h-3" />
+                        <X className="w-3 h-3" aria-hidden="true" />
                       </button>
                     </div>
                   )}
                   {(minPrice > 0 || maxPrice !== null) && (
-                    <div className="flex items-center gap-1 px-3 py-1 bg-slate-100 rounded-full text-sm font-medium">
+                    <div className="flex items-center gap-1 px-3 py-1 bg-secondary rounded-full text-sm font-medium text-foreground">
                       {maxPrice !== null ? `$${minPrice} - $${maxPrice}` : `$${minPrice}+`}
-                      <button 
+                      <button
                         onClick={() => {
                           setMinPrice(0)
                           setMaxPrice(null)
                         }}
-                        className="ml-1 hover:text-slate-600"
+                        aria-label="Remove price filter"
+                        className="ml-1 hover:text-muted-foreground"
                       >
-                        <X className="w-3 h-3" />
+                        <X className="w-3 h-3" aria-hidden="true" />
                       </button>
                     </div>
                   )}
@@ -322,7 +332,7 @@ const Shop = () => {
                 </div>
               ) : (
                 <div className="text-center py-16">
-                  <p className="text-slate-600 text-lg mb-4">No products found</p>
+                  <p className="text-muted-foreground text-lg mb-4">No products found</p>
                   <Button
                     variant="primary"
                     onClick={clearFilters}

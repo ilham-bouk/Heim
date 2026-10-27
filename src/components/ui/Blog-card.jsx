@@ -3,10 +3,10 @@ import { Link } from "react-router";
 import { formatDate } from "../../utils/format";
 
 /**
-+ * Blog post preview card for grid listings (e.g. Home's blog section).
-+ * The Blog listing page itself uses its own inline row layout, not this component.
-+ * @param {object} post - post object from blogService
-+ */
+ * Blog post preview card for grid listings (e.g. Home's blog section).
+ * The Blog listing page itself uses its own inline row layout, not this component.
+ * @param {object} post - post object from blogService
+ */
 const BlogCard = ({ post }) => {
   return (
     <article className="group">
@@ -25,7 +25,7 @@ const BlogCard = ({ post }) => {
       {/* Content */}
       <div className="mt-4 space-y-2">
         <div className="flex items-center gap-3">
-          <span className="text-xs font-medium uppercase tracking-wider text-accent">
+          <span className="text-xs font-medium uppercase tracking-wider text-accent-text">
             {post.category}
           </span>
           <span className="text-xs text-muted-foreground">
@@ -34,7 +34,7 @@ const BlogCard = ({ post }) => {
         </div>
         
         <Link to={`/blog/${post.id}`}>
-          <h3 className="font-semibold text-foreground hover:text-accent transition-colors line-clamp-2 text-lg">
+          <h3 className="font-semibold text-foreground hover:text-accent-text transition-colors line-clamp-2 text-lg">
             {post.title}
           </h3>
         </Link>
@@ -45,7 +45,7 @@ const BlogCard = ({ post }) => {
         
         <Link 
           to={`/blog/${post.id}`}
-          className="inline-flex items-center text-sm font-medium text-foreground hover:text-accent transition-colors pt-1"
+          className="inline-flex items-center text-sm font-medium text-foreground hover:text-accent-text transition-colors pt-1"
         >
           Read More
           <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
