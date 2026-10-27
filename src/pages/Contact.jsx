@@ -135,20 +135,20 @@ const Contact = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Breadcrumb items={[{ label: 'Contact Us' }]} />
 
       {/* Hero Section */}
       <section className="py-12 lg:py-20 bg-secondary">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block text-sm font-medium text-accent uppercase tracking-wider mb-4">
+            <span className="inline-block text-sm font-medium text-accent-text uppercase tracking-wider mb-4">
               Get In Touch
             </span>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance mb-4">
               We'd Love to Hear From You
             </h1>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg text-foreground/70">
               Have questions about our products or services? Our team is here to help. Reach out to us through any of the channels below.
             </p>
           </div>
@@ -162,23 +162,23 @@ const Contact = () => {
             {contactInfo.map((info, index) => {
               return (
                 <div key={index}>
-                  <div className="bg-secondary rounded-xl p-8 border border-slate-200 h-full">
+                  <div className="bg-secondary rounded-xl p-8 border border-border h-full">
                     <div className="w-14 h-14 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
                       <info.icon className="w-7 h-7 text-accent" />
                     </div>
-                    <h3 className="text-lg font-bold text-slate-900 mb-3">{info.title}</h3>
+                    <h3 className="text-lg font-bold text-foreground mb-3">{info.title}</h3>
                     <div className="space-y-2">
                       {info.details.map((detail, idx) => (
                         info.link ? (
                           <a 
                             href={info.link} 
                             key={idx} 
-                            className="block text-slate-600 text-sm hover:text-accent transition-colors"
+                            className="block text-foreground/80 text-sm hover:text-accent-text transition-colors"
                           >
                             {detail}
                           </a>
                         ) : (
-                          <p key={idx} className="text-slate-600 text-sm">
+                          <p key={idx} className="text-foreground/80 text-sm">
                             {detail}
                           </p>
                         )
@@ -193,22 +193,22 @@ const Contact = () => {
       </section>
 
       {/* Contact Form & Map Section */}
-      <section className="py-8 lg:py-16 bg-slate-50">
+      <section className="py-8 lg:py-16 bg-secondary">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-xl p-8 lg:p-10 border border-slate-200">
-                <h2 className="text-3xl font-bold text-slate-900 mb-2">Send us a Message</h2>
-                <p className="text-slate-600 mb-8">
+              <div className="bg-card rounded-xl p-8 lg:p-10 border border-border">
+                <h2 className="text-3xl font-bold text-foreground mb-2">Send us a Message</h2>
+                <p className="text-foreground/80 mb-8">
                   Fill out the form below and we'll get back to you as soon as possible.
                 </p>
                 
                 <form onSubmit={handleSubmit} noValidate className="space-y-6 mb-8">
                   {/* Name */}
                   <div>
-                    <label htmlFor="name" className="block text-sm font-semibold text-slate-900 mb-2">
+                    <label htmlFor="name" className="block text-sm font-semibold text-foreground mb-2">
                       Full Name *
                     </label>
                     <input
@@ -220,12 +220,12 @@ const Contact = () => {
                       placeholder="John Doe"
                       aria-invalid={!!errors.name}
                       aria-describedby={errors.name ? 'name-error' : undefined}
-                      className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 text-foreground placeholder-muted-foreground ${
+                      className={`w-full px-4 py-3 rounded-lg border bg-card focus:outline-none focus:ring-2 text-foreground placeholder:text-muted-foreground ${
                         errors.name ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
                       }`}
                      />
                     {errors.name && (
-                      <p id="name-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive">
+                      <p id="name-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive-text">
                         <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.name}
                       </p>
                     )}
@@ -233,7 +233,7 @@ const Contact = () => {
 
                   {/* Email */}
                   <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-slate-900 mb-2">
+                    <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-2">
                       Email Address *
                     </label>
                     <input
@@ -245,12 +245,12 @@ const Contact = () => {
                       placeholder="john@example.com"
                       aria-invalid={!!errors.email}
                       aria-describedby={errors.email ? 'email-error' : undefined}
-                      className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 text-foreground placeholder-muted-foreground ${
+                      className={`w-full px-4 py-3 rounded-lg border bg-card focus:outline-none focus:ring-2 text-foreground placeholder:text-muted-foreground ${
                         errors.email ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
                       }`}
                     />
                     {errors.email && (
-                      <p id="email-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive">
+                      <p id="email-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive-text">
                         <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.email}
                       </p>
                     )}
@@ -258,7 +258,7 @@ const Contact = () => {
 
                   {/* Phone */}
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-semibold text-slate-900 mb-2">
+                    <label htmlFor="phone" className="block text-sm font-semibold text-foreground mb-2">
                       Phone Number
                     </label>
                     <input
@@ -268,7 +268,7 @@ const Contact = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="+1 (555) 123-4567"
-                      className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 text-foreground placeholder-muted-foreground ${
+                      className={`w-full px-4 py-3 rounded-lg border bg-card focus:outline-none focus:ring-2 text-foreground placeholder:text-muted-foreground ${
                         errors.phone ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
                       }`}
                     />
@@ -276,7 +276,7 @@ const Contact = () => {
 
                   {/* Subject */}
                   <div>
-                    <label htmlFor="subject" className="block text-sm font-semibold text-slate-900 mb-2">
+                    <label htmlFor="subject" className="block text-sm font-semibold text-foreground mb-2">
                       Subject *
                     </label>
                     <select
@@ -286,7 +286,7 @@ const Contact = () => {
                       onChange={handleChange}
                       aria-invalid={!!errors.subject}
                       aria-describedby={errors.subject ? 'subject-error' : undefined}
-                      className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 text-foreground placeholder-muted-foreground ${
+                      className={`w-full px-4 py-3 rounded-lg border bg-card focus:outline-none focus:ring-2 text-foreground ${
                         errors.subject ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
                       }`}
                     >
@@ -296,7 +296,7 @@ const Contact = () => {
                       ))}
                     </select>
                     {errors.subject && (
-                      <p id="subject-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive">
+                      <p id="subject-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive-text">
                         <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.subject}
                       </p>
                     )}
@@ -304,7 +304,7 @@ const Contact = () => {
 
                   {/* Message */}
                   <div>
-                    <label htmlFor="message" className="block text-sm font-semibold text-slate-900 mb-2">
+                    <label htmlFor="message" className="block text-sm font-semibold text-foreground mb-2">
                       Message *
                     </label>
                     <textarea
@@ -316,12 +316,12 @@ const Contact = () => {
                       rows="6"
                       aria-invalid={!!errors.message}
                       aria-describedby={errors.message ? 'message-error' : undefined}
-                      className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 text-foreground placeholder-muted-foreground ${
+                      className={`w-full px-4 py-3 rounded-lg border bg-card focus:outline-none focus:ring-2 text-foreground placeholder:text-muted-foreground ${
                         errors.message ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
                       }`}                    
                     />
                     {errors.message && (
-                      <p id="message-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive">
+                      <p id="message-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive-text">
                         <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {errors.message}
                       </p>
                     )}
@@ -344,27 +344,27 @@ const Contact = () => {
                   <div className="mb-6 p-4 bg-success/10 border border-success/30 rounded-lg flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-success mt-0.5 shrink-0" />
                      <div>
-                      <p className="font-semibold text-success">Thank you for your message!</p>
-                      <p className="text-sm text-success">We've received your inquiry and will get back to you soon.</p>
+                      <p className="font-semibold text-success-text">Thank you for your message!</p>
+                      <p className="text-sm text-success-text">We've received your inquiry and will get back to you soon.</p>
                      </div>
                   </div>
                 )}
 
                 {Object.keys(errors).length > 0 && (
-                  <div className="mb-6 p-4 bg-danger/10 border border-danger/30 rounded-lg flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-danger mt-0.5 shrink-0" />
-                    <p className="font-semibold text-danger">Please fix the highlighted fields</p>
+                  <div className="mb-6 p-4 bg-destructive/10 border border-destructive/30 rounded-lg flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-destructive mt-0.5 shrink-0" />
+                    <p className="font-semibold text-destructive-text">Please fix the highlighted fields</p>
                   </div>
                 )}
 
                 {submitError && (
-                  <div role="alert" className="mb-6 p-4 bg-danger/10 border border-danger/30 rounded-lg flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-danger mt-0.5 shrink-0" />
-                    <p className="font-semibold text-danger">{submitError}</p>
+                  <div role="alert" className="mb-6 p-4 bg-destructive/10 border border-destructive/30 rounded-lg flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-destructive mt-0.5 shrink-0" />
+                    <p className="font-semibold text-destructive-text">{submitError}</p>
                   </div>
                 )}
 
-                <p className="text-xs text-slate-500 mt-4">
+                <p className="text-xs text-muted-foreground mt-4">
                   * Required fields. We respect your privacy and will never share your information.
                 </p>
               </div>
@@ -373,37 +373,37 @@ const Contact = () => {
             {/* Sidebar Info */}
             <div>
               {/* Quick Contact */}
-              <div className="bg-white rounded-xl p-8 border border-slate-200 mb-8">
-                <h3 className="text-xl font-bold text-slate-900 mb-6">Quick Contact</h3>
+              <div className="bg-card rounded-xl p-8 border border-border mb-8">
+                <h3 className="text-xl font-bold text-foreground mb-6">Quick Contact</h3>
                 
                 <div className="space-y-4">
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                       Response Time
                     </p>
-                    <p className="text-slate-900">
+                    <p className="text-foreground">
                       We typically respond within <span className="font-semibold">24 hours</span>
                     </p>
                   </div>
 
-                  <div className="h-px bg-slate-200" />
+                  <div className="h-px bg-border" />
 
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                       Preferred Method
                     </p>
-                    <p className="text-slate-900">
+                    <p className="text-foreground">
                       Email us for fastest response
                     </p>
                   </div>
 
-                  <div className="h-px bg-slate-200" />
+                  <div className="h-px bg-border" />
 
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                       Emergency Support
                     </p>
-                    <p className="text-slate-900">
+                    <p className="text-foreground">
                       Call us during business hours
                     </p>
                   </div>
@@ -418,27 +418,27 @@ const Contact = () => {
       <section className="py-16 lg:py-24">
         <div className="max-w-4xl mx-auto px-4 lg:px-8">
           <div className="text-center mb-12">
-            <span className="inline-block text-sm font-medium text-accent uppercase tracking-wider mb-2">
+            <span className="inline-block text-sm font-medium text-accent-text uppercase tracking-wider mb-2">
               Common Questions
             </span>
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
-            <p className="text-lg text-slate-600">
+            <h2 className="text-4xl font-bold text-foreground mb-4">Frequently Asked Questions</h2>
+            <p className="text-lg text-foreground/80">
               Find answers to common questions about our products and services
             </p>
           </div>
 
           <div className="space-y-4">
             {faqItems.map((item, index) => (
-              <details key={index} className="group bg-white rounded-lg border border-slate-200 p-6 hover:border-slate-300 transition-colors">
+              <details key={index} className="group bg-card rounded-lg border border-border p-6 hover:border-muted-foreground/70 transition-colors">
                 <summary className="flex items-center justify-between cursor-pointer">
-                  <h3 className="text-lg font-semibold text-slate-900">
+                  <h3 className="text-lg font-semibold text-foreground">
                     {item.question}
                   </h3>
                   <div className="shrink-0 ml-4 flex items-center justify-center h-6 w-6 rounded-full bg-accent/10 group-open:bg-accent/20 transition-colors">
                     <ChevronDown className='h-4 w-4 text-accent transform group-open:rotate-180 transition-transform' />
                   </div>
                 </summary>
-                <p className="mt-4 text-slate-600 leading-relaxed">
+                <p className="mt-4 text-foreground/80 leading-relaxed">
                   {item.answer}
                 </p>
               </details>
@@ -446,7 +446,7 @@ const Contact = () => {
           </div>
 
           <div className="mt-12 text-center">
-            <p className="text-slate-600 mb-6">
+            <p className="text-foreground/80 mb-6">
               Didn't find what you're looking for?
             </p>
             <Button variant="primary" size="lg" className="flex justify-center gap-2">
@@ -460,10 +460,10 @@ const Contact = () => {
       {/* CTA Section */}
       <section className="py-16 lg:py-24 bg-secondary">
         <div className="max-w-4xl mx-auto px-4 lg:px-8 text-center">
-          <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
+          <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
             Can't Wait to Get Started?
           </h2>
-          <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-foreground/70 mb-8 max-w-2xl mx-auto">
             Explore our collection and start shopping today. New customers get 10% off their first order!
           </p>
           <Button as={Link} to="/shop" variant="primary" size="lg">
