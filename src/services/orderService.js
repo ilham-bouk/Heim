@@ -1,4 +1,5 @@
 import { getFinalPrice } from '../utils/product';
+import { normalizeEmail } from '../utils/user';
 
 // Order data helpers: PURE functions. Persistence/state lives in
 // context/OrderContext.jsx; demo seed orders live in data/orderSeed.js.
@@ -135,3 +136,10 @@ export const buildOrder = (
     payment: { brand: payment.brand, last4: payment.last4 },
   };
 };
+
+/**
+ * Guest tracking check: does this email own the order? (case-insensitive)
+ * Real backend: the server does this check; getOrderById alone must never be exposed.
+ */
+export const matchesTrackingEmail = (order, email) =>
+  normalizeEmail(order.email ?? '') === normalizeEmail(email);

@@ -6,8 +6,6 @@ import { SOCIAL_NETWORKS } from "../../services/settingsService";
 const footerLinks = {
   company: [
     { name: "About Us", href: "/about" },
-    { name: "Careers", href: "/careers" },
-    { name: "Press", href: "/press" },
     { name: "Blog", href: "/blog" },
   ],
   support: [

@@ -10,7 +10,7 @@ const Hero = () => {
         <div className="grid grid-cols-1 items-center gap-8 py-12 lg:grid-cols-2 lg:py-24">
           {/* Text content */}
           <div className="max-w-xl">
-            <span className="inline-block text-sm font-medium text-accent uppercase tracking-wider mb-4">
+            <span className="inline-block text-sm font-medium text-accent-text uppercase tracking-wider mb-4">
               New Collection 2026
             </span>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance">

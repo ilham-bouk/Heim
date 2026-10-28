@@ -73,6 +73,12 @@ export const AuthProvider = ({ children }) => {
     return Promise.resolve();
   };
 
+  // Mock password reset. Always resolves, so it can't reveal which emails have accounts.
+  // Real backend: POST /auth/forgot-password (same generic answer for every email).
+  const requestPasswordReset = async () => {
+    await delay(MOCK_LATENCY_MS);
+  };
+
   // Sessions saved before roles existed have no `role`: treat them as customers.
   const role = user ? user.role ?? ROLES.CUSTOMER : null;
 
@@ -86,6 +92,7 @@ export const AuthProvider = ({ children }) => {
     signOut,
     updateProfile,
     updatePassword,
+    requestPasswordReset,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

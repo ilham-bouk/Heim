@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, MessageSquare, AlertCircle, CheckCircle, ChevronDown } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, AlertCircle, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
 import Breadcrumb from '../components/ui/Breadcrumb';
@@ -104,33 +104,6 @@ const Contact = () => {
       title: "Business Hours",
       details: contactInfoConfig.hours,
       link: null
-    }
-  ];
-
-  const faqItems = [
-    {
-      question: "How long does delivery take?",
-      answer: "Standard delivery takes 5-7 business days within the continental US. Express delivery options are available for an additional fee."
-    },
-    {
-      question: "Do you offer international shipping?",
-      answer: "Yes, we ship to over 50 countries worldwide. Shipping costs and delivery times vary by location. Contact us for a quote."
-    },
-    {
-      question: "What is your return policy?",
-      answer: "We offer a 30-day return policy for all furniture. Items must be in original condition. Shipping costs for returns are the customer's responsibility."
-    },
-    {
-      question: "Can I customize my furniture?",
-      answer: "Many of our pieces offer customization options including fabric, color, and dimensions. Please contact us to discuss your specific needs."
-    },
-    {
-      question: "Do you offer warranties?",
-      answer: "Yes, all our furniture comes with a 2-year manufacturer's warranty covering defects in materials and workmanship."
-    },
-    {
-      question: "How do I track my order?",
-      answer: "You'll receive a tracking number via email once your order ships. You can use this to monitor your delivery in real-time."
     }
   ];
 
@@ -414,46 +387,16 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* Quick answers */}
       <section className="py-16 lg:py-24">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8">
-          <div className="text-center mb-12">
-            <span className="inline-block text-sm font-medium text-accent-text uppercase tracking-wider mb-2">
-              Common Questions
-            </span>
-            <h2 className="text-4xl font-bold text-foreground mb-4">Frequently Asked Questions</h2>
-            <p className="text-lg text-foreground/80">
-              Find answers to common questions about our products and services
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            {faqItems.map((item, index) => (
-              <details key={index} className="group bg-card rounded-lg border border-border p-6 hover:border-muted-foreground/70 transition-colors">
-                <summary className="flex items-center justify-between cursor-pointer">
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {item.question}
-                  </h3>
-                  <div className="shrink-0 ml-4 flex items-center justify-center h-6 w-6 rounded-full bg-accent/10 group-open:bg-accent/20 transition-colors">
-                    <ChevronDown className='h-4 w-4 text-accent transform group-open:rotate-180 transition-transform' />
-                  </div>
-                </summary>
-                <p className="mt-4 text-foreground/80 leading-relaxed">
-                  {item.answer}
-                </p>
-              </details>
-            ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <p className="text-foreground/80 mb-6">
-              Didn't find what you're looking for?
-            </p>
-            <Button variant="primary" size="lg" className="flex justify-center gap-2">
-              <MessageSquare className="w-5 h-5" />
-              Ask Another Question
-            </Button>
-          </div>
+        <div className="max-w-4xl mx-auto px-4 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold text-foreground mb-4">Looking for a quick answer?</h2>
+          <p className="text-lg text-foreground/80 mb-8">
+            Delivery, returns, warranties and more are covered in our FAQ.
+          </p>
+          <Button as={Link} to="/faq" variant="outline" size="lg">
+            Read the FAQ
+          </Button>
         </div>
       </section>
 
