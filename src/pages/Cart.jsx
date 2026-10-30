@@ -110,7 +110,7 @@ const Cart = () => {
 
         <div className="mb-12">
           <h1 className="text-4xl lg:text-5xl font-bold text-foreground">Shopping Cart</h1>
-          <p className="text-foreground/80 mt-2">{itemCount} item{cartItems.length !== 1 ? 's' : ''} in your cart</p>
+          <p className="text-foreground/80 mt-2">{itemCount} {itemCount === 1 ? 'item' : 'items'} in your cart</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -284,6 +284,7 @@ const Cart = () => {
                     <button
                       type="button"
                       onClick={handleRemovePromo}
+                      aria-label={`Remove promo code ${appliedPromo.code}`}
                       className="px-3 py-2 border border-border text-foreground/80 rounded-lg hover:bg-card transition-colors text-sm font-medium"
                     >
                       Remove
@@ -314,7 +315,7 @@ const Cart = () => {
               {subtotal < freeShippingThreshold && (
                 <div className="mt-6 p-4 bg-accent/10 border border-accent/30 rounded-lg">
                   <p className="text-xs text-foreground">
-                    <span className="font-semibold">Free shipping</span> on orders over ${freeShippingThreshold}. You're ${(freeShippingThreshold - subtotal).toFixed(2)} away!
+                    <span className="font-semibold">Free shipping</span> on orders over ${freeShippingThreshold}. You're ${(freeShippingThreshold - subtotal).toLocaleString()} away!
                   </p>
                 </div>
               )}

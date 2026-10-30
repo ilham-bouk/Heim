@@ -21,7 +21,7 @@ const iconButtonClass =
 // Module-level so DataTable's memoised filtering/sorting stays stable.
 const getMessageId = (message) => message.id;
 const getSearchText = (message) =>
-  `${message.name} ${message.email} ${getSubjectLabel(message.subject)} ${message.message} ${message.read ? 'read' : 'unread'}`;
+  `${message.name} ${message.email} ${getSubjectLabel(message.subject)} ${message.message}`;
 
 const COLUMNS = [
   {

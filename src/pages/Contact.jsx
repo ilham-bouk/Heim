@@ -241,9 +241,7 @@ const Contact = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="+1 (555) 123-4567"
-                      className={`w-full px-4 py-3 rounded-lg border bg-card focus:outline-none focus:ring-2 text-foreground placeholder:text-muted-foreground ${
-                        errors.phone ? 'border-destructive focus:ring-destructive' : 'border-border focus:ring-primary'
-                      }`}
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary text-foreground placeholder:text-muted-foreground"
                     />
                   </div>
 
