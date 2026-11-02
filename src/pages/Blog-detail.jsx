@@ -132,7 +132,7 @@ const BlogDetail = () => {
 
       {/* Previous/Next Navigation */}
       {(previousPost || nextPost) && (
-        <section className="py-12 lg:py-20 bg-secondary">
+        <section className="py-12 lg:py-20">
           <div className="max-w-4xl mx-auto px-4 lg:px-8">
             <h3 className="text-2xl font-bold text-foreground mb-8">Read More</h3>
             
