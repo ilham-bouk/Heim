@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
-import { ShoppingBag } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
+import favicon from '../../assets/favicon-light.svg'
 
 const AuthLayout = ({ quote, subtext, children }) => {
   const { settings } = useSettings();
@@ -27,7 +27,7 @@ const AuthLayout = ({ quote, subtext, children }) => {
         {/* Brand */}
         <Link to="/" className="relative z-10 flex items-center gap-3 w-fit">
           <div className="w-10 h-10 bg-primary-foreground rounded-xl flex items-center justify-center shadow-lg">
-            <ShoppingBag className="w-5 h-5 text-primary" />
+            <img src={favicon} alt="Heim icon" className="w-6 h-6" />
           </div>
           <span className="text-white font-bold text-xl tracking-tight">{settings.store.name}</span>
         </Link>
@@ -63,7 +63,7 @@ const AuthLayout = ({ quote, subtext, children }) => {
           {/* Mobile brand */}
           <Link to="/" className="flex items-center gap-2.5 mb-10 lg:hidden">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <ShoppingBag className="w-4 h-4 text-primary-foreground" />
+              <img src={favicon} alt="Heim icon" />
             </div>
             <span className="text-foreground font-bold text-lg tracking-tight">{settings.store.name}</span>
           </Link>
