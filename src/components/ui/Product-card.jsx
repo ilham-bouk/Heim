@@ -4,16 +4,19 @@ import { Link } from 'react-router';
 import { getFinalPrice, getBadgeClass } from '../../utils/product';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { useToast } from '../../context/ToastContext';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const toast = useToast();
   const wishlisted = isInWishlist(product.id);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
     addToCart(product, 1);
+    toast.success(`“${product.name}” was added to your cart.`);
   };
 
   const handleToggleWishlist = (e) => {
@@ -30,12 +33,14 @@ const ProductCard = ({ product }) => {
           src={product.image}
           alt={product.name}
           loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
         />
+
+        <Link to={`/shop/${product.id}`} tabIndex={-1} aria-hidden="true" className="absolute inset-0" />
 
         {/* Badge */}
         {product.badge && (
-          <span className={`absolute top-3 left-3 px-3 py-1 rounded-lg text-xs font-semibold ${getBadgeClass(product.badge)}`}>
+          <span className={`pointer-events-none absolute top-3 left-3 px-3 py-1 rounded-lg text-xs font-semibold ${getBadgeClass(product.badge)}`}>
             {product.badge}
             {product.discount && product.badge === 'Sale' && ` -${product.discount}%`}
           </span>
@@ -46,15 +51,15 @@ const ProductCard = ({ product }) => {
           onClick={handleToggleWishlist}
           aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           aria-pressed={wishlisted}
-          className={`absolute top-3 right-3 flex transition-all cursor-pointer ${
+          className={`absolute top-2 right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-card/80 transition-all cursor-pointer ${
             wishlisted ? 'text-destructive' : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          <Heart className={`h-4 w-4 ${wishlisted ? 'fill-destructive' : 'fill-card'}`} />
+          <Heart className={`h-4 w-4 ${wishlisted ? 'fill-destructive' : 'fill-card'}`} aria-hidden="true" />
         </button>
 
         {/* Add to Cart Button */}
-        <div className="absolute inset-x-3 bottom-3 flex items-end opacity-100 transition-opacity duration-300 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100">
+        <div className="absolute inset-x-3 bottom-3 z-10 flex items-end opacity-100 transition-opacity duration-300 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100">
           <Button
             variant="primary"
             size="sm"

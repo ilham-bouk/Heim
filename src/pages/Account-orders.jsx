@@ -1,4 +1,5 @@
 import { Package } from 'lucide-react';
+import { Link } from 'react-router';
 import StatusBadge from '../components/ui/StatusBadge';
 import { useOrders } from '../context/OrderContext';
 import { getStatusTone } from '../services/orderService';
@@ -56,10 +57,16 @@ const AccountOrders = () => {
               </span>
             </div>
 
-            <div className="pt-4 border-t border-border">
+            <div className="flex items-center justify-between pt-4 border-t border-border">
               <span className="font-semibold text-foreground">
                 Total: ${order.total.toLocaleString()}
               </span>
+              <Link
+                to={`/account/orders/${order.id}`}
+                className="text-sm font-semibold text-accent-text transition-colors hover:text-foreground"
+              >
+                View details<span className="sr-only"> for order {order.id}</span>
+              </Link>
             </div>
           </div>
         ))}

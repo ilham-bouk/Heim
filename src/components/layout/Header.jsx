@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Menu, X, Heart, User, ShoppingBag } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 import { useCart } from '../../context/CartContext';
@@ -41,6 +41,15 @@ const Header = () => {
 
   const closeMobile = () => setIsOpen(false);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b border-border">
       <nav aria-label="Main navigation" className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
@@ -55,14 +64,30 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* Mobile menu toggle */}
-        <div className="flex lg:hidden">
+        {/* Mobile: cart and wishlist stay visible next to the menu toggle */}
+        <div className="flex items-center gap-1 lg:hidden">
+          <Link
+            to="/wishlist"
+            aria-label={`Wishlist (${wishlistCount} items)`}
+            className="relative inline-flex items-center justify-center p-2.5 rounded-lg text-foreground/60 hover:text-foreground hover:bg-accent/5 transition-all"
+          >
+            <Heart className="h-5 w-5" />
+            <Badge count={wishlistCount} />
+          </Link>
+          <Link
+            to="/cart"
+            aria-label={`Cart (${itemCount} items)`}
+            className="relative inline-flex items-center justify-center p-2.5 rounded-lg text-foreground/60 hover:text-foreground hover:bg-accent/5 transition-all"
+          >
+            <ShoppingBag className="h-5 w-5" />
+            <Badge count={itemCount} />
+          </Link>
           <button
             type="button"
             onClick={() => setIsOpen(prev => !prev)}
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isOpen}
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-foreground"
+            className="inline-flex items-center justify-center rounded-md p-2.5 text-foreground"
           >
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -140,7 +165,6 @@ const Header = () => {
 
             {/* Icon actions */}
             <div className="flex items-center gap-2 pt-4 mt-2 border-t border-border">
-
               <Link
                 to={userHref}
                 onClick={closeMobile}
@@ -148,26 +172,6 @@ const Header = () => {
                 className="relative inline-flex items-center justify-center p-2.5 rounded-lg text-foreground/70 hover:text-foreground hover:bg-accent/5 transition-all"
               >
                 <User className="h-5 w-5" />
-              </Link>
-
-              <Link
-                to="/wishlist"
-                onClick={closeMobile}
-                aria-label={`Wishlist (${wishlistCount} items)`}
-                className="relative inline-flex items-center justify-center p-2.5 rounded-lg text-foreground/70 hover:text-foreground hover:bg-accent/5 transition-all"
-              >
-                <Heart className="h-5 w-5" />
-                <Badge count={wishlistCount} />
-              </Link>
-
-              <Link
-                to="/cart"
-                onClick={closeMobile}
-                aria-label={`Cart (${itemCount} items)`}
-                className="relative inline-flex items-center justify-center p-2.5 rounded-lg text-foreground/70 hover:text-foreground hover:bg-accent/5 transition-all"
-              >
-                <ShoppingBag className="h-5 w-5" />
-                <Badge count={itemCount} />
               </Link>
             </div>
 

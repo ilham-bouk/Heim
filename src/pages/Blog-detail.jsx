@@ -90,7 +90,7 @@ const BlogDetail = () => {
                 <span className="text-sm font-medium text-foreground/80">Tags:</span>
                 <div className="flex flex-wrap gap-2">
                   {post.tags.map((tag) => (
-                    <Link key={tag} to={`/blog?search=${tag}`}>
+                    <Link key={tag} to={`/blog?search=${encodeURIComponent(tag)}`}>
                       <span className="px-3 py-1 bg-secondary hover:bg-border text-foreground/80 text-sm rounded-full transition-colors cursor-pointer">
                         #{tag}
                       </span>
@@ -107,7 +107,7 @@ const BlogDetail = () => {
       {/* Main Content */}
       <section>
         <div className="max-w-4xl mx-auto px-4 lg:px-8">
-          <article className="prose prose-lg max-w-none">
+          <article className="max-w-none">
             {/* Excerpt */}
             <p className="text-lg text-foreground/80 italic mb-8 pb-8 border-b border-border">
               {post.excerpt}
@@ -132,7 +132,7 @@ const BlogDetail = () => {
 
       {/* Previous/Next Navigation */}
       {(previousPost || nextPost) && (
-        <section className="py-12 lg:py-20 bg-slate-50">
+        <section className="py-12 lg:py-20 bg-secondary">
           <div className="max-w-4xl mx-auto px-4 lg:px-8">
             <h3 className="text-2xl font-bold text-foreground mb-8">Read More</h3>
             
@@ -187,7 +187,7 @@ const BlogDetail = () => {
                         src={relPost.image}
                         alt={relPost.title}
                         loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                       />
                     </div>
 

@@ -1,14 +1,18 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
+import { COUNTRY_SUGGESTIONS } from '../../utils/countries';
 
 const EMPTY_ADDRESS = {
   label: '', fullName: '', line1: '', line2: '', city: '', state: '', zip: '', country: '',
 };
 
+const POSTAL_CODE_PATTERN = '[A-Za-z0-9][A-Za-z0-9 \\-]{2,9}';
+
 /**
  * Shared address form (Account → Addresses, Checkout → Shipping).
  * Owns its own field state; the parent decides what "submit" means.
+ * Uses the browser's built-in validation (required, pattern, min length).
  *
  * @param {object} [initialValues] - prefill, e.g. the address being edited
  * @param {string} [submitLabel='Save Address']
@@ -28,6 +32,7 @@ const AddressForm = ({
   onCancel,
   className = '',
 }) => {
+  const countryListId = useId();
   const [formData, setFormData] = useState({ ...EMPTY_ADDRESS, ...initialValues });
   const [saveToAccount, setSaveToAccount] = useState(false);
 
@@ -40,7 +45,10 @@ const AddressForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData, { save: allowSave && saveToAccount });
+    const trimmed = Object.fromEntries(
+      Object.entries(formData).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
+    );
+    onSubmit(trimmed, { save: allowSave && saveToAccount });
   };
 
   return (
@@ -57,6 +65,7 @@ const AddressForm = ({
           aria-label="Full name"
           autoComplete="name"
           placeholder="Full name"
+          minLength={2}
           value={formData.fullName}
           onChange={handleChange}
           required
@@ -68,9 +77,34 @@ const AddressForm = ({
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Input name="city" aria-label="City" autoComplete="address-level2" placeholder="City" value={formData.city} onChange={handleChange} required />
         <Input name="state" aria-label="State" autoComplete="address-level1" placeholder="State" value={formData.state} onChange={handleChange} required />
-        <Input name="zip" aria-label="ZIP code" autoComplete="postal-code" placeholder="ZIP code" value={formData.zip} onChange={handleChange} required />
+        <Input
+          name="zip"
+          aria-label="ZIP or postal code"
+          autoComplete="postal-code"
+          placeholder="ZIP code"
+          maxLength={10}
+          pattern={POSTAL_CODE_PATTERN}
+          title="Enter a valid ZIP or postal code (3 to 10 letters, numbers, spaces or hyphens)"
+          value={formData.zip}
+          onChange={handleChange}
+          required
+        />
       </div>
-      <Input name="country" aria-label="Country" autoComplete="country-name" placeholder="Country" value={formData.country} onChange={handleChange} required />
+      <Input
+        name="country"
+        aria-label="Country"
+        autoComplete="country-name"
+        placeholder="Country"
+        list={countryListId}
+        value={formData.country}
+        onChange={handleChange}
+        required
+      />
+      <datalist id={countryListId}>
+        {COUNTRY_SUGGESTIONS.map((country) => (
+          <option key={country} value={country} />
+        ))}
+      </datalist>
 
       {allowSave && (
         <label className="flex items-center gap-2.5 cursor-pointer select-none w-fit">

@@ -35,7 +35,8 @@ export const AuthProvider = ({ children }) => {
       email: isAdmin ? DEMO_ADMIN.email : email.trim(),
       fullName: isAdmin
         ? DEMO_ADMIN.fullName
-        : fullName || (isDemoCustomerEmail(email) ? DEMO_CUSTOMER.fullName : email.split('@')[0]),      role: isAdmin ? ROLES.ADMIN : ROLES.CUSTOMER,
+        : fullName || (isDemoCustomerEmail(email) ? DEMO_CUSTOMER.fullName : email.split('@')[0]),
+      role: isAdmin ? ROLES.ADMIN : ROLES.CUSTOMER,
       phone: '',
       birthday: '',
     };

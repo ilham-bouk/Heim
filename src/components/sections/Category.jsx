@@ -18,37 +18,35 @@ const Category = () => {
           </p>
         </div>
 
-        {/* Category grid */}
         <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6 lg:gap-6">
           {categories.map((category) => (
-            <div key={category.id} className="group relative overflow-hidden rounded-xl" >
-              {/* Image */}
+            <Link
+              key={category.id}
+              to={`/shop?category=${encodeURIComponent(category.name)}`}
+              className="group relative block overflow-hidden rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            >
               <div className="aspect-4/5 overflow-hidden">
                 <img
                   src={category.image}
-                  alt={category.name}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  alt=""
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               </div>
 
-              {/* Overlay */}
               <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
 
-              {/* Content */}
               <div className="absolute inset-x-0 bottom-0 p-4 lg:p-6">
-                <h3 className="text-lg font-semibold text-white lg:text-xl">
-                  {category.name}
-                </h3>
+                <h3 className="text-lg font-semibold text-white lg:text-xl">{category.name}</h3>
                 <p className="text-sm text-white/70">
                   {category.itemCount} {category.itemCount === 1 ? 'item' : 'items'}
                 </p>
-                <Link to={`/shop?category=${encodeURIComponent(category.name)}`}
-                  className="mt-2 gap-2 hover:gap-4 flex items-center text-sm font-medium text-white opacity-0 -translate-x-2.5 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 group-focus-within:opacity-100 group-focus-within:translate-x-0">
+                <span className="mt-2 flex items-center gap-2 text-sm font-medium text-white transition-all duration-300 motion-reduce:transition-none lg:-translate-x-2.5 lg:opacity-0 lg:group-hover:translate-x-0 lg:group-hover:gap-4 lg:group-hover:opacity-100 lg:group-focus-visible:translate-x-0 lg:group-focus-visible:opacity-100">
                   Shop Now
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

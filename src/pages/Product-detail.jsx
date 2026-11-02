@@ -10,8 +10,7 @@ import { useSettings } from '../context/SettingsContext';
 import { getFinalPrice, getBadgeClass } from '../utils/product';
 import Breadcrumb from '../components/ui/Breadcrumb';
 
-const ProductDetail = () => {
-  const { id } = useParams();
+const ProductDetailContent = ({ id }) => {
   const { addToCart, cartItems } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { getProductById, getRelatedProducts } = useCatalog();
@@ -65,7 +64,7 @@ const ProductDetail = () => {
       />
 
       {/* Main product section */}
-      <main className="max-w-7xl mx-auto px-4 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
 
           {/* Images */}
@@ -310,7 +309,7 @@ const ProductDetail = () => {
                           src={rel.image}
                           alt={rel.name}
                           loading="lazy"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                         />
                         {rel.badge && (
                           <span className={`absolute top-3 left-3 px-3 py-1 rounded-lg text-xs font-semibold ${getBadgeClass(rel.badge)}`}>
@@ -339,9 +338,14 @@ const ProductDetail = () => {
             </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
+};
+
+const ProductDetail = () => {
+  const { id } = useParams();
+  return <ProductDetailContent key={id} id={id} />;
 };
 
 export default ProductDetail;

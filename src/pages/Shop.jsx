@@ -1,11 +1,13 @@
 import { useState } from "react"
 import { useSearchParams } from "react-router"
-import { SlidersHorizontal, X } from "lucide-react"
+import { Search, SlidersHorizontal, X } from "lucide-react"
 import ProductCard from "../components/ui/Product-card"
 import Button from "../components/ui/Button"
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { useCatalog } from "../context/CatalogContext"
 import { getFinalPrice } from "../utils/product"
+
+const PAGE_SIZE = 12
 
 const SORT_OPTIONS = [
   { value: "featured", label: "Featured" },
@@ -26,33 +28,47 @@ const SORTERS = {
 const inputClass =
   "w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
 
+const matchesQuery = (product, query) =>
+  `${product.name} ${product.category} ${product.description ?? ""}`.toLowerCase().includes(query)
+
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { products, categories } = useCatalog()
 
-  // Category and sort live in the URL so they're shareable (the promo banner links to ?sort=newest).
+  // Category, sort and search live in the URL so they're shareable (the promo banner links to ?sort=newest).
   const selectedCategory = searchParams.get("category")
   const sortParam = searchParams.get("sort")
   const sortBy = SORT_OPTIONS.some((option) => option.value === sortParam) ? sortParam : "featured"
+  const query = searchParams.get("q") ?? ""
 
   const [minPrice, setMinPrice] = useState(0)
   const [maxPrice, setMaxPrice] = useState(null) // null = no upper limit
   const [showFilters, setShowFilters] = useState(false)
 
-  const updateParams = (changes) => {
+  // "Show more" count. It is tied to the current filters, so changing any filter
+  // starts again at one page without needing an effect to reset it.
+  const filterKey = JSON.stringify([selectedCategory, sortBy, query, minPrice, maxPrice])
+  const [shown, setShown] = useState({ key: "", count: PAGE_SIZE })
+  const visibleCount = shown.key === filterKey ? shown.count : PAGE_SIZE
+
+  const updateParams = (changes, options) => {    
     const next = new URLSearchParams(searchParams)
     Object.entries(changes).forEach(([key, value]) => (value ? next.set(key, value) : next.delete(key)))
-    setSearchParams(next)
+    setSearchParams(next, options)
   }
 
   const selectCategory = (name) => updateParams({ category: name })
   const setSortBy = (value) => updateParams({ sort: value === "featured" ? null : value })
+  const setQuery = (value) => updateParams({ q: value }, { replace: true }) // typing shouldn't flood history
 
   // Placeholder for the empty Max field: the most expensive final price, rounded up.
   const priceCeiling = Math.ceil(Math.max(0, ...products.map(getFinalPrice)) / 100) * 100
 
+  const normalizedQuery = query.trim().toLowerCase()
+
   const filtered = products.filter((product) => {
     if (selectedCategory && product.category !== selectedCategory) return false
+    if (normalizedQuery && !matchesQuery(product, normalizedQuery)) return false
     const price = getFinalPrice(product)
     if (price < minPrice) return false
     if (maxPrice !== null && price > maxPrice) return false
@@ -61,8 +77,8 @@ const Shop = () => {
 
   filtered.sort(SORTERS[sortBy])
 
-  const hasFilters = selectedCategory || minPrice > 0 || maxPrice !== null
-
+  const visibleProducts = filtered.slice(0, visibleCount)
+  const hasFilters = selectedCategory || normalizedQuery || minPrice > 0 || maxPrice !== null
   const clearFilters = () => {
     setSearchParams({})
     setMinPrice(0)
@@ -71,7 +87,7 @@ const Shop = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <main>
+      <div>
         <Breadcrumb
           items={selectedCategory
               ? [{ label: 'Shop', href: '/shop' }, { label: selectedCategory }]
@@ -85,8 +101,8 @@ const Shop = () => {
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">
               {selectedCategory ? selectedCategory : "All Products"}
             </h1>
-            <p className="mt-2 text-foreground/70">
-              {filtered.length} products found
+            <p role="status" className="mt-2 text-foreground/70">
+              {filtered.length} {filtered.length === 1 ? "product" : "products"} found
             </p>
           </div>
         </div>
@@ -180,9 +196,23 @@ const Shop = () => {
             {/* Main Content */}
             <div className="flex-1">
               
-              {/* Toolbar - Sort and Mobile Filters */}
+              {/* Toolbar - Search, Sort and Mobile Filters */}
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
                 
+                {/* Search */}
+                <div className="relative min-w-52 flex-1 sm:max-w-xs">
+                  <label htmlFor="shop-search" className="sr-only">Search products</label>
+                  <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                  <input
+                    id="shop-search"
+                    type="search"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search products…"
+                    className="w-full rounded-lg border border-border bg-card py-2 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+
                 {/* Mobile Filter Button */}
                 <Button
                   variant="outline"
@@ -305,6 +335,20 @@ const Shop = () => {
                       </button>
                     </div>
                   )}
+
+                  {normalizedQuery && (
+                    <div className="flex items-center gap-1 px-3 py-1 bg-secondary rounded-full text-sm font-medium text-foreground">
+                      “{query.trim()}”
+                      <button
+                        onClick={() => setQuery("")}
+                        aria-label="Clear search"
+                        className="ml-1 hover:text-muted-foreground"
+                      >
+                        <X className="w-3 h-3" aria-hidden="true" />
+                      </button>
+                    </div>
+                  )}
+
                   {(minPrice > 0 || maxPrice !== null) && (
                     <div className="flex items-center gap-1 px-3 py-1 bg-secondary rounded-full text-sm font-medium text-foreground">
                       {maxPrice !== null ? `$${minPrice} - $${maxPrice}` : `$${minPrice}+`}
@@ -325,11 +369,27 @@ const Shop = () => {
 
               {/* Product Grid */}
               {filtered.length > 0 ? (
-                <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3">
-                  {filtered.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
+                <>
+                  <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3">
+                    {visibleProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+
+                  {filtered.length > visibleProducts.length && (
+                    <div className="mt-10 text-center">
+                      <p className="mb-4 text-sm text-muted-foreground">
+                        Showing {visibleProducts.length} of {filtered.length}
+                      </p>
+                      <Button
+                        variant="outline"
+                        onClick={() => setShown({ key: filterKey, count: visibleCount + PAGE_SIZE })}
+                      >
+                        Show more
+                      </Button>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="text-center py-16">
                   <p className="text-muted-foreground text-lg mb-4">No products found</p>
@@ -344,7 +404,7 @@ const Shop = () => {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   )
 }

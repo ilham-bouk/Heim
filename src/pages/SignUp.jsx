@@ -1,29 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router';
 import { Mail, Lock, User, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import Button from '../components/ui/Button';
 import AuthLayout from '../components/auth/AuthLayout';
+import AuthField, { FieldError } from '../components/auth/AuthField';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import { isValidEmail } from '../utils/validators';
 import DemoHint from '../components/auth/DemoHint';
 
-const FieldError = ({ message }) =>
-  message ? (
-    <p className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive-text">
-      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-      {message}
-    </p>
-  ) : null;
-
-const inputClass = (hasError) =>
-  `w-full py-2.5 rounded-lg border text-foreground text-sm placeholder:text-muted-foreground
-   transition-colors focus:outline-none focus:ring-2 focus:border-transparent
-   ${hasError
-     ? 'pl-10 pr-4 border-destructive bg-destructive/10 focus:ring-destructive'
-     : 'pl-10 pr-4 border-border bg-card hover:border-muted-foreground focus:ring-primary'}`;
-
-/* Password strength. Full class names on purpose (Tailwind only generates classes it can see).
-   Three tones for five levels: the label and the number of filled segments carry the meaning. */
 const STRENGTH_LEVELS = [
   { label: 'Too short', bar: 'bg-destructive', text: 'text-destructive-text' },
   { label: 'Weak', bar: 'bg-destructive', text: 'text-destructive-text' },
@@ -49,7 +34,7 @@ const PasswordStrengthBar = ({ password }) => {
 
   return (
     <div className="mt-2">
-      <div className="flex gap-1 mb-1">
+      <div className="flex gap-1 mb-1" aria-hidden="true">
         {[0, 1, 2, 3].map((i) => (
           <div
             key={i}
@@ -60,17 +45,29 @@ const PasswordStrengthBar = ({ password }) => {
         ))}
       </div>
       <p className={`text-xs font-medium ${text}`}>
-        {label}
+        Password strength: {label}
       </p>
     </div>
   );
 };
 
+const PasswordToggle = ({ shown, onToggle }) => (
+  <button
+    type="button"
+    onClick={onToggle}
+    aria-label={shown ? 'Hide password' : 'Show password'}
+    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+  >
+    {shown ? <EyeOff className="w-4 h-4" aria-hidden="true" /> : <Eye className="w-4 h-4" aria-hidden="true" />}
+  </button>
+);
 
 const SignUp = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { signUp } = useAuth();
+  const { settings } = useSettings();
+  const formRef = useRef(null);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -79,10 +76,17 @@ const SignUp = () => {
     confirmPassword: '',
   });
   const [errors, setErrors] = useState({});
+  const [submitCount, setSubmitCount] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // After a failed submit, move focus to the first invalid field.
+  useEffect(() => {
+    if (submitCount === 0) return;
+    formRef.current?.querySelector('[aria-invalid="true"]')?.focus();
+  }, [submitCount]);
 
   const validate = () => {
     const e = {};
@@ -122,7 +126,10 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate()) {
+      setSubmitCount((count) => count + 1);
+      return;
+    }
 
     setIsLoading(true);
 
@@ -136,7 +143,7 @@ const SignUp = () => {
 
   return (
     <AuthLayout
-      quote="Join thousands of homeowners who trust Heim for their space."
+      quote={`Join thousands of homeowners who trust ${settings.store.name} for their space.`}
       subtext="Create your account and start exploring."
     >
       {/* Heading */}
@@ -155,111 +162,57 @@ const SignUp = () => {
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} noValidate className="space-y-4">
+      <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-4">
+        <AuthField
+          label="Full name"
+          icon={User}
+          name="fullName"
+          type="text"
+          autoComplete="name"
+          value={formData.fullName}
+          onChange={handleChange}
+          placeholder="Jane Doe"
+          error={errors.fullName}
+        />
 
-        {/* Full Name */}
-        <div>
-          <label htmlFor="fullName" className="block text-sm font-semibold text-foreground mb-1.5">
-            Full name
-          </label>
-          <div className="relative">
-            <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-            <input
-              id="fullName"
-              name="fullName"
-              type="text"
-              autoComplete="name"
-              value={formData.fullName}
-              onChange={handleChange}
-              placeholder="Jane Doe"
-              className={inputClass(!!errors.fullName)}
-            />
-          </div>
-          <FieldError message={errors.fullName} />
-        </div>
+        <AuthField
+          label="Email address"
+          icon={Mail}
+          name="email"
+          type="email"
+          autoComplete="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="you@example.com"
+          error={errors.email}
+        />
 
-        {/* Email */}
-        <div>
-          <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-1.5">
-            Email address
-          </label>
-          <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="you@example.com"
-              className={inputClass(!!errors.email)}
-            />
-          </div>
-          <FieldError message={errors.email} />
-        </div>
+        <AuthField
+          label="Password"
+          icon={Lock}
+          name="password"
+          type={showPassword ? 'text' : 'password'}
+          autoComplete="new-password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Create a strong password"
+          error={errors.password}
+          trailing={<PasswordToggle shown={showPassword} onToggle={() => setShowPassword(v => !v)} />}
+          footer={formData.password && !errors.password ? <PasswordStrengthBar password={formData.password} /> : null}
+        />
 
-        {/* Password */}
-        <div>
-          <label htmlFor="password" className="block text-sm font-semibold text-foreground mb-1.5">
-            Password
-          </label>
-          <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-            <input
-              id="password"
-              name="password"
-              type={showPassword ? 'text' : 'password'}
-              autoComplete="new-password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Create a strong password"
-              className={`${inputClass(!!errors.password)} pr-11`}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(v => !v)}
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
-          {/* Strength bar */}
-          {formData.password && !errors.password
-            ? <PasswordStrengthBar password={formData.password} />
-            : <FieldError message={errors.password} />
-          }
-        </div>
-
-        {/* Confirm Password */}
-        <div>
-          <label htmlFor="confirmPassword" className="block text-sm font-semibold text-foreground mb-1.5">
-            Confirm password
-          </label>
-          <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type={showConfirm ? 'text' : 'password'}
-              autoComplete="new-password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="Re-enter your password"
-              className={`${inputClass(!!errors.confirmPassword)} pr-11`}
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirm(v => !v)}
-              aria-label={showConfirm ? 'Hide password' : 'Show password'}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
-          <FieldError message={errors.confirmPassword} />
-        </div>
+        <AuthField
+          label="Confirm password"
+          icon={Lock}
+          name="confirmPassword"
+          type={showConfirm ? 'text' : 'password'}
+          autoComplete="new-password"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          placeholder="Re-enter your password"
+          error={errors.confirmPassword}
+          trailing={<PasswordToggle shown={showConfirm} onToggle={() => setShowConfirm(v => !v)} />}
+        />
 
         {/* Terms */}
         <div>
@@ -267,6 +220,8 @@ const SignUp = () => {
             <input
               type="checkbox"
               checked={agreedToTerms}
+              aria-invalid={!!errors.terms}
+              aria-describedby={errors.terms ? 'terms-error' : undefined}
               onChange={(e) => {
                 setAgreedToTerms(e.target.checked);
                 if (errors.terms) setErrors(prev => ({ ...prev, terms: '' }));
@@ -284,7 +239,7 @@ const SignUp = () => {
               </Link>
             </span>
           </label>
-          <FieldError message={errors.terms} />
+          <FieldError id="terms-error" message={errors.terms} />
         </div>
 
         {/* Submit */}
@@ -300,13 +255,7 @@ const SignUp = () => {
           className="w-full justify-center mt-6"
           disabled={isLoading}
         >
-          {isLoading ? (
-            <span className="flex items-center gap-2">
-              Creating account…
-            </span>
-          ) : (
-            'Create Account'
-          )}
+          {isLoading ? 'Creating account…' : 'Create Account'}
         </Button>
       </form>
 
@@ -335,11 +284,11 @@ const SignUp = () => {
           Facebook
         </button>
       </div>
-      
+
       <DemoHint />
 
     </AuthLayout>
   );
 };
 
-export default SignUp
+export default SignUp;

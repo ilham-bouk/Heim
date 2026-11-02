@@ -1,38 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router';
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import Button from '../components/ui/Button';
 import AuthLayout from '../components/auth/AuthLayout';
+import AuthField from '../components/auth/AuthField';
 import { useAuth } from '../context/AuthContext';
 import { isValidEmail } from '../utils/validators';
 import { ROLES } from '../utils/constants';
 import DemoHint from '../components/auth/DemoHint';
 
-const FieldError = ({ message }) =>
-  message ? (
-    <p className="mt-1.5 flex items-center gap-1.5 text-xs text-destructive-text">
-      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-      {message}
-    </p>
-  ) : null;
-
-const inputClass = (hasError) =>
-  `w-full py-2.5 rounded-lg border text-foreground text-sm placeholder:text-muted-foreground
-   transition-colors focus:outline-none focus:ring-2 focus:border-transparent
-   ${hasError
-     ? 'pl-10 pr-4 border-destructive bg-destructive/10 focus:ring-destructive'
-     : 'pl-10 pr-4 border-border bg-card hover:border-muted-foreground focus:ring-primary'}`;
-
-
 const SignIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn } = useAuth();
+  const formRef = useRef(null);
 
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
+  const [submitCount, setSubmitCount] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // After a failed submit, move focus to the first invalid field.
+  useEffect(() => {
+    if (submitCount === 0) return;
+    formRef.current?.querySelector('[aria-invalid="true"]')?.focus();
+  }, [submitCount]);
 
   const validate = () => {
     const e = {};
@@ -58,13 +51,15 @@ const SignIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validate()) return;
-    
+    if (!validate()) {
+      setSubmitCount((count) => count + 1);
+      return;
+    }
+
     setIsLoading(true);
 
     signIn({ email: formData.email, password: formData.password })
       .then((user) => {
-        // Admins always land on /admin; customers return to where they came from (e.g. /checkout).
         navigate(user.role === ROLES.ADMIN ? '/admin' : location.state?.from?.pathname || '/account');
       })
       .catch((err) => {
@@ -94,65 +89,48 @@ const SignIn = () => {
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} noValidate className="space-y-5">
+      <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-5">
+        <AuthField
+          label="Email address"
+          icon={Mail}
+          name="email"
+          type="email"
+          autoComplete="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="you@example.com"
+          error={errors.email}
+        />
 
-        {/* Email */}
-        <div>
-          <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-1.5">
-            Email address
-          </label>
-          <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="you@example.com"
-              className={inputClass(!!errors.email)}
-            />
-          </div>
-          <FieldError message={errors.email} />
-        </div>
-
-        {/* Password */}
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label htmlFor="password" className="block text-sm font-semibold text-foreground">
-              Password
-            </label>
+        <AuthField
+          label="Password"
+          icon={Lock}
+          name="password"
+          type={showPassword ? 'text' : 'password'}
+          autoComplete="current-password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Password"
+          error={errors.password}
+          labelAction={
             <Link
               to="/forgot-password"
               className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
             >
               Forgot password?
             </Link>
-          </div>
-          <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-            <input
-              id="password"
-              name="password"
-              type={showPassword ? 'text' : 'password'}
-              autoComplete="current-password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              className={`${inputClass(!!errors.password)} pr-11`}
-            />
+          }
+          trailing={
             <button
               type="button"
               onClick={() => setShowPassword(v => !v)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
             >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showPassword ? <EyeOff className="w-4 h-4" aria-hidden="true" /> : <Eye className="w-4 h-4" aria-hidden="true" />}
             </button>
-          </div>
-          <FieldError message={errors.password} />
-        </div>
+          }
+        />
 
         {/* Remember me */}
         <label className="flex items-center gap-2.5 cursor-pointer select-none w-fit">
@@ -176,13 +154,7 @@ const SignIn = () => {
           className="w-full justify-center"
           disabled={isLoading}
         >
-          {isLoading ? (
-            <span className="flex items-center gap-2">
-              Signing in…
-            </span>
-          ) : (
-            'Sign In'
-          )}
+          {isLoading ? 'Signing in…' : 'Sign In'}
         </Button>
       </form>
 

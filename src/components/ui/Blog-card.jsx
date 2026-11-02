@@ -11,16 +11,16 @@ const BlogCard = ({ post }) => {
   return (
     <article className="group">
       {/* Image */}
-      <div className="block overflow-hidden rounded-xl">
+      <Link to={`/blog/${post.id}`} tabIndex={-1} aria-hidden="true" className="block overflow-hidden rounded-xl">
         <div className="aspect-16/10 overflow-hidden">
           <img
             src={post.image}
-            alt={post.title}
+            alt=""
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         </div>
-      </div>
+      </Link>
 
       {/* Content */}
       <div className="mt-4 space-y-2">

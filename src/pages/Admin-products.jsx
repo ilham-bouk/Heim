@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { ExternalLink, Package, Pencil, Plus, Trash2 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import ConfirmInline from '../components/ui/ConfirmInline';
@@ -80,7 +80,9 @@ const AdminProducts = () => {
   const { products, categories, deleteProduct } = useCatalog();
   const toast = useToast();
 
-  const [category, setCategory] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category');
+  const category = categories.some((c) => c.name === categoryParam) ? categoryParam : '';
   const [confirmingId, setConfirmingId] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -109,7 +111,19 @@ const AdminProducts = () => {
       <select
         id="product-category-filter"
         value={category}
-        onChange={(e) => setCategory(e.target.value)}
+        onChange={(e) => {
+          const { value } = e.target;
+          setSearchParams(
+            (prev) => {
+              const next = new URLSearchParams(prev);
+              if (value) next.set('category', value);
+              else next.delete('category');
+              next.delete('page');
+              return next;
+            },
+            { replace: true }
+          );
+        }}
         className="rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
       >
         <option value="">All categories</option>
@@ -142,6 +156,7 @@ const AdminProducts = () => {
         searchLabel="Search products"
         toolbar={categoryFilter}
         initialSort={{ key: 'createdAt', direction: 'desc' }}
+        syncToUrl
         rowActions={(product) => (
           <div className="flex items-center justify-end gap-1">
             <Link to={`/shop/${product.id}`} aria-label={`View ${product.name} in the store`} className={iconButtonClass}>

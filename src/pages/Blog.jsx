@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router';
 import { Search, Calendar, User, Clock, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
 import Button from '../components/ui/Button';
 import { useBlog } from '../context/BlogContext';
+import { useSettings } from '../context/SettingsContext';
 import { searchBlogPosts } from '../services/blogService';
 import { formatDate } from '../utils/format';
 import Breadcrumb from '../components/ui/Breadcrumb';
@@ -11,19 +11,22 @@ import NewsletterForm from '../components/ui/NewsletterForm';
 
 const Blog = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const { blogPosts, blogCategories, getFeaturedBlogPosts } = useBlog();
+  const { settings } = useSettings();
 
-  useEffect(() => {
-    const urlSearch = searchParams.get('search') || '';
-    setSearchQuery(urlSearch);
-  }, [searchParams]);
+  // Search and category live in the URL only (shareable, no duplicated state).
+  const searchQuery = searchParams.get('search') ?? '';
+  const categoryParam = searchParams.get('category');
+  const selectedCategory = blogCategories.some((c) => c.name === categoryParam) ? categoryParam : 'All';
+
+  const updateParams = (changes, options) => {
+    const next = new URLSearchParams(searchParams);
+    Object.entries(changes).forEach(([key, value]) => (value ? next.set(key, value) : next.delete(key)));
+    setSearchParams(next, options);
+  };
 
   const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-    setSearchParams(value ? { search: value } : {});
+    updateParams({ search: e.target.value }, { replace: true });
   };
 
   const filteredPosts = searchBlogPosts(blogPosts, searchQuery, selectedCategory);
@@ -66,7 +69,7 @@ const Blog = () => {
                     src={post.image}
                     alt={post.title}
                     loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover motion-reduce:transition-none motion-reduce:group-hover:scale-100 transition-transform duration-300"
                   />
                   <div className="absolute top-4 left-4">
                     <span className="inline-block px-3 py-1 bg-accent-text text-primary-foreground text-xs font-semibold rounded-lg">
@@ -210,11 +213,7 @@ const Blog = () => {
                   <p className="text-foreground/80 text-lg mb-4">No articles found matching your search.</p>
                   <Button
                     variant="primary"
-                    onClick={() => {
-                      setSearchQuery('');
-                      setSearchParams({});
-                      setSelectedCategory('All');
-                    }}
+                    onClick={() => setSearchParams({})}
                   >
                     Clear Search
                   </Button>
@@ -231,7 +230,7 @@ const Blog = () => {
                   {blogCategories.map((category) => (
                     <button
                       key={category.id}
-                      onClick={() => setSelectedCategory(category.name)}
+                      onClick={() => selectCategory(category.name)}
                       className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                         selectedCategory === category.name
                           ? 'bg-primary text-primary-foreground'
@@ -284,7 +283,7 @@ const Blog = () => {
             Ready to Redesign Your Space?
           </h2>
           <p className="text-lg text-foreground/80 mb-8 max-w-2xl mx-auto">
-            Explore our collection and bring your design inspiration to life with Heim's curated furniture selection.
+            Explore our collection and bring your design inspiration to life with {settings.store.name}'s curated furniture selection.
           </p>
           <Button as={Link} to="/shop" variant="primary" size="lg">
             Shop Now

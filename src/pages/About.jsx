@@ -4,9 +4,15 @@ import Button from '../components/ui/Button';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import aboutImg from '../assets/aboutImg.jpeg'
 import teamImg from '../assets/team-member.jpeg'
+import { useCatalog } from '../context/CatalogContext'
+import { useSettings } from '../context/SettingsContext'
+import { STORE_STATS, getYearsInBusiness } from '../config/content'
 
 const About = () => {
-  return (
+  const { products } = useCatalog();
+  const { name } = useSettings().settings.store;
+
+   return (
     <div className="min-h-screen bg-background">
       <Breadcrumb items={[{ label: 'About Us' }]} />
 
@@ -23,7 +29,7 @@ const About = () => {
                 Crafted for Modern Living
               </h1>
               <p className="text-lg text-foreground/70 leading-relaxed mb-4">
-                Since 2015, Heim has been dedicated to bringing exceptional furniture design into homes worldwide. We believe that your living space should reflect your personality while providing ultimate comfort and durability.
+                Since {STORE_STATS.foundedYear}, {name} has been dedicated to bringing exceptional furniture design into homes worldwide. ...
               </p>
               <p className="text-lg text-foreground/70 leading-relaxed">
                 Our mission is to create timeless pieces that combine stunning aesthetics with sustainable practices, ensuring that every purchase contributes to a better tomorrow.
@@ -40,7 +46,7 @@ const About = () => {
               <div className="aspect-4/3 overflow-hidden rounded-2xl bg-muted">
                 <img
                   src={aboutImg}
-                  alt="Heim Furniture Showroom"
+                  alt={`${name} Furniture Showroom`}
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -48,7 +54,7 @@ const About = () => {
               <div className="absolute -bottom-6 -right-6 hidden lg:block">
                 <div className="rounded-xl bg-card p-6 shadow-lg max-w-xs">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="text-accent text-3xl font-bold">10+</div>
+                    <div className="text-accent text-3xl font-bold">{getYearsInBusiness()}+</div>
                   </div>
                   <p className="text-sm font-semibold text-foreground">Years of Excellence</p>
                   <p className="text-xs text-muted-foreground mt-1">Trusted by designers worldwide</p>
@@ -66,16 +72,16 @@ const About = () => {
             {/* Stat 1 */}
             <div className="text-center">
               <div className="text-5xl lg:text-6xl font-bold text-accent mb-3">
-                50K+
+                {STORE_STATS.customers}
               </div>
               <p className="text-foreground/80 font-semibold">Happy Customers</p>
-              <p className="text-sm text-muted-foreground mt-1">Across 25 countries</p>
+              <p className="text-sm text-muted-foreground mt-1">Across {STORE_STATS.countries}+ countries</p>
             </div>
 
             {/* Stat 2 */}
             <div className="text-center">
               <div className="text-5xl lg:text-6xl font-bold text-accent mb-3">
-                1000+
+                {products.length}
               </div>
               <p className="text-foreground/80 font-semibold">Products</p>
               <p className="text-sm text-muted-foreground mt-1">Unique designs</p>
@@ -84,7 +90,7 @@ const About = () => {
             {/* Stat 3 */}
             <div className="text-center">
               <div className="text-5xl lg:text-6xl font-bold text-accent mb-3">
-                10+
+                {STORE_STATS.awards}
               </div>
               <p className="text-foreground/80 font-semibold">Awards</p>
               <p className="text-sm text-muted-foreground mt-1">Industry recognition</p>
@@ -93,7 +99,7 @@ const About = () => {
             {/* Stat 4 */}
             <div className="text-center">
               <div className="text-5xl lg:text-6xl font-bold text-accent mb-3">
-                98%
+                {STORE_STATS.satisfaction}
               </div>
               <p className="text-foreground/80 font-semibold">Satisfaction Rate</p>
               <p className="text-sm text-muted-foreground mt-1">Customer approved</p>
@@ -195,7 +201,7 @@ const About = () => {
               Our Team
             </span>
             <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
-              Meet the People Behind Heim
+              Meet the People Behind {name}
             </h2>
             <p className="text-lg text-foreground/80 max-w-2xl mx-auto">
               A passionate team of designers, craftspeople, and visionaries
@@ -376,7 +382,7 @@ const About = () => {
             {/* Content */}
             <div>
               <span className="inline-block text-sm font-medium text-accent-text uppercase tracking-wider mb-2">
-                Why Choose Heim
+                Why Choose {name}
               </span>
               <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
                 Superior Quality Meets Exceptional Design

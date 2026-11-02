@@ -52,7 +52,7 @@ const AccountProfile = () => {
             </p>
           </div>
           <Link
-            to="/account/orders"
+            to={`/account/orders/${order.id}`}
             className="text-sm font-semibold text-accent-text hover:text-foreground transition-colors shrink-0"
           >
             Track Order

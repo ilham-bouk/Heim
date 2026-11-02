@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
+import { isCardExpired, isValidCardNumber } from '../../utils/payment';
 
 const MONTHS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
 const YEARS = Array.from({ length: 15 }, (_, i) => String(new Date().getFullYear() + i));
@@ -44,12 +45,16 @@ const PaymentMethodForm = ({
     e.preventDefault();
 
     const cardNumber = formData.cardNumber.replace(/\s+/g, '');
-    if (!/^\d{13,19}$/.test(cardNumber)) {
+    if (!isValidCardNumber(cardNumber)) {
       setError('Enter a valid card number');
       return;
     }
     if (!formData.expMonth || !formData.expYear) {
       setError('Select an expiration date');
+      return;
+    }
+    if (isCardExpired(formData.expMonth, formData.expYear)) {
+      setError('This card has expired');
       return;
     }
 
@@ -62,7 +67,7 @@ const PaymentMethodForm = ({
       className={`p-5 rounded-lg border border-border bg-secondary/40 space-y-4 ${className}`}
     >
       <Input name="cardholderName" aria-label="Name on card" autoComplete="cc-name" placeholder="Name on card" value={formData.cardholderName} onChange={handleChange} required />
-      <Input name="cardNumber" aria-label="Card number" autoComplete="cc-number" inputMode="numeric" placeholder="Card number" value={formData.cardNumber} onChange={handleChange} required />
+      <Input name="cardNumber" aria-label="Card number" autoComplete="cc-number" inputMode="numeric" maxLength={23} placeholder="Card number" value={formData.cardNumber} onChange={handleChange} required />
       <div className="grid grid-cols-2 gap-4">
         <select
           name="expMonth"
@@ -118,6 +123,7 @@ const PaymentMethodForm = ({
 
       <p className="text-xs text-muted-foreground">
         This is a UI demo — no real payment processor is connected. Only the last 4 digits are stored.
+        Demo card: 4242 4242 4242 4242.
       </p>
 
       <div className="flex items-center gap-3 pt-2">

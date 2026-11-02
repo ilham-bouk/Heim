@@ -6,12 +6,16 @@ import Breadcrumb from '../components/ui/Breadcrumb';
 import { isValidEmail } from '../utils/validators';
 import { useSettings } from '../context/SettingsContext';
 import { useMessages } from '../context/MessageContext';
+import { usePromos } from '../context/PromoContext';
+import { describePromo, selectActivePromos } from '../services/promoService';
 import { MESSAGE_SUBJECTS } from '../services/messageService';
 
 const Contact = () => {
   const { settings } = useSettings();
   const contactInfoConfig = settings.contact;
   const { sendMessage } = useMessages();
+  const { promos } = usePromos();
+  const activePromo = selectActivePromos(promos)[0];
 
   const [formData, setFormData] = useState({
     name: '',
@@ -26,6 +30,14 @@ const Contact = () => {
   const [isSending, setIsSending] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const timerRef = useRef(null);
+  const formRef = useRef(null);
+  const [submitCount, setSubmitCount] = useState(0);
+
+  // After a failed submit, move focus to the first invalid field.
+  useEffect(() => {
+    if (submitCount === 0) return;
+    formRef.current?.querySelector('[aria-invalid="true"]')?.focus();
+  }, [submitCount]);
 
   // Don't leave the banner timer running after the page unmounts.
   useEffect(() => () => clearTimeout(timerRef.current), []);
@@ -57,6 +69,7 @@ const Contact = () => {
     const nextErrors = validate();
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
+      setSubmitCount((count) => count + 1);
       return;
     }
 
@@ -178,7 +191,7 @@ const Contact = () => {
                   Fill out the form below and we'll get back to you as soon as possible.
                 </p>
                 
-                <form onSubmit={handleSubmit} noValidate className="space-y-6 mb-8">
+                <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-6 mb-8">
                   {/* Name */}
                   <div>
                     <label htmlFor="name" className="block text-sm font-semibold text-foreground mb-2">
@@ -311,15 +324,17 @@ const Contact = () => {
                   </Button>
                 </form>
 
-                {formSubmitted && (
-                  <div className="mb-6 p-4 bg-success/10 border border-success/30 rounded-lg flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-success mt-0.5 shrink-0" />
-                     <div>
-                      <p className="font-semibold text-success-text">Thank you for your message!</p>
-                      <p className="text-sm text-success-text">We've received your inquiry and will get back to you soon.</p>
-                     </div>
-                  </div>
-                )}
+                <div role="status">
+                  {formSubmitted && (
+                    <div className="mb-6 p-4 bg-success/10 border border-success/30 rounded-lg flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-success mt-0.5 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-success-text">Thank you for your message!</p>
+                        <p className="text-sm text-success-text">We've received your inquiry and will get back to you soon.</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 {Object.keys(errors).length > 0 && (
                   <div className="mb-6 p-4 bg-destructive/10 border border-destructive/30 rounded-lg flex items-start gap-3">
@@ -405,7 +420,8 @@ const Contact = () => {
             Can't Wait to Get Started?
           </h2>
           <p className="text-lg text-foreground/70 mb-8 max-w-2xl mx-auto">
-            Explore our collection and start shopping today. New customers get 10% off their first order!
+            Explore our collection and start shopping today.
+            {activePromo && <> Use code <strong>{activePromo.code}</strong> for {describePromo(activePromo)}.</>}
           </p>
           <Button as={Link} to="/shop" variant="primary" size="lg">
             Start Shopping

@@ -10,6 +10,32 @@ export const detectBrand = (cardNumber) => {
   return 'Card';
 };
 
+/** 13 to 19 digits that pass the Luhn checksum (spaces are ignored). */
+export const isValidCardNumber = (cardNumber) => {
+  const digits = cardNumber.replace(/\s+/g, '');
+  if (!/^\d{13,19}$/.test(digits)) return false;
+
+  let sum = 0;
+  let double = false;
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let digit = Number(digits[i]);
+    if (double) {
+      digit *= 2;
+      if (digit > 9) digit -= 9;
+    }
+    sum += digit;
+    double = !double;
+  }
+  return sum % 10 === 0;
+};
+
+/** A card is valid through the END of its expiry month. */
+export const isCardExpired = (expMonth, expYear, now = new Date()) => {
+  const year = Number(expYear);
+  const month = Number(expMonth);
+  return year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth() + 1);
+};
+
 /** Safe-to-store description of a card (no full number). */
 export const toPaymentSnapshot = ({ cardNumber, cardholderName, expMonth, expYear }) => ({
   brand: detectBrand(cardNumber),

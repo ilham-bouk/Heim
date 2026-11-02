@@ -54,7 +54,7 @@ const WishlistCard = ({ item, onRemove, onAddToCart }) => {
             src={item.image}
             alt={item.name}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         </Link>
 

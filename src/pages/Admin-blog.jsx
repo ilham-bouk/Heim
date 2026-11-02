@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { ExternalLink, FileText, Pencil, Plus, Trash2 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import ConfirmInline from '../components/ui/ConfirmInline';
@@ -65,7 +65,9 @@ const AdminBlog = () => {
   const { allBlogPosts, deletePost } = useBlog();
   const toast = useToast();
 
-  const [status, setStatus] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const statusParam = searchParams.get('status');
+  const status = statusParam === 'published' || statusParam === 'draft' ? statusParam : '';
   const [confirmingId, setConfirmingId] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -94,7 +96,19 @@ const AdminBlog = () => {
       <select
         id="post-status-filter"
         value={status}
-        onChange={(e) => setStatus(e.target.value)}
+        onChange={(e) => {
+          const { value } = e.target;
+          setSearchParams(
+            (prev) => {
+              const next = new URLSearchParams(prev);
+              if (value) next.set('status', value);
+              else next.delete('status');
+              next.delete('page');
+              return next;
+            },
+            { replace: true }
+          );
+        }}
         className="rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
       >
         <option value="">All statuses</option>
@@ -126,6 +140,7 @@ const AdminBlog = () => {
         searchLabel="Search posts"
         toolbar={statusFilter}
         initialSort={{ key: 'publishedAt', direction: 'desc' }}
+        syncToUrl
         rowActions={(post) => (
           <div className="flex items-center justify-end gap-1">
             {post.status === 'published' && (

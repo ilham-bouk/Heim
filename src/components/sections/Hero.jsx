@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react"
 import heroImg from '../../assets/heroImg.png';
 import { Link } from "react-router";
 import Button from '../ui/Button';
+import { STORE_STATS } from '../../config/content';
 
 const Hero = () => {
   return (
@@ -21,7 +22,7 @@ const Hero = () => {
               Designed for comfort, built for longevity.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Button as={Link} to="/shop" size="lg" className="gap-2 hover:gap-4">
+              <Button as={Link} to="/shop" size="md" className="gap-2 hover:gap-4">
                 Shop Now
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -55,7 +56,7 @@ const Hero = () => {
                     <span className="h-8 w-8 rounded-full bg-accent/70 ring-2 ring-card" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-foreground">2,500+</p>
+                    <p className="text-sm font-semibold text-foreground">{STORE_STATS.customers}</p>
                     <p className="text-xs text-muted-foreground">Happy Customers</p>
                   </div>
                 </div>

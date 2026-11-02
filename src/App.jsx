@@ -1,62 +1,73 @@
+import { Suspense, lazy } from 'react'
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router'
 
 import { ToastProvider } from './context/ToastContext'
 import AppProviders from './context/AppProviders'
 import ScrollToTop from './components/ScrollToTop'
 import ProtectedRoute from './components/auth/ProtectedRoute'
-import CheckoutLayout from './components/checkout/CheckoutLayout'
-import CheckoutGuard from './components/checkout/CheckoutGuard'
 import { ROLES } from './utils/constants'
 
 import Header from "./components/layout/Header"
 import Footer from "./components/layout/Footer"
-import AccountLayout from './components/account/AccountLayout'
-import AdminLayout from './components/admin/AdminLayout'
 
 import Home from "./pages/Home"
-import Shop from "./pages/Shop"
-import ProductDetail from './pages/Product-detail'
-import About from './pages/About'
-import Blog from './pages/Blog'
-import BlogDetail from './pages/Blog-detail'
-import Contact from './pages/Contact'
-import Cart from './pages/Cart'
-import Wishlist from './pages/Wishlist'
-import SignIn from './pages/SignIn'
-import SignUp from './pages/SignUp'
-import Faq from './pages/Faq'
-import Shipping from './pages/Shipping'
-import Returns from './pages/Returns'
-import TrackOrder from './pages/Track-order'
-import Privacy from './pages/Privacy'
-import Terms from './pages/Terms'
-import ForgotPassword from './pages/Forgot-password'
-import AccountProfile from './pages/Account-profile'
-import AccountOrders from './pages/Account-orders'
-import AccountAddresses from './pages/Account-addresses'
-import AccountWallet from './pages/Account-wallet'
-import AccountSettings from './pages/Account-settings'
-import CheckoutAccount from './pages/Checkout-account'
-import CheckoutShipping from './pages/Checkout-shipping'
-import CheckoutPayment from './pages/Checkout-payment'
-import CheckoutReview from './pages/Checkout-review'
-import CheckoutConfirmation from './pages/Checkout-confirmation'
-import AdminDashboard from './pages/Admin-dashboard'
-import AdminProducts from './pages/Admin-products'
-import AdminProductForm from './pages/Admin-product-form'
-import AdminCategories from './pages/Admin-categories'
-import AdminBlog from './pages/Admin-blog'
-import AdminBlogForm from './pages/Admin-blog-form'
-import AdminMessages from './pages/Admin-messages'
-import AdminMessageDetail from './pages/Admin-message-detail'
-import AdminOrders from './pages/Admin-orders'
-import AdminOrderDetail from './pages/Admin-order-detail'
-import AdminCustomers from './pages/Admin-customers'
-import AdminPromos from './pages/Admin-promos'
-import AdminSubscribers from './pages/Admin-subscribers'
-import AdminSettings from './pages/Admin-settings'
-
 import NotFound from './pages/NotFound'
+
+const Shop = lazy(() => import('./pages/Shop'))
+const ProductDetail = lazy(() => import('./pages/Product-detail'))
+const About = lazy(() => import('./pages/About'))
+const Blog = lazy(() => import('./pages/Blog'))
+const BlogDetail = lazy(() => import('./pages/Blog-detail'))
+const Contact = lazy(() => import('./pages/Contact'))
+const Cart = lazy(() => import('./pages/Cart'))
+const Wishlist = lazy(() => import('./pages/Wishlist'))
+const SignIn = lazy(() => import('./pages/SignIn'))
+const SignUp = lazy(() => import('./pages/SignUp'))
+const ForgotPassword = lazy(() => import('./pages/Forgot-password'))
+const Faq = lazy(() => import('./pages/Faq'))
+const Shipping = lazy(() => import('./pages/Shipping'))
+const Returns = lazy(() => import('./pages/Returns'))
+const TrackOrder = lazy(() => import('./pages/Track-order'))
+const Privacy = lazy(() => import('./pages/Privacy'))
+const Terms = lazy(() => import('./pages/Terms'))
+
+const CheckoutLayout = lazy(() => import('./components/checkout/CheckoutLayout'))
+const CheckoutGuard = lazy(() => import('./components/checkout/CheckoutGuard'))
+const CheckoutAccount = lazy(() => import('./pages/Checkout-account'))
+const CheckoutShipping = lazy(() => import('./pages/Checkout-shipping'))
+const CheckoutPayment = lazy(() => import('./pages/Checkout-payment'))
+const CheckoutReview = lazy(() => import('./pages/Checkout-review'))
+const CheckoutConfirmation = lazy(() => import('./pages/Checkout-confirmation'))
+
+const AccountLayout = lazy(() => import('./components/account/AccountLayout'))
+const AccountProfile = lazy(() => import('./pages/Account-profile'))
+const AccountOrders = lazy(() => import('./pages/Account-orders'))
+const AccountOrderDetail = lazy(() => import('./pages/Account-order-detail'))
+const AccountAddresses = lazy(() => import('./pages/Account-addresses'))
+const AccountWallet = lazy(() => import('./pages/Account-wallet'))
+const AccountSettings = lazy(() => import('./pages/Account-settings'))
+
+const AdminLayout = lazy(() => import('./components/admin/AdminLayout'))
+const AdminDashboard = lazy(() => import('./pages/Admin-dashboard'))
+const AdminProducts = lazy(() => import('./pages/Admin-products'))
+const AdminProductForm = lazy(() => import('./pages/Admin-product-form'))
+const AdminCategories = lazy(() => import('./pages/Admin-categories'))
+const AdminBlog = lazy(() => import('./pages/Admin-blog'))
+const AdminBlogForm = lazy(() => import('./pages/Admin-blog-form'))
+const AdminMessages = lazy(() => import('./pages/Admin-messages'))
+const AdminMessageDetail = lazy(() => import('./pages/Admin-message-detail'))
+const AdminOrders = lazy(() => import('./pages/Admin-orders'))
+const AdminOrderDetail = lazy(() => import('./pages/Admin-order-detail'))
+const AdminCustomers = lazy(() => import('./pages/Admin-customers'))
+const AdminPromos = lazy(() => import('./pages/Admin-promos'))
+const AdminSubscribers = lazy(() => import('./pages/Admin-subscribers'))
+const AdminSettings = lazy(() => import('./pages/Admin-settings'))
+
+const PageFallback = () => (
+  <div role="status" className="flex min-h-[60vh] items-center justify-center text-sm text-muted-foreground">
+    Loading…
+  </div>
+)
 
 function App() {
   return (
@@ -64,8 +75,17 @@ function App() {
       <ScrollToTop />
       <ToastProvider>
         <AppProviders>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-70 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+          >
+            Skip to main content
+          </a>
+
           <Header />
 
+          <main id="main-content" tabIndex={-1} className="focus:outline-none">
+          <Suspense fallback={<PageFallback />}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} />
@@ -85,7 +105,7 @@ function App() {
             <Route path="/track-order" element={<TrackOrder />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
-            
+
             <Route path="/checkout" element={<CheckoutLayout />}>
               <Route path="account" element={<CheckoutAccount />} />
               <Route element={<CheckoutGuard />}>
@@ -102,6 +122,7 @@ function App() {
                 <Route index element={<Navigate to="profile" replace />} />
                 <Route path="profile" element={<AccountProfile />} />
                 <Route path="orders" element={<AccountOrders />} />
+                <Route path="orders/:id" element={<AccountOrderDetail />} />
                 <Route path="addresses" element={<AccountAddresses />} />
                 <Route path="wallet" element={<AccountWallet />} />
                 <Route path="settings" element={<AccountSettings />} />
@@ -131,7 +152,9 @@ function App() {
 
             <Route path="*" element={<NotFound />} />
           </Routes>
-          
+          </Suspense>
+          </main>
+
           <Footer />
         </AppProviders>
       </ToastProvider>
