@@ -4,6 +4,7 @@ import { User, Mail, Phone, Cake, Lock, Eye, EyeOff, AlertCircle, Check, LogOut,
 import Button from '../components/ui/Button';
 import ConfirmInline from '../components/ui/ConfirmInline';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 
 const fieldClass =
   'w-full pl-10 pr-4 py-2.5 rounded-lg border border-border bg-card text-foreground text-sm ' +
@@ -241,13 +242,14 @@ const PasswordSection = () => {
 /* ─── Sign Out ────────────────────────────────────────────────────────── */
 const SignOutSection = () => {
   const { signOut } = useAuth();
+  const { settings } = useSettings();
   const navigate = useNavigate();
 
   return (
     <div className="bg-card rounded-xl border border-border p-6 lg:p-8 flex flex-wrap items-center justify-between gap-4">
       <div>
         <h2 className="text-xl font-bold text-foreground mb-1">Sign Out</h2>
-        <p className="text-sm text-muted-foreground">Sign out of Heim on this device.</p>
+        <p className="text-sm text-muted-foreground">Sign out of {settings.store.name} on this device.</p>
       </div>
       <Button
         variant="outline"

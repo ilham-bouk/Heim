@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import { ChevronDown } from 'lucide-react';
 import Button from '../components/ui/Button';
 import InfoPage from '../components/ui/InfoPage';
+import { STORE_STATS } from '../config/content';
 
 // Edit in code: this is marketing/policy copy, not data. Keep it consistent with
 // the Shipping and Returns pages.
@@ -12,7 +13,7 @@ const FAQ_ITEMS = [
   },
   {
     question: 'Do you offer international shipping?',
-    answer: 'Yes, we ship to over 50 countries worldwide. Shipping costs and delivery times vary by location. Contact us for a quote.',
+    answer: `Yes, we ship to ${STORE_STATS.countries}+ countries worldwide. Shipping costs and delivery times vary by location. Contact us for a quote.`,
   },
   {
     question: 'What is your return policy?',

@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import InfoPage, { InfoSection } from '../components/ui/InfoPage';
 import { useSettings } from '../context/SettingsContext';
+import { STORE_STATS } from '../config/content';
 
 // Prices come from the admin-editable pricing settings, so this page can't
 // disagree with the cart. The rest of the copy is "edit in code".
@@ -24,7 +25,9 @@ const Shipping = () => {
       </InfoSection>
 
       <InfoSection title="International shipping">
-        <p>We ship to over 50 countries. Costs and delivery times vary by destination, so please <Link to="/contact" className="font-semibold text-accent-text underline underline-offset-2 hover:text-foreground">contact us</Link> for a quote.</p>
+        <p>We ship to {STORE_STATS.countries}+ countries. Costs and delivery times vary by destination, so please{' '}
+          <Link to="/contact" className="font-semibold text-accent-text underline underline-offset-2 hover:text-foreground">contact us</Link>
+        {' '}for a quote.</p>
       </InfoSection>
 
       <InfoSection title="Tracking your order">

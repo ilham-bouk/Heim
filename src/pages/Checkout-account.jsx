@@ -3,6 +3,7 @@ import Button from '../components/ui/Button';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useCheckout } from '../context/CheckoutContext';
+import { useSettings } from '../context/SettingsContext';
 import { getStepHref } from '../utils/checkoutSteps';
 
 // Passed to /signin and /signup so they send the user back here afterwards
@@ -13,6 +14,7 @@ const CheckoutAccount = () => {
   const { isAuthenticated } = useAuth();
   const { cartItems } = useCart();
   const { updateDraft } = useCheckout();
+  const { settings } = useSettings();
 
   if (cartItems.length === 0) return <Navigate to="/cart" replace />;
   if (isAuthenticated) return <Navigate to={getStepHref('shipping')} replace />;
@@ -41,7 +43,7 @@ const CheckoutAccount = () => {
             Sign In
           </Button>
           <p className="mt-4 text-center text-sm text-muted-foreground">
-            New to Heim?{' '}
+            New to {settings.store.name}?{' '}
             <Link
               to="/signup"
               state={RETURN_STATE}
