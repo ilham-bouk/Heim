@@ -1,1 +1,0 @@
-import{j as e}from"./index-DTqxUjEf.js";const n=({className:r="",...o})=>e.jsx("input",{className:`w-full px-4 py-2.5 border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${r}`,...o});export{n as I};
