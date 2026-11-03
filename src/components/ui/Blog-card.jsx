@@ -9,9 +9,9 @@ import { formatDate } from "../../utils/format";
  */
 const BlogCard = ({ post }) => {
   return (
-    <article className="group">
+    <article className="group relative">
       {/* Image */}
-      <Link to={`/blog/${post.id}`} tabIndex={-1} aria-hidden="true" className="block overflow-hidden rounded-xl">
+      <div className="block overflow-hidden rounded-xl">
         <div className="aspect-16/10 overflow-hidden">
           <img
             src={post.image}
@@ -20,7 +20,7 @@ const BlogCard = ({ post }) => {
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         </div>
-      </Link>
+      </div>
 
       {/* Content */}
       <div className="mt-4 space-y-2">
@@ -33,7 +33,10 @@ const BlogCard = ({ post }) => {
           </span>
         </div>
         
-        <Link to={`/blog/${post.id}`}>
+        <Link
+          to={`/blog/${post.id}`}
+          className="after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:rounded-xl focus-visible:after:ring-2 focus-visible:after:ring-primary"
+        >
           <h3 className="font-semibold text-foreground hover:text-accent-text transition-colors line-clamp-2 text-lg">
             {post.title}
           </h3>

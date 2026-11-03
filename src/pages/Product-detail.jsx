@@ -9,6 +9,7 @@ import { useCatalog } from '../context/CatalogContext';
 import { useSettings } from '../context/SettingsContext';
 import { getFinalPrice, getBadgeClass } from '../utils/product';
 import Breadcrumb from '../components/ui/Breadcrumb';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 const ProductDetailContent = ({ id }) => {
   const { addToCart, cartItems } = useCart();
@@ -21,6 +22,13 @@ const ProductDetailContent = ({ id }) => {
   const [addedToCart, setAddedToCart] = useState(false);
 
   const product = getProductById(id);
+
+  usePageMeta({
+    title: product?.name,
+    description: product?.description,
+    image: product?.image,
+    type: 'product',
+  });
 
   if (!product) {
     return (

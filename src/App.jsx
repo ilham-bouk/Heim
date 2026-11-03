@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router'
 import { ToastProvider } from './context/ToastContext'
 import AppProviders from './context/AppProviders'
 import ScrollToTop from './components/ScrollToTop'
+import RouteMeta from './components/RouteMeta'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import { ROLES } from './utils/constants'
 
@@ -75,6 +76,7 @@ function App() {
       <ScrollToTop />
       <ToastProvider>
         <AppProviders>
+          <RouteMeta />
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-70 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"

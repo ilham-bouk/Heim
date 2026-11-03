@@ -26,7 +26,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="group">
+    <div className="group relative">
       {/* Image Container */}
       <div className="relative aspect-square rounded-xl overflow-hidden bg-secondary">
         <img
@@ -35,8 +35,6 @@ const ProductCard = ({ product }) => {
           loading="lazy"
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
         />
-
-        <Link to={`/shop/${product.id}`} tabIndex={-1} aria-hidden="true" className="absolute inset-0" />
 
         {/* Badge */}
         {product.badge && (
@@ -78,7 +76,10 @@ const ProductCard = ({ product }) => {
           {product.category}
         </p>
 
-        <Link to={`/shop/${product.id}`}>
+        <Link
+          to={`/shop/${product.id}`}
+          className="after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:rounded-xl focus-visible:after:ring-2 focus-visible:after:ring-primary"
+        >
           <h3 className="font-semibold text-foreground hover:text-accent transition-colors line-clamp-2">
             {product.name}
           </h3>

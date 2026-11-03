@@ -5,11 +5,19 @@ import { formatDate } from '../utils/format';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import NewsletterForm from '../components/ui/NewsletterForm';
 import NotFound from './NotFound';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 const BlogDetail = () => {
   const { id } = useParams();
   const { getBlogPostById, getRelatedBlogPosts, getAdjacentBlogPosts } = useBlog();
   const post = getBlogPostById(id);
+
+  usePageMeta({
+    title: post?.title,
+    description: post?.excerpt,
+    image: post?.image,
+    type: 'article',
+  });
 
   if (!post) {
     return (

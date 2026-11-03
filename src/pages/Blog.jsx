@@ -29,6 +29,8 @@ const Blog = () => {
     updateParams({ search: e.target.value }, { replace: true });
   };
 
+  const selectCategory = (name) => updateParams({ category: name === 'All' ? null : name });
+
   const filteredPosts = searchBlogPosts(blogPosts, searchQuery, selectedCategory);
 
   return (
@@ -69,7 +71,7 @@ const Blog = () => {
                     src={post.image}
                     alt={post.title}
                     loading="lazy"
-                    className="w-full h-full object-cover motion-reduce:transition-none motion-reduce:group-hover:scale-100 transition-transform duration-300"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                   />
                   <div className="absolute top-4 left-4">
                     <span className="inline-block px-3 py-1 bg-accent-text text-primary-foreground text-xs font-semibold rounded-lg">

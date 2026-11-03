@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router';
 import { Mail, Lock, User, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import Button from '../components/ui/Button';
 import AuthLayout from '../components/auth/AuthLayout';
-import AuthField, { FieldError } from '../components/auth/AuthField';
+import AuthField, { FieldError } from '../components/auth/Authfield';
 import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
 import { isValidEmail } from '../utils/validators';
