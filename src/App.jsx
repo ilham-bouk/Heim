@@ -72,7 +72,7 @@ const PageFallback = () => (
 
 function App() {
   return (
-    <BrowserRouter basename="/Heim">
+    <BrowserRouter>
       <ScrollToTop />
       <ToastProvider>
         <AppProviders>
