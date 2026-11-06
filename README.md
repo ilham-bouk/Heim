@@ -6,7 +6,9 @@ There is **no backend**. All data is mock, lives in `localStorage` and is struct
 
 ![Heim Mockup](src/assets/Mockup.png)
 
-**Live demo:** https://ilham-bouk.github.io/Heim/
+**Live demo:** [Visit Heim](https://YOUR-SITE.netlify.app) <!-- replace with your Netlify URL -->
+
+Version history: see [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Table of contents
 
@@ -38,7 +40,7 @@ npm install
 npm run dev
 ```
 
-Open the URL Vite prints. Because the app is served under `/Heim`, it is usually `http://localhost:5173/Heim/`.
+Open the URL Vite prints, usually `http://localhost:5173/`.
 
 | Command | What it does |
 |---|---|
@@ -46,7 +48,6 @@ Open the URL Vite prints. Because the app is served under `/Heim`, it is usually
 | `npm run build` | Production build into `dist/` |
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | Run ESLint |
-| `npm run deploy` | Build and publish `dist/` to GitHub Pages (`gh-pages`) |
 
 ## Demo access
 
@@ -66,14 +67,15 @@ Promo codes seeded for the demo: `HEIM10` (10% off), `WELCOME20` ($20 off, expir
 
 ### Storefront
 - Responsive multi-page UI for desktop and mobile
-- Shop with category, price range and sort filters (category and sort live in the URL, so they are shareable)
+- Shop with search, category, price range and sort filters (search, category and sort live in the URL, so they are shareable) and "Show more" pagination
 - Product detail pages, related products, wishlist and cart
 - Cart with promo codes, free-shipping progress and live totals
 - Multi-step checkout (shipping, payment, review) for signed-in customers **and guests**, with a route guard that blocks skipping ahead and a confirmation page that survives refresh
-- Customer account: profile, order history, saved addresses, saved cards (brand + last 4 only), settings
+- Customer account: profile, order history and order detail, saved addresses, saved cards (brand + last 4 only), settings
 - Blog with search, categories, tags, related and previous/next posts
 - Contact form (messages reach the admin), newsletter signup (subscribers reach the admin)
 - Info pages: FAQ, Shipping, Returns, Track Order, Privacy, Terms, Forgot password
+- Page titles, meta descriptions and Open Graph tags per route; private pages are `noindex`
 - 404 page and a "not authorised" page
 
 ### Admin
@@ -89,9 +91,10 @@ Promo codes seeded for the demo: `HEIM10` (10% off), `WELCOME20` ($20 off, expir
 
 ### Quality
 - Semantic HTML, keyboard support, focus management and ARIA throughout (see [Accessibility](#accessibility))
-- State kept in the URL where it matters (shop filters, order and message list filters, search, sort and page in the admin tables)
+- State kept in the URL where it matters (shop and blog filters, order, message, product and post list filters, search, sort and page in the admin tables)
 - Inline delete confirmations instead of modals
 - Toast notifications with live regions
+- Route-level code splitting (every page except Home and Not Found is lazy-loaded)
 
 ## Pages and routes
 
@@ -101,7 +104,7 @@ Promo codes seeded for the demo: `HEIM10` (10% off), `WELCOME20` ($20 off, expir
 | Auth | `/signin`, `/signup`, `/forgot-password` |
 | Info | `/faq`, `/shipping`, `/returns`, `/track-order`, `/privacy`, `/terms` |
 | Checkout | `/checkout/account`, `/checkout/shipping`, `/checkout/payment`, `/checkout/review`, `/checkout/confirmation/:orderId` |
-| Account (signed in) | `/account/profile`, `/orders`, `/addresses`, `/wallet`, `/settings` |
+| Account (signed in) | `/account/profile`, `/orders`, `/orders/:id`, `/addresses`, `/wallet`, `/settings` |
 | Admin (admin role) | `/admin`, `/admin/orders`, `/admin/orders/:id`, `/admin/customers`, `/admin/promos`, `/admin/products`, `/admin/products/new`, `/admin/products/:id/edit`, `/admin/categories`, `/admin/blog`, `/admin/blog/new`, `/admin/blog/:id/edit`, `/admin/messages`, `/admin/messages/:id`, `/admin/subscribers`, `/admin/settings` |
 
 ## Replace before going live
@@ -127,8 +130,9 @@ These exist to make the demo feel alive. Delete or replace them when you connect
 
 The admin **Settings** page edits the store name, tagline, contact details, social links and pricing rules at runtime. The defaults live in `src/config/site.js`. Everything below is plain copy in the source.
 
-- **The name "Heim"** appears in prose in: `pages/About.jsx` (story, headings, "Why choose Heim"), `pages/SignIn.jsx` (quotes), `pages/Checkout-account.jsx` ("New to Heim?"), `pages/Account-settings.jsx` ("Sign out of Heim"), `pages/Blog.jsx` (CTA), `index.html` (`<title>`), `package.json` (name, `homepage`), `vite.config.js` (`base`) and `App.jsx` (`basename`).
-- **Marketing copy:** the Contact CTA ("10% off your first order"), the Promo banner ("up to 30% off"), the Hero ("New Collection 2026", "2,500+ Happy Customers"), the About stats and team, the features bar, the product page trust blocks ("2-Year Warranty", "30-Day Returns"), the auth side-panel trust lines, and the footer copyright year.
+- **The name "Heim"** appears in prose in: `pages/About.jsx` (story, timeline), `pages/SignIn.jsx` (quotes), `components/auth/AuthLayout.jsx` (icon alt text), `index.html` (`<title>`, meta and Open Graph tags), `config/routeMeta.js` (home title suffix) and `package.json` (`name`).
+- **Page titles and descriptions:** `src/config/routeMeta.js` is the one place to edit them (`{name}` is replaced by the store name).
+- **Marketing copy:** the Contact CTA, the Promo banner ("up to 30% off"), the Hero ("New Collection 2026"), the About stats and team (numbers in `config/content.js`), the features bar, the product page trust blocks ("2-Year Warranty", "30-Day Returns"), the auth side-panel trust lines, and the footer copyright year.
 - **Policy copy:** `Faq.jsx`, `Shipping.jsx` and `Returns.jsx` (the shipping prices on those pages come from Settings). **`Privacy.jsx` and `Terms.jsx` are placeholder text, not legal advice.** Each page shows a notice saying so. Replace them with documents reviewed for your business and jurisdiction.
 - **Currency:** the `$` symbol is written directly in about 25 places and prices have no cents. There is no currency setting.
 
@@ -145,6 +149,7 @@ All images were generated with Gemini and ship with the template (see [`IMAGE-CR
 - **Forms** own their field state and validation. The **page** decides what "submit" means.
 - **`hooks/useLocalStorage`** persists a value, syncs across tabs through the `storage` event, and fires `heim:storage-error` when a write fails (the toast provider shows an error).
 - **`hooks/useSeededCollection(key, getSeed)`** persists a collection as `{ version, items }`, starting from a seed. When `DATA_VERSION` changes, the stored copy is replaced by a fresh seed.
+- **`config/routeMeta.js` + `components/RouteMeta.jsx`** set the title and meta tags per route; product and article pages override them with `hooks/usePageMeta`.
 
 ### Provider order
 
@@ -243,14 +248,14 @@ Customers' **Orders** column excludes Cancelled orders, like the Orders KPI. A c
 
 ```
 Heim/
-├── public/
+├── public/                   # favicon.svg, _redirects (SPA rewrite for Netlify)
 ├── src/
 │   ├── assets/               # images (see IMAGE-CREDITS.md)
 │   ├── components/
 │   │   ├── account/          # AccountLayout
 │   │   ├── admin/            # AdminLayout, DataTable, PageHeader, StatCard,
 │   │   │                     # DashboardCard, ColumnChart, BarList, RecentList
-│   │   ├── auth/             # ProtectedRoute, AuthLayout, NotAuthorized, DemoHint
+│   │   ├── auth/             # ProtectedRoute, AuthLayout, Authfield, NotAuthorized, DemoHint
 │   │   ├── checkout/         # CheckoutLayout, CheckoutGuard, CheckoutStepper,
 │   │   │                     # OrderSummary, OptionCard
 │   │   ├── forms/            # FormField, ImageField, Address/PaymentMethod/Product/
@@ -260,20 +265,24 @@ Heim/
 │   │   ├── ui/               # Button, Input, StatusBadge, EmptyState, ConfirmInline,
 │   │   │                     # Breadcrumb, InfoPage, ProductCard, BlogCard,
 │   │   │                     # NewsletterForm, ToastViewport
+│   │   ├── RouteMeta.jsx     # sets title/meta per route
 │   │   └── ScrollToTop.jsx
 │   ├── config/
 │   │   ├── site.js           # default store settings (re-branding starts here)
+│   │   ├── content.js        # shared marketing numbers
+│   │   ├── routeMeta.js      # page titles and descriptions
 │   │   └── demo.js           # demo credentials
 │   ├── context/              # one provider per concern + AppProviders
 │   ├── data/                 # mock and seed data
-│   ├── hooks/                # useLocalStorage, useSeededCollection
+│   ├── hooks/                # useLocalStorage, useSeededCollection, usePageMeta
 │   ├── pages/                # flat, hyphenated: Admin-products.jsx, Checkout-review.jsx ...
 │   ├── services/             # pure functions (orders, products, promos, dashboard ...)
 │   ├── utils/                # format, pricing, product, user, validators, constants,
-│   │                         # storageKeys, checkoutSteps, payment, admin
+│   │                         # storageKeys, checkoutSteps, payment, admin, pageMeta, countries
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── index.css             # Tailwind v4 @theme design tokens
+├── CHANGELOG.md
 ├── IMAGE-CREDITS.md
 ├── index.html
 ├── vite.config.js
@@ -305,13 +314,15 @@ Colours, fonts and animation are tokens in the `@theme` block of `src/index.css`
 
 ## Extending the template
 
-**Re-brand.** Edit `src/config/site.js`, the tokens in `index.css`, `index.html`, `package.json` (`name`, `homepage`) and the prose listed in [Replace before going live](#text-and-branding-to-edit-in-code).
+**Re-brand.** Edit `src/config/site.js`, the tokens in `index.css`, `index.html`, `config/routeMeta.js`, `package.json` (`name`) and the prose listed in [Replace before going live](#text-and-branding-to-edit-in-code).
 
 **Add a checkout step.** Add an entry to `CHECKOUT_STEPS` in `utils/checkoutSteps.js` (id, label, path, `showSummary`, `isComplete(draft)`), create the page, and add one `<Route>` in `App.jsx`. The stepper, the route guard and the Back/Continue links read that config.
 
 **Add an order status.** Add an entry to `ORDER_STATUS_CONFIG` and a label to `ORDER_ACTION_LABELS` in `services/orderService.js`, and an icon to `ACTION_ICONS` in `pages/Admin-order-detail.jsx`. Check the walk in `data/orderSeed.js` (`STATUS_PATHS`) if you add seed orders.
 
-**Add an admin page.** Create `pages/Admin-thing.jsx`, add a `<Route>` under `/admin` in `App.jsx`, and an entry in `ADMIN_NAV` in `AdminLayout.jsx`. Use `PageHeader` and `DataTable`; define `getRowId`, `searchText` and `COLUMNS` at module level so memoisation stays stable.
+**Add a page.** Create the page in `pages/`, add a lazy import and a `<Route>` in `App.jsx`, and an entry in `config/routeMeta.js` for its title.
+
+**Add an admin page.** Create `pages/Admin-thing.jsx`, add a `<Route>` under `/admin` in `App.jsx`, an entry in `ADMIN_NAV` in `AdminLayout.jsx` and one in `config/routeMeta.js`. Use `PageHeader` and `DataTable`; define `getRowId`, `searchText` and `COLUMNS` at module level so memoisation stays stable.
 
 **Add a persisted collection.**
 1. Add its key to `utils/storageKeys.js` (Reset picks it up automatically).
@@ -328,25 +339,32 @@ Colours, fonts and animation are tokens in the `@theme` block of `src/index.css`
 
 ## Accessibility
 
-- Every form field has a label; errors use `aria-invalid` and `aria-describedby` and a failed submit focuses the first invalid field (the two auth forms are the exception, see [Known limits](#known-limits))
-- Admin pages focus their `<h1>` on mount, so route changes are announced
+- Every form field has a label; errors use `aria-invalid` and `aria-describedby` and a failed submit focuses the first invalid field
+- Admin pages focus their `<h1>` on mount, so route changes are announced; other pages move focus to `<main>`
+- A skip link and a single `<main>` landmark on every page
 - Inline confirmations move focus to Cancel, close on Escape and return focus to the trigger
 - Tables use captions and `aria-sort`; the result count is announced when search or filters change
 - Dashboard charts are `role="img"` with an `aria-label`, **plus** a visually hidden data table next to each one. Values are always printed, never colour-only.
 - Toasts use polite and assertive live regions; errors never auto-dismiss; hover or focus pauses the timer
 - Small text uses the `*-text` tokens for at least 4.5:1 contrast against its background
+- Hover zoom and toast animations respect `prefers-reduced-motion`
 
 ## Deployment
 
-The template is configured for **GitHub Pages under `/Heim`**:
+The template is a static single-page app and deploys to **Netlify** with no extra configuration:
 
-- `vite.config.js`: `base: "/Heim"`
-- `App.jsx`: `<BrowserRouter basename="/Heim">`
-- `package.json`: `homepage`
+| Setting | Value |
+|---|---|
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+| Node version | 20.19 or newer (set the `NODE_VERSION` environment variable if the default is older) |
 
-To deploy elsewhere (Netlify, Vercel, your own domain), change all three to match your path (use `/` for a domain root).
+- `public/_redirects` (`/*  /index.html  200`) makes deep links such as `/account/orders` work on refresh.
+- The app is served from the domain root: `vite.config.js` has `base: "/"` and `BrowserRouter` has no `basename`.
 
-**Deep-link refresh on GitHub Pages.** GitHub Pages cannot rewrite unknown paths, so refreshing a client-side route such as `/Heim/account/orders` shows GitHub's 404. The app itself works because navigation happens in the browser. Fixes: host somewhere that supports SPA rewrites (a single rule that serves `index.html` for every path), or add a `404.html` redirect trick, or switch to `HashRouter`. "Reset demo data" deliberately does not reload the page for this reason.
+**Other hosts.** Any static host works as long as it rewrites unknown paths to `index.html` (Vercel, Cloudflare Pages, your own server). Replace `public/_redirects` with that host's rule.
+
+**Serving from a sub-path** (for example GitHub Pages under `/Heim`): set `base: "/Heim"` in `vite.config.js` and `<BrowserRouter basename="/Heim">` in `App.jsx`. GitHub Pages cannot rewrite unknown paths, so refreshing a deep link shows its 404 page; use `HashRouter` or a `404.html` redirect if you need that host.
 
 ## Known limits
 
@@ -360,14 +378,15 @@ To deploy elsewhere (Netlify, Vercel, your own domain), change all three to matc
 - **The Settings form reads settings once on mount.**
 - **`DATA_VERSION` is global.** Changing seed data resets every seeded collection, including visitor-submitted messages and subscribers.
 - **Demo placeholders that do nothing:** the Google and Facebook sign-in buttons, the "Remember me" checkbox and the product-page share buttons.
-- **Accessibility gaps you should know about:** `muted-foreground` text on `secondary` surfaces is about 4.2:1 (borderline); the unread-count badges in the header and admin sidebar are about 4.4:1; the SignIn and SignUp forms do not yet wire `aria-invalid` and `aria-describedby` to their errors; Safari does not focus buttons on click, so "return focus to the trigger" works for keyboard users only there.
+- **Accessibility gaps you should know about:** `muted-foreground` text on `secondary` surfaces is about 4.2:1 (borderline); the unread-count badges in the header and admin sidebar are about 4.4:1; Safari does not focus buttons on click, so "return focus to the trigger" works for keyboard users only there.
+- **SEO is limited for a client-rendered app.** Titles and meta tags are set in the browser, so crawlers that do not run JavaScript only see the static tags in `index.html`.
 - **Shared images.** See [Images](#images).
 
 ## Credits
 
 - Images: see [`IMAGE-CREDITS.md`](IMAGE-CREDITS.md). Faces and products in them are fictional.
 - Icons: [Lucide](https://lucide.dev/). Fonts: Inter and Playfair Display (Google Fonts).
-- Built with React, Vite, Tailwind CSS, React Router and gh-pages.
+- Built with React, Vite, Tailwind CSS and React Router.
 
 ## Contact
 

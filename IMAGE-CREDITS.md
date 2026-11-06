@@ -26,6 +26,8 @@ version, date and prompt if you want a full record.
 | src/assets/bed.jpeg | Demo products (beds) | AI-generated (Gemini) | |
 | src/assets/cozy-living-room.jpeg | Blog posts | AI-generated (Gemini) | |
 | src/assets/product-placeholder.svg | Fallback for products without an image | Original | |
+| src/assets/favicon-light.svg | Heim light icon | Original | |
+| src/assets/Mockup.png | README preview | Original | |
 
 ## Notes
 - Images are demo content. Several products and all blog posts share one image.
