@@ -6,7 +6,7 @@ There is **no backend**. All data is mock, lives in `localStorage` and is struct
 
 ![Heim Mockup](src/assets/Mockup.png)
 
-**Live demo:** [Visit Heim](https://YOUR-SITE.netlify.app) <!-- replace with your Netlify URL -->
+**Live demo:** [Visit Heim](https://heim-store.netlify.app/)
 
 Version history: see [`CHANGELOG.md`](CHANGELOG.md).
 
